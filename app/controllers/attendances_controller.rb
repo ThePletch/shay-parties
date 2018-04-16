@@ -6,7 +6,7 @@ class AttendancesController < ApplicationController
   # POST /attendances
   # POST /attendances.json
   def create
-    @attendance = @event.attendances.build(invitable: current_user, rsvp_status: params[:rsvp_status])
+    @attendance = @event.attendances.build(invitable: current_user, rsvp_status: attendance_params[:rsvp_status])
 
     respond_to do |format|
       if @attendance.save
