@@ -1,4 +1,4 @@
-class CreateEventAttendances < ActiveRecord::Migration
+class CreateEventAttendances < ActiveRecord::Migration[5.2]
   def self.up
     create_table :event_attendances do |t|
 
@@ -9,7 +9,7 @@ class CreateEventAttendances < ActiveRecord::Migration
       t.string :rsvp_status
 
       t.timestamps
-      
+
     end
   end
 
