@@ -1,5 +1,7 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :rsvp]
+  before_action :require_ownership!, only: [:edit, :update, :destroy]
+  before_action :authenticate_user!, only: [:new, :create]
 
   # GET /events
   # GET /events.json
@@ -10,6 +12,9 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    if user_signed_in?
+      @attendance = @event.attendances.find_by(invitable_id: current_user.id) || @event.attendances.build
+    end
   end
 
   # GET /events/new
@@ -24,7 +29,7 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.json
   def create
-    @event = Event.new(event_params)
+    @event = current_user.events.build(event_params)
 
     respond_to do |format|
       if @event.save
@@ -61,6 +66,15 @@ class EventsController < ApplicationController
     end
   end
 
+  def rsvp
+    if @event.event_members.where(invitee_id: current_user.id).any?
+      redirect_back fallback_location: root_path, alert: "You've already RSVPed!"
+      return
+    end
+
+    @event.event_members.create(invitee: current_user)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event
@@ -70,5 +84,13 @@ class EventsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
       params.require(:event).permit(:title, :start_time, :end_time, :description)
+    end
+
+    def require_ownership!
+      authenticate_user!
+
+      unless @event.user_id == current_user.id
+        redirect_back fallback_location: root_path, alert: "You can't make changes to that event."
+      end
     end
 end
