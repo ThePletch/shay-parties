@@ -10,7 +10,7 @@ class Event < ApplicationRecord
   validate :ends_after_it_starts
 
   def owned_by?(user)
-    user.id == owner.id
+    user && user.id == owner.id
   end
 
   private
