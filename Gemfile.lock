@@ -36,6 +36,10 @@ GEM
       globalid (>= 0.3.6)
     activemodel (5.2.0)
       activesupport (= 5.2.0)
+    activemodel-serializers-xml (1.0.2)
+      activemodel (> 5.x)
+      activesupport (> 5.x)
+      builder (~> 3.1)
     activerecord (5.2.0)
       activemodel (= 5.2.0)
       activesupport (= 5.2.0)
@@ -53,6 +57,8 @@ GEM
     bcrypt (3.1.11)
     bindex (0.5.0)
     builder (3.2.3)
+    bulma-rails (0.7.0)
+      sass (~> 3.2)
     byebug (10.0.2)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
@@ -72,6 +78,12 @@ GEM
       railties (>= 4.1.0, < 6.0)
       responders
       warden (~> 1.2.3)
+    draper (3.0.1)
+      actionpack (~> 5.0)
+      activemodel (~> 5.0)
+      activemodel-serializers-xml (~> 1.0)
+      activesupport (~> 5.0)
+      request_store (~> 1.0)
     erubi (1.7.1)
     erubis (2.7.0)
     execjs (2.7.0)
@@ -158,6 +170,8 @@ GEM
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     redcarpet (3.4.0)
+    request_store (1.4.1)
+      rack (>= 1.4)
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
       railties (>= 4.2.0, < 5.3)
@@ -214,10 +228,12 @@ PLATFORMS
 
 DEPENDENCIES
   attendable!
+  bulma-rails (~> 0.7.0)
   byebug
   coffee-rails (~> 4.2)
   commontator (~> 5.1.0)
   devise (~> 4.4.3)
+  draper (~> 3.0.1)
   haml-rails (~> 1.0.0)
   jbuilder (~> 2.5)
   jquery-rails

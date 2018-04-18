@@ -15,6 +15,7 @@ class EventsController < ApplicationController
     if user_signed_in?
       @attendance = @event.attendances.find_by(invitable_id: current_user.id) || @event.attendances.build
     end
+    @event = EventDecorator.decorate(@event)
   end
 
   # GET /events/new
