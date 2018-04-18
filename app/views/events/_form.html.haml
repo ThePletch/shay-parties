@@ -1,0 +1,23 @@
+= form_with(model: event, local: true) do |form|
+  - if event.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(event.errors.count, "error")
+        prohibited this event from being saved:
+      %ul
+        - event.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = form.label :title
+    = form.text_field :title
+  .field
+    = form.label :start_time
+    = form.datetime_select :start_time
+  .field
+    = form.label :end_time
+    = form.datetime_select :end_time
+  .field
+    = form.label :description
+    = form.text_area :description
+  .actions
+    = form.submit
