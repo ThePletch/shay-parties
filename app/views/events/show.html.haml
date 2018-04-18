@@ -1,19 +1,13 @@
-%p
-  %strong Title:
+%h1.title
   = @event.title
-%p
-  %strong Start time:
+  - if @event.owned_by?(current_user)
+    = link_to 'Edit', edit_event_path(@event), class: 'button is-white'
+.subtitle
   = @event.start_time
-%p
-  %strong End time:
+  \-
   = @event.end_time
-%p
-  %strong Description:
-  = @event.description
 - if user_signed_in?
   = render 'attendances/event_form', attendance: @attendance, event: @event
-- if @event.owned_by?(current_user)
-  = link_to 'Edit', edit_event_path(@event)
-  |
-= link_to 'Back', events_path
+.content= @event.description
+%hr
 = commontator_thread(@event)

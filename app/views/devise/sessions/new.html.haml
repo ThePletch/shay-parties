@@ -1,0 +1,21 @@
+= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+  %h1.title Log in
+  .field
+    = f.label :email, class: 'label'
+    = f.email_field :email, autofocus: true, autocomplete: "email", class: 'input'
+  .field
+    = f.label :password, class: 'label'
+    = f.password_field :password, autocomplete: "off", class: 'input'
+  - if devise_mapping.rememberable?
+    .field
+      .control.is-pulled-left
+        = f.check_box :remember_me
+        = f.label :remember_me, class: 'checkbox'
+      .is-pulled-right
+        = link_to "Forgot your password?", new_password_path(resource_name), class: 'button is-white'
+    .is-clearfix
+  .field.is-grouped
+    .control
+      = f.submit "Log in", class: 'button is-link'
+    .control
+      = link_to "...or sign up", new_registration_path(resource_name), class: 'button is-white'

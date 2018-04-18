@@ -1,0 +1,11 @@
+%nav.navbar{role: :navigation, 'aria-label': "main navigation"}
+  .navbar-brand
+    = link_to root_path, class: "navbar-item" do
+      %h1.is-size-4 Steve Parties
+    = link_to "Home", root_path, class: "navbar-item"
+    - if user_signed_in?
+      -# = link_to "Profile", edit_user_path, class: "navbar-item"
+      .navbar-item
+        = button_to "Log out", destroy_user_session_path, method: :delete, class: "button is-light"
+    - else
+      = link_to "Log in", new_user_session_path, class: "navbar-item"

@@ -2,11 +2,16 @@
 %html
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %title SteveParties
+    %title Parties
     = csrf_meta_tags
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
-    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag    'application', media: 'all'
+    = javascript_include_tag 'application'
   %body
-    %p.notice= notice
-    %p.alert= alert
-    = yield
+    = render 'partials/navbar'
+    - if notice
+      .notification.is-info= notice
+    - if alert
+      .notification.is-warning= alert
+    = yield :sidebar
+    .box
+      = yield

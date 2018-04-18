@@ -1,20 +1,13 @@
-= form_for [event, attendance] do |form|
-  - if attendance.errors.any?
-    #error_explanation
-      %h2
-        = pluralize(attendance.errors.count, "error")
-        prohibited this attendance from being saved:
-      %ul
-        - attendance.errors.full_messages.each do |message|
-          %li= message
-  = form.hidden_field :invitable_id, value: current_user.id
-  .field
-    = form.label :rsvp_status
-    = form.select :rsvp_status, options_for_select(["No RSVP"] + Attendance::RSVP_TYPES, selected: attendance.rsvp_status)
-  .actions
-    - if attendance.persisted?
-      = form.submit "Update"
-    - else
-      = form.submit "RSVP"
-- if attendance.persisted?
-  = button_to("Delete RSVP", event_attendance_path(event, attendance), method: :delete)
+.field.has-addons
+  = form_for [event, attendance], class: 'is-inline-flex' do |form|
+    = form.hidden_field :invitable_id, value: current_user.id
+    .is-inline-flex.control
+      = form.select :rsvp_status, options_for_select(["No RSVP"] + Attendance::RSVP_TYPES, selected: attendance.rsvp_status), {}, class: 'select input is-info'
+    .is-inline-flex.control
+      - if attendance.persisted?
+        = form.submit "Update", class: 'button is-link'
+      - else
+        = form.submit "RSVP", class: 'button is-link'
+  - if attendance.persisted?
+    .control
+      = button_to("Un-RSVP", event_attendance_path(event, attendance), method: :delete, class: 'button is-danger')
