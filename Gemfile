@@ -25,8 +25,8 @@ gem 'haml-rails', '~> 1.0.0'
 
 gem 'draper', '~> 3.0.1'
 
-# use bulma as css framework
-gem "bulma-rails", "~> 0.7.0"
+# use bootstrap as css framework
+gem 'bootstrap', '~> 4.1.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

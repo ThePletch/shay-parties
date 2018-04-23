@@ -1,13 +1,20 @@
-%h1.title
-  = @event.title
-  - if @event.owned_by?(current_user)
-    = link_to 'Edit', edit_event_path(@event), class: 'button is-white'
-.subtitle
-  = @event.start_time
-  \-
-  = @event.end_time
-- if user_signed_in?
-  = render 'attendances/event_form', attendance: @attendance, event: @event
-.content= @event.description
+.row
+  .col-md-6
+    %h1.title
+      = @event.title
+      - if @event.owned_by?(current_user)
+        %small
+          = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
+    .subtitle
+      = @event.start_time
+      \-
+      = @event.end_time
+    .content= @event.description
+  .col-md-6
+    - if user_signed_in?
+      = render 'attendances/event_form', attendance: @attendance, event: @event
+    - else
+      .m-3= link_to "Sign in to RSVP", new_user_session_path
+    = render 'events/rsvps', event: @event
 %hr
 = commontator_thread(@event)

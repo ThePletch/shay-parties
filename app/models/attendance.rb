@@ -6,6 +6,10 @@ class Attendance < ActiveRecord::Base
 
   before_create :generate_token
 
+  scope :going, -> { where(rsvp_status: "Yes") }
+  scope :maybe, -> { where(rsvp_status: "Maybe") }
+  scope :not_going, -> { where(rsvp_status: "No") }
+
   validates :rsvp_status, inclusion: {in: RSVP_TYPES, message: "Not a valid RSVP."}
 
   protected

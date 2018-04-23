@@ -5,15 +5,17 @@
       %th Title
       %th Date
       %th Person
-      %th{:colspan => "2"}
+      %th
   %tbody
     - @events.each do |event|
       %tr
         %td= link_to event.title, event, class: 'is-size-5 is-link'
         %td= event.start_time.to_date
-        %td= event.owner.email
+        %td= event.owner.name
         - if event.owned_by?(current_user)
-          %td= link_to 'Edit', edit_event_path(event), class: 'button is-light is-small'
-          %td= link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'button is-danger is-small'
+          %td
+            .btn-group
+              = link_to 'Edit', edit_event_path(event), class: 'btn btn-primary btn-small'
+              = link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
 %br/
 = link_to 'New Event', new_event_path, class: ['button', 'is-link']

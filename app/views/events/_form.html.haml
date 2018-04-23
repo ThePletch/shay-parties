@@ -7,17 +7,17 @@
       %ul
         - event.errors.full_messages.each do |message|
           %li= message
-  .field
-    = form.label :title, class: 'label'
-    = form.text_field :title, class: 'input'
-  .field
-    = form.label :start_time, class: 'label'
-    = form.datetime_select :start_time, class: 'input'
-  .field
-    = form.label :end_time, class: 'label'
-    = form.datetime_select :end_time, class: 'input'
-  .field
-    = form.label :description, class: 'label'
-    = form.text_area :description, class: 'textarea', rows: "6"
+  .form-group
+    = form.label :title
+    = form.text_field :title, class: 'form-control'
+  .form-group
+    = form.label :start_time
+    = form.datetime_select :start_time, class: 'form-control'
+  .form-group
+    = form.label :end_time
+    = form.datetime_select :end_time, class: 'form-control'
+  .form-group
+    = form.label :description
+    = form.text_area :description, class: 'form-control', rows: "6"
   .actions
-    = form.submit class: 'button is-link'
+    = form.submit class: 'btn btn-primary'
