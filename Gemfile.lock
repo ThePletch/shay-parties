@@ -57,9 +57,6 @@ GEM
     autoprefixer-rails (8.3.0)
       execjs
     bcrypt (3.1.11)
-    bettertabs (1.4.2)
-      jquery-rails
-      rails (>= 3.1.0)
     bindex (0.5.0)
     bootstrap (4.1.0)
       autoprefixer-rails (>= 6.0.3)
@@ -236,7 +233,6 @@ PLATFORMS
 
 DEPENDENCIES
   attendable!
-  bettertabs (~> 1.4.2)
   bootstrap (~> 4.1.0)
   byebug
   coffee-rails (~> 4.2)

@@ -50,9 +50,6 @@ gem 'commontator', '~> 5.1.0'
 # markdown for descriptions
 gem 'redcarpet', '~> 3.4.0'
 
-# tabs
-gem 'bettertabs', '~> 1.4.2'
-
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
