@@ -1,13 +1,14 @@
-.field.has-addons
-  = form_for [event, attendance], class: 'is-inline-flex' do |form|
+.row.my-2.mx-1
+  = form_for [event, attendance], html: {class: 'form-inline col p-0'} do |form|
     = form.hidden_field :invitable_id, value: current_user.id
-    .is-inline-flex.control
-      = form.select :rsvp_status, options_for_select(["No RSVP"] + Attendance::RSVP_TYPES, selected: attendance.rsvp_status), {}, class: 'select input is-info'
-    .is-inline-flex.control
-      - if attendance.persisted?
-        = form.submit "Update", class: 'button is-link'
-      - else
-        = form.submit "RSVP", class: 'button is-link'
+    .input-group.col.p-0
+      .input-group-prepend
+        .input-group-text RSVP:
+      = form.select :rsvp_status, options_for_select(["No RSVP"] + Attendance::RSVP_TYPES, selected: attendance.rsvp_status), {}, class: 'form-control'
+    - if attendance.persisted?
+      = form.submit "Update", class: 'btn btn-primary col-auto m-0'
+    - else
+      = form.submit "RSVP", class: 'btn btn-primary col-auto m-0'
   - if attendance.persisted?
-    .control
-      = button_to("Un-RSVP", event_attendance_path(event, attendance), method: :delete, class: 'button is-danger')
+    .col-sm-auto.p-0
+      = button_to("Un-RSVP", event_attendance_path(event, attendance), method: :delete, class: 'form-control btn btn-danger')

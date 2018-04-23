@@ -1,11 +1,12 @@
-%nav.navbar{role: :navigation, 'aria-label': "main navigation"}
-  .navbar-brand
-    = link_to root_path, class: "navbar-item" do
-      %h1.is-size-4 Steve Parties
-    = link_to "Home", root_path, class: "navbar-item"
-    - if user_signed_in?
-      -# = link_to "Profile", edit_user_path, class: "navbar-item"
-      .navbar-item
-        = button_to "Log out", destroy_user_session_path, method: :delete, class: "button is-light"
-    - else
-      = link_to "Log in", new_user_session_path, class: "navbar-item"
+%nav.navbar.navbar-expand-md.navbar-light.bg-light{role: :navigation, 'aria-label': "main navigation"}
+  = link_to "Steve Parties", root_path, class: "navbar-brand"
+  %button.navbar-toggler{type: 'button', data: {toggle: 'collapse', target: '#main-nav'}, aria_controls: 'main-nav', aria_expanded: false, aria_label: "Toggle navigation"}
+    %span.navbar-toggler-icon
+  .collapse.navbar-collapse#main-nav
+    %ul.navbar-nav.mr-auto
+      %li.nav-item= link_to "Home", root_path, class: 'nav-link'
+      - if user_signed_in?
+        = link_to "Profile", edit_user_registration_path, class: "nav-link"
+        %li.nav-item= button_to "Log out", destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
+      - else
+        %li.nav-item= link_to "Log in", new_user_session_path, class: "nav-link"

@@ -9,9 +9,9 @@
   %body
     = render 'partials/navbar'
     - if notice
-      .notification.is-info= notice
+      .alert.alert-info= notice
     - if alert
-      .notification.is-warning= alert
+      .alert.alert-warning= alert
     = yield :sidebar
-    .box
+    .m-xl-4.m-md-3.m-sm-1
       = yield
