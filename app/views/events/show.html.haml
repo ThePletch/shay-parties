@@ -9,8 +9,8 @@
       = @event.start_time
       \-
       = @event.end_time
-    -# %span.d-block= @event.address.street
-    -# %span.d-block= @event.address.street2
+    - if @event.address
+      = render 'addresses/show', address: @event.address
 
     .content= @event.description
   .col-md-6

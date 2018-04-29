@@ -92,7 +92,6 @@ GEM
     erubis (2.7.0)
     execjs (2.7.0)
     ffi (1.9.23)
-    geocoder (1.4.7)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     haml (5.0.4)
@@ -126,8 +125,6 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.0)
       mini_mime (>= 0.1.1)
-    mainstreet (0.1.0)
-      geocoder
     marcel (0.3.2)
       mimemagic (~> 0.3.2)
     method_source (0.9.0)
@@ -243,7 +240,6 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   listen (~> 3.0.5)
-  mainstreet
   pg
   puma (~> 3.0)
   rails (~> 5.2.0)

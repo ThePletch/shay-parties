@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy, :rsvp]
+  before_action :set_up_address, only: [:new, :edit]
   before_action :require_ownership!, only: [:edit, :update, :destroy]
   before_action :authenticate_user!, only: [:new, :create]
 
@@ -83,9 +84,15 @@ class EventsController < ApplicationController
       @event = Event.find(params[:id])
     end
 
+    def set_up_address
+      @event.build_address if @event.address.nil?
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
       params.require(:event).permit(:title, :start_time, :end_time, :description, address_attributes: [
+        :id,
+        :event_id,
         :street,
         :street2,
         :city,
