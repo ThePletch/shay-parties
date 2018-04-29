@@ -6,7 +6,7 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all
+    @events = Event.where("end_time > ?", DateTime.current)
   end
 
   # GET /events/1
