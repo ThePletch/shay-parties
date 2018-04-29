@@ -16,6 +16,8 @@
   .form-group
     = form.label :end_time
     = form.datetime_select :end_time, class: 'form-control'
+  = form.fields_for :address do |a_form|
+    = render "addresses/form", form: a_form
   .form-group
     = form.label :description
     = form.text_area :description, class: 'form-control', rows: "6"

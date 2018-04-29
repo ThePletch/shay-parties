@@ -43,8 +43,6 @@ gem 'jbuilder', '~> 2.5'
 gem 'attendable', github: 'benignware/attendable'
 # accounts and authentication
 gem 'devise', '~> 4.4.3'
-# addresses
-gem 'mainstreet'
 # comments
 gem 'commontator', '~> 5.1.0'
 # markdown for descriptions
