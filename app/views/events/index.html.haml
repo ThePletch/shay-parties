@@ -3,15 +3,18 @@
   %thead
     %tr
       %th Title
+      %th Attendees
       %th Date
-      %th Person
       %th
   %tbody
     - @events.each do |event|
       %tr
         %td= link_to event.title, event, class: 'is-size-5 is-link'
+        %td
+          %ul.list-unstyled
+            %li= "Going: #{event.attendances.going.count}"
+            %li= "Maybe: #{event.attendances.maybe.count}"
         %td= event.start_time.to_date
-        %td= event.owner.name
         - if event.owned_by?(current_user)
           %td
             .btn-group
