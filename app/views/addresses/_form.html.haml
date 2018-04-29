@@ -1,0 +1,19 @@
+.form-group
+  = form.label :street
+  = form.text_field :street, class: 'form-control'
+
+.form-group
+  = form.label :street2
+  = form.text_field :street2, class: 'form-control'
+
+.form-group
+  .row
+    .col-md-4
+      = form.label :city
+      = form.text_field :city, class: 'form-control'
+    .col-md-4
+      = form.label :state
+      = form.text_field :state, class: 'form-control'
+    .col-md-4
+      = form.label :zip_code
+      = form.text_field :zip_code, class: 'form-control'

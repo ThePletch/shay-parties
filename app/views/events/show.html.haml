@@ -5,10 +5,13 @@
       - if @event.owned_by?(current_user)
         %small
           = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
-    .subtitle
+    %em
       = @event.start_time
       \-
       = @event.end_time
+    -# %span.d-block= @event.address.street
+    -# %span.d-block= @event.address.street2
+
     .content= @event.description
   .col-md-6
     - if user_signed_in?
