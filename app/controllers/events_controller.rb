@@ -1,8 +1,9 @@
 class EventsController < ApplicationController
+  before_action :authenticate_user!, except: [:show, :index]
   before_action :set_event, only: [:show, :edit, :update, :destroy, :rsvp]
   before_action :set_up_address, only: [:new, :edit]
+  before_action :require_creator!, except: [:show, :index, :rsvp]
   before_action :require_ownership!, only: [:edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:new, :create]
 
   # GET /events
   # GET /events.json
@@ -99,9 +100,13 @@ class EventsController < ApplicationController
       ])
     end
 
-    def require_ownership!
-      authenticate_user!
+    def require_creator!
+      unless current_user.creator?
+        redirect_back fallback_location: root_path, alert: "You're not allowed to manage events."
+      end
+    end
 
+    def require_ownership!
       unless @event.user_id == current_user.id
         redirect_back fallback_location: root_path, alert: "You can't make changes to that event."
       end
