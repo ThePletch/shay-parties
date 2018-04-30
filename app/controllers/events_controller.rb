@@ -1,7 +1,6 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
   before_action :set_event, only: [:show, :edit, :update, :destroy, :rsvp]
-  before_action :set_up_address, only: [:new, :edit]
   before_action :require_creator!, except: [:show, :index, :rsvp]
   before_action :require_ownership!, only: [:edit, :update, :destroy]
 
@@ -24,10 +23,12 @@ class EventsController < ApplicationController
   # GET /events/new
   def new
     @event = Event.new
+    @event.build_address if @event.address.nil?
   end
 
   # GET /events/1/edit
   def edit
+    @event.build_address if @event.address.nil?
   end
 
   # POST /events
@@ -83,10 +84,6 @@ class EventsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_event
       @event = Event.find(params[:id])
-    end
-
-    def set_up_address
-      @event.build_address if @event.address.nil?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
