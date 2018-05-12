@@ -7,6 +7,10 @@ class EventDecorator < Draper::Decorator
     event.start_time.strftime(event_date_format)
   end
 
+  def start_date
+    event.start_time.strftime("%B %-d, %Y")
+  end
+
   def end_time
     event.end_time.strftime(event_date_format)
   end

@@ -14,7 +14,7 @@
           %ul.list-unstyled
             %li= "Going: #{event.attendances.going.count}"
             %li= "Maybe: #{event.attendances.maybe.count}"
-        %td= event.start_time.to_date
+        %td= EventDecorator.decorate(event).start_date
         - if event.owned_by?(current_user)
           %td
             .btn-group
