@@ -1,20 +1,18 @@
 class Event < ApplicationRecord
+  include Ownable
+
   acts_as_attendable :attendances, by: :users
 
   # events can be commented on
   acts_as_commentable dependent: :destroy
 
+  has_many :polls, dependent: :destroy
   has_one :address
-  belongs_to :owner, class_name: "User", foreign_key: :user_id
 
   accepts_nested_attributes_for :address, update_only: true
 
   validate :ends_after_it_starts
   validates_associated :address
-
-  def owned_by?(user)
-    user && user.id == owner.id
-  end
 
   private
 

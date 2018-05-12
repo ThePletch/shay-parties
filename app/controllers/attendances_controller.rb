@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  before_action :set_event
+  before_action :set_event, only: [:create]
   before_action :set_attendance, only: [:update, :destroy]
   before_action :authenticate_user!
 
@@ -22,12 +22,20 @@ class AttendancesController < ApplicationController
   # PATCH/PUT /attendances/1
   # PATCH/PUT /attendances/1.json
   def update
+    event = @attendance.attendable
+
+    if attendance_params[:rsvp_status] == "No RSVP"
+      result = @attendance.destroy
+    else
+      result = @attendance.update(attendance_params)
+    end
+
     respond_to do |format|
-      if @attendance.update(attendance_params)
-        format.html { redirect_to @event, notice: 'RSVP updated.' }
+      if result
+        format.html { redirect_to event, notice: 'RSVP updated.' }
         format.json { render :show, status: :ok, location: @attendance }
       else
-        format.html { redirect_to @event, alert: @attendance.errors.values.flatten.join("\n") }
+        format.html { redirect_to event, alert: @attendance.errors.values.flatten.join("\n") }
         format.json { render json: @attendance.errors, status: :unprocessable_entity }
       end
     end
@@ -36,9 +44,10 @@ class AttendancesController < ApplicationController
   # DELETE /attendances/1
   # DELETE /attendances/1.json
   def destroy
+    event = @attendance.attendable
     @attendance.destroy
     respond_to do |format|
-      format.html { redirect_to @event, notice: 'RSVP deleted.' }
+      format.html { redirect_to event, notice: 'RSVP deleted.' }
       format.json { head :no_content }
     end
   end

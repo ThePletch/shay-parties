@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_23_014341) do
+ActiveRecord::Schema.define(version: 2018_05_09_235850) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,27 @@ ActiveRecord::Schema.define(version: 2018_04_23_014341) do
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
+  create_table "poll_responses", force: :cascade do |t|
+    t.bigint "poll_id"
+    t.bigint "user_id"
+    t.string "choice"
+    t.boolean "example_response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["poll_id"], name: "index_poll_responses_on_poll_id"
+    t.index ["user_id"], name: "index_poll_responses_on_user_id"
+  end
+
+  create_table "polls", force: :cascade do |t|
+    t.string "question"
+    t.bigint "event_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_polls_on_event_id"
+    t.index ["user_id"], name: "index_polls_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -109,6 +130,7 @@ ActiveRecord::Schema.define(version: 2018_04_23_014341) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.string "role", default: "user"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

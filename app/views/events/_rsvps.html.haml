@@ -2,25 +2,20 @@
   %li.nav-item
     %a.nav-link.active#going-tab{href: '#going', role: 'tab', 'aria-controls' => 'going', 'aria-selected' => true, data: {toggle: 'tab'}}
       %i.fa.fa-check{"aria-hidden" => true}
-      %span Yes
+      %span= "Yes (#{event.attendances.going.count})"
   %li.nav-item
     %a.nav-link#maybe-tab{href: '#maybe', role: 'tab', 'aria-controls' => 'maybe', data: {toggle: 'tab'}}
       %i.fa.fa-question{"aria-hidden" => true}
-      %span Maybe
+      %span= "Maybe (#{event.attendances.maybe.count})"
   %li.nav-item
     %a.nav-link#not-going-tab{href: '#not-going', role: 'tab', 'aria-controls' => 'not-going', data: {toggle: 'tab'}}
       %i.fa.fa-cross{"aria-hidden" => true}
-      %span No
+      %span= "No (#{event.attendances.not_going.count})"
 .tab-content
-  .tab-pane.show.active#going{role: 'tabpanel', 'aria-labelledby' => 'going-tab'}
-    %ul.list-group
-      = render partial: "attendances/attendance", collection: event.attendances.going
-  .tab-pane#maybe{role: 'tabpanel', 'aria-labelledby' => 'maybe-tab'}
-    %ul.list-group
-      = render partial: "attendances/attendance", collection: event.attendances.maybe
-  .tab-pane#not-going{role: 'tabpanel', 'aria-labelledby' => 'not-going-tab'}
-    %ul.list-group
-      = render partial: "attendances/attendance", collection: event.attendances.not_going
-
-
-
+  - {going: event.attendances.going, maybe: event.attendances.maybe, 'not-going': event.attendances.not_going}.each do |label, collection|
+    .tab-pane{id: label, class: ("show active" if label == :going), role: 'tabpanel', 'aria-labelledby' => "#{label}-tab"}
+      %ul.list-group
+        - if collection.empty?
+          %li.list-group-item
+            %small.text-muted Nobody yet!
+        = render partial: "attendances/attendance", collection: collection
