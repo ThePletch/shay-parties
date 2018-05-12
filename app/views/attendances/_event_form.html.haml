@@ -1,5 +1,6 @@
+- form_object = attendance.persisted? ? [attendance] : [event, attendance]
 .row.my-2.mx-1
-  = form_for [event, attendance], html: {class: 'form-inline col p-0'} do |form|
+  = form_for form_object, html: {class: 'form-inline col p-0'} do |form|
     = form.hidden_field :invitable_id, value: current_user.id
     .input-group.col.p-0
       .input-group-prepend
@@ -9,6 +10,3 @@
       = form.submit "Update", class: 'btn btn-primary col-auto m-0'
     - else
       = form.submit "RSVP", class: 'btn btn-primary col-auto m-0'
-  - if attendance.persisted?
-    .col-sm-auto.p-0
-      = button_to("Un-RSVP", event_attendance_path(event, attendance), method: :delete, class: 'form-control btn btn-danger')

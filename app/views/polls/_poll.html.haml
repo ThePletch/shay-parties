@@ -1,0 +1,16 @@
+.my-2
+  %h4
+    = poll.question
+    - if poll.owned_by?(current_user)
+      %small= link_to "Edit", edit_poll_path(poll), class: 'text-muted'
+  %ul.list-group
+    - user_response = poll.response_for_user(current_user)
+    - form_object = user_response.persisted? ? [user_response] : [poll, user_response]
+    = form_for form_object do |f|
+      - poll.responses_and_counts.each do |response, count|
+        %li.list-group-item
+          = f.radio_button :choice, response
+          = response
+          - if count > 0
+            = "(#{count})"
+      = f.submit "Answer", class: 'btn btn-secondary btn-block'
