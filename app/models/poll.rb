@@ -14,7 +14,7 @@ class Poll < ApplicationRecord
   end
 
   def response_for_user(user)
-    return nil if user.nil?
+    return PollResponse.new if user.nil?
 
     responses.find_by(user: user) || PollResponse.new
   end
