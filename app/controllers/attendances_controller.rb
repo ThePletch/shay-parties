@@ -41,17 +41,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  # DELETE /attendances/1
-  # DELETE /attendances/1.json
-  def destroy
-    event = @attendance.attendable
-    @attendance.destroy
-    respond_to do |format|
-      format.html { redirect_to event, notice: 'RSVP deleted.' }
-      format.json { head :no_content }
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_attendance

@@ -26,12 +26,6 @@ class PollResponsesController < ApplicationController
     redirect_to event_path(@poll.event), message
   end
 
-  def destroy
-    current_user.poll_responses.find(params[:id]).destroy
-
-    redirect_to event_path(@poll.event), notice: "Removed response to poll."
-  end
-
   private
 
   def poll_response_params

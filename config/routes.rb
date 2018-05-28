@@ -7,9 +7,9 @@ Rails.application.routes.draw do
       put 'rsvp'
     end
 
-    resources :attendances, only: [:create, :update, :destroy]
+    resources :attendances, only: [:create, :update]
     resources :polls, except: [:index, :show], shallow: true do
-      resources :poll_responses, only: [:create, :update, :destroy]
+      resources :poll_responses, only: [:create, :update]
     end
   end
 
