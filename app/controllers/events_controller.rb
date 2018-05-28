@@ -7,7 +7,14 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    @events = Event.where("end_time > ?", DateTime.current)
+    @current_scope = params[:scope] || "future"
+
+    case @current_scope
+    when "past"
+      @events = Event.where("end_time < ?", Time.current)
+    else
+      @events = Event.where("end_time > ?", Time.current)
+    end
   end
 
   # GET /events/1

@@ -1,4 +1,8 @@
-%h1.title Events
+%h1.title
+  Events
+  .btn-group{role: "group", "aria-label" => "event scopes"}
+    = scope "Future", events_path(scope: :future), :future
+    = scope "Past", events_path(scope: :past), :past
 %table.table
   %thead
     %tr

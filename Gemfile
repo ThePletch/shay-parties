@@ -65,6 +65,7 @@ end
 
 group :test do
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
   gem 'factory_bot_rails', '>= 4.8.0'
   gem 'capybara'
   gem 'poltergeist'
