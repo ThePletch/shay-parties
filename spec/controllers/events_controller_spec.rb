@@ -3,7 +3,21 @@ require 'rails_helper'
 describe EventsController do
 
   describe "GET index" do
-    it "shows all events with end times after the current time"
+    it "shows all events with end times after the current time" do
+      earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day)
+      later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day)
+
+      get :index
+      expect(assigns(:events)).to match_array([later_event])
+    end
+
+    it "shows all past events when set to 'past' scope" do
+      earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day)
+      later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day)
+
+      get :index, params: {scope: :past}
+      expect(assigns(:events)).to match_array([earlier_event])
+    end
   end
 
   describe "GET show" do

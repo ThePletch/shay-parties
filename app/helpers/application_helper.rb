@@ -35,4 +35,10 @@ module ApplicationHelper
 
     content_tag(:span, name, html_options, &block)
   end
+
+  def scope(name, path, scope_name)
+    scope_classes = ['btn', 'btn-sm', 'btn-secondary']
+    scope_classes << 'active' if @current_scope == scope_name.to_s
+    link_to(name, path, class: scope_classes)
+  end
 end
