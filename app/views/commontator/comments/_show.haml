@@ -1,0 +1,24 @@
+- # Clients of this partial must supply the following variables:
+- # comment
+- # user
+- creator = comment.creator
+- name = Commontator.commontator_name(creator) || ''
+- link = Commontator.commontator_link(creator, main_app) || ''
+- avatar = Commontator.commontator_avatar(creator, self) || ''
+.card
+  .card-body
+    %strong
+      = link.blank? ? name : link_to(name, link)
+    %small
+      = comment.created_timestamp
+      - if comment.is_modified?
+        %span{title: comment.updated_timestamp, data: {toggle: 'tooltip', placement: 'right'}} ✏️
+    %span.float-left.mt-2.mr-3.mb-1{id: "comment_#{comment.id.to_s}_avatar_span"}
+      = avatar
+    %span.comment_votes{id: "comment_#{comment.id.to_s}_votes_span"}
+      = render partial: 'commontator/comments/votes', locals: { comment: comment, user: user }
+    %div
+      = render partial: 'commontator/comments/body', locals: { comment: comment }
+    .clearfix
+    %span.float-right
+      = render partial: 'commontator/comments/actions', locals: { comment: comment, user: user }
