@@ -1,0 +1,18 @@
+%h1.title
+  Mailing Lists
+%table.table
+  %thead
+    %tr
+      %th Name
+      %th Emails
+      %th
+  %tbody
+    - @mailing_lists.each do |mailing_list|
+      %tr
+        %td= link_to mailing_list.name, mailing_list, class: 'is-size-5 is-link'
+        %td= mailing_list.emails.count
+        %td
+          .btn-group
+            = link_to 'Edit', edit_mailing_list_path(mailing_list), class: 'btn btn-primary btn-small'
+            = link_to 'Delete', mailing_list, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
+  = link_to 'New Mailing List', new_mailing_list_path, class: ['button', 'is-link']
