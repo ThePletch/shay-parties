@@ -13,5 +13,11 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :mailing_lists do
+    member do
+      put 'sync_users'
+    end
+  end
+
   root "events#index"
 end

@@ -12,8 +12,10 @@ class User < ApplicationRecord
   # events the user has rsvped to - some of these may be 'no' rsvps,
   # hence not calling this 'attended_events'
   has_many :rsvped_events, through: :attendances, class_name: "Event"
+  has_many :attendances, as: :invitable
   has_many :poll_responses
   has_many :polls
+  has_many :mailing_lists
 
   def creator?
     role == "creator"

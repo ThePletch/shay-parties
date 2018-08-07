@@ -1,0 +1,41 @@
+.row
+  .col-lg-6
+    %h1.title
+      = @mailing_list.name
+      = link_to "Edit", edit_mailing_list_path(@mailing_list)
+    %table.table
+      %thead
+        %tr
+          %td Email
+          %td User
+      %tbody
+        - @emails.each do |email|
+          %tr
+            %td= email.email
+            - if email.user.present?
+              %td= email.user.name
+            - else
+              %td.text-muted No User
+    %h4 Copypastable List
+    = text_area_tag nil, @emails.pluck(:email).join(",\n"), class: 'form-control'
+  .col-lg-6
+    %h2.text-center Manage List
+    = button_to "Sync Users", sync_users_mailing_list_path(@mailing_list), method: :put, class: 'btn btn-primary btn-block btn-sm'
+    .row
+      = form_tag '', class: 'form-inline col p-0', method: :get do
+        = hidden_field_tag :scope, 'exclude_no_rsvps'
+        .input-group.col
+          .input-group-prepend
+            .input-group-text Exclude 'No' RSVPs for:
+          = select_tag :event_id, options_for_select(Event.all.pluck(:title, :id)), class: 'form-control'
+          = submit_tag "Filter", class: 'btn btn-primary col-auto m-0'
+    .row
+      = form_tag '', class: 'form-inline col p-0', method: :get do
+        = hidden_field_tag :scope, 'attendees'
+        .input-group.col
+          .input-group-prepend
+            .input-group-text Attendees for:
+          = select_tag :event_id, options_for_select(Event.all.pluck(:title, :id)), class: 'form-control'
+          = submit_tag "Filter", class: 'btn btn-primary col-auto m-0'
+
+    = link_to "Clear Filters", mailing_list_path(@mailing_list), class: 'btn btn-secondary btn-block btn-sm'
