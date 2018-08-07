@@ -21,6 +21,7 @@ class EventsController < ApplicationController
     end
 
     @event = EventDecorator.decorate(@event)
+    commontator_thread_show(@event)
   end
 
   def new

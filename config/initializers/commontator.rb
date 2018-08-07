@@ -34,7 +34,7 @@ Commontator.configure do |config|
   # Arguments: a user (acts_as_commontator)
   # Returns: the user's name (String)
   # Default: ->(user) { I18n.t('commontator.anonymous') } (all users are anonymous)
-  config.user_name_proc = ->(user) { I18n.t('commontator.anonymous') }
+  config.user_name_proc = ->(user) { user.name }
 
   # user_link_proc
   # Type: Proc
@@ -63,7 +63,7 @@ Commontator.configure do |config|
   #   view.commontator_gravatar_image_tag(user, 1, s: 60, d: 'mm')
   # }
   config.user_avatar_proc = ->(user, view) {
-    view.commontator_gravatar_image_tag(user, 1, s: 60, d: 'mm')
+    view.commontator_gravatar_image_tag(user, 1, s: 60, d: 'identicon')
   }
 
   # user_email_proc
@@ -152,7 +152,7 @@ Commontator.configure do |config|
   #   :s  (star ratings)
   #   :r  (reputation system)
   # Default: :n
-  config.comment_voting = :n
+  config.comment_voting = :ld
 
   # vote_count_proc
   # Type: Proc

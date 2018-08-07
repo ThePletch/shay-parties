@@ -4,7 +4,7 @@ class Event < ApplicationRecord
   acts_as_attendable :attendances, by: :users
 
   # events can be commented on
-  acts_as_commentable dependent: :destroy
+  acts_as_commontable dependent: :destroy
 
   has_many :polls, dependent: :destroy
   has_one :address

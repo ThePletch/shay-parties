@@ -43,6 +43,7 @@ gem 'attendable', github: 'benignware/attendable'
 gem 'devise', '~> 4.4.3'
 # comments
 gem 'commontator', '~> 5.1.0'
+gem 'acts_as_votable'
 # markdown for descriptions
 gem 'redcarpet', '~> 3.4.0'
 
