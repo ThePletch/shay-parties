@@ -18,7 +18,25 @@ class User < ApplicationRecord
   has_many :polls
   has_many :mailing_lists
 
+  validate :only_one_default_host
+
   def creator?
     role == "creator"
+  end
+
+  def host?
+    role == "host"
+  end
+
+  def default_host?
+    host? && default_host
+  end
+
+  private
+
+  def only_one_default_host
+    if default_host? && User.where(default_host: true).where.not(id: id).exists?
+      errors.add(:default_host, "Cannot have more than one default host.")
+    end
   end
 end
