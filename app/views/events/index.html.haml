@@ -6,8 +6,8 @@
   - else
     = "Events organized by #{@target_user.name}"
   .btn-group{role: "group", "aria-label" => "event scopes"}
-    = scope "Future", events_path(scope: :future), :future
-    = scope "Past", events_path(scope: :past), :past
+    = scope "Future", user_events_path(@target_user, scope: :future), :future
+    = scope "Past", user_events_path(@target_user, scope: :past), :past
 %table.table
   %thead
     %tr
