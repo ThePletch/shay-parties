@@ -26,7 +26,7 @@ gem 'haml-rails', '~> 1.0.0'
 gem 'draper', '~> 3.0.1'
 
 # use bootstrap as css framework
-gem 'bootstrap', '~> 4.1.0'
+gem 'bootstrap', '>= 4.3.1'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -41,7 +41,7 @@ gem 'jbuilder', '~> 2.5'
 # event attendance scaffolding
 gem 'attendable', github: 'benignware/attendable'
 # accounts and authentication
-gem 'devise', '~> 4.4.3'
+gem 'devise', '>= 4.6.0'
 # comments
 gem 'commontator', '~> 5.1.0'
 gem 'acts_as_votable'
