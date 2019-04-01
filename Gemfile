@@ -14,7 +14,7 @@ gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sassc', '~> 2.0.1'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
@@ -30,6 +30,7 @@ gem 'bootstrap', '~> 4.1.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
