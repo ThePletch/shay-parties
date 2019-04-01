@@ -20,16 +20,14 @@ class User < ApplicationRecord
 
   validate :only_one_default_host
 
-  def creator?
-    role == "creator"
-  end
-
-  def host?
-    role == "host"
-  end
-
   def default_host?
-    host? && default_host
+    default_host
+  end
+
+  # if we haven't set the default host yet, default to the first user in the system
+  # until we set the default host.
+  def self.default_host
+    User.find_by(default_host: true) || User.first
   end
 
   private

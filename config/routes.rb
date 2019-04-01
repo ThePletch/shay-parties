@@ -13,6 +13,11 @@ Rails.application.routes.draw do
     end
   end
 
+  # user-scoped events index
+  resources :user, shallow: true, only: [] do
+    resources :events, only: [:index]
+  end
+
   resources :mailing_lists do
     member do
       put 'sync_users'

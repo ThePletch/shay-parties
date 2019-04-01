@@ -1,5 +1,7 @@
+- title "Events from #{@target_user.name}"
+
 %h1.title
-  Events
+  = "Events organized by #{@target_user.name}"
   .btn-group{role: "group", "aria-label" => "event scopes"}
     = scope "Future", events_path(scope: :future), :future
     = scope "Past", events_path(scope: :past), :past
@@ -24,5 +26,5 @@
             .btn-group
               = link_to 'Edit', edit_event_path(event), class: 'btn btn-primary btn-small'
               = link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
-- if current_user && current_user.creator?
+- if current_user
   = link_to 'New Event', new_event_path, class: ['button', 'is-link']

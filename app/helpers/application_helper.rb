@@ -41,4 +41,8 @@ module ApplicationHelper
     scope_classes << 'active' if @current_scope == scope_name.to_s
     link_to(name, path, class: scope_classes)
   end
+
+  def title(page_title)
+    content_for(:title) { page_title }
+  end
 end
