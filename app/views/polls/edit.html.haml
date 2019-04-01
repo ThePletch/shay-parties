@@ -1,3 +1,4 @@
+- title "Edit #{@poll.question}"
 %h1.title Editing Poll
 = render 'form', poll: @poll, form_object: [@poll]
 = link_to 'Back', event_path(@poll.event), class: 'button is-white'

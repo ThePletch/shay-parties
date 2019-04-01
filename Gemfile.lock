@@ -85,7 +85,7 @@ GEM
     commontator (5.1.0)
       jquery-rails
       rails (>= 5.0)
-    concurrent-ruby (1.0.5)
+    concurrent-ruby (1.1.3)
     crass (1.0.4)
     database_cleaner (1.7.0)
     devise (4.4.3)
@@ -138,7 +138,7 @@ GEM
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    loofah (2.2.2)
+    loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.0)
@@ -152,7 +152,7 @@ GEM
     minitest (5.11.3)
     multi_json (1.13.1)
     nio4r (2.3.0)
-    nokogiri (1.8.2)
+    nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     orm_adapter (0.5.0)
     pg (0.20.0)
@@ -163,7 +163,7 @@ GEM
     popper_js (1.12.9)
     public_suffix (3.0.2)
     puma (3.11.4)
-    rack (2.0.4)
+    rack (2.0.6)
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
     rails (5.2.0)
@@ -240,7 +240,7 @@ GEM
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
       spring (>= 1.2, < 3.0)
-    sprockets (3.7.1)
+    sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
@@ -302,7 +302,7 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 RUBY VERSION
-   ruby 2.5.0p0
+   ruby 2.5.1p57
 
 BUNDLED WITH
-   1.16.1
+   1.16.6

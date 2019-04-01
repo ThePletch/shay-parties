@@ -14,8 +14,8 @@
   #emails
     = f.fields_for(:emails, mailing_list.emails) do |email_form|
       = render partial: 'mailing_list_emails/form', locals: {f: email_form, mailing_list_email: email_form.object}
-  = link_to_add_fields 'Add an email', f, :emails, {partial: 'mailing_list_emails/form', target: "#emails", locals: { mailing_list_email: f.object.emails.build }}, class: 'btn btn-success', id: "add-email"
   .actions
+    = link_to_add_fields 'Add an email', f, :emails, {partial: 'mailing_list_emails/form', target: "#emails", locals: { mailing_list_email: f.object.emails.build }}, class: 'btn btn-success', id: "add-email"
     = f.submit class: 'btn btn-primary'
 - if mailing_list.persisted?
   = button_to "Destroy", mailing_list_path(mailing_list), method: :delete, class: 'btn btn-danger', confirm: "Are you sure you want to delete this?"

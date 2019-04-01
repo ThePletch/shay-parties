@@ -2,11 +2,9 @@
 %div
   = f.hidden_field :id, value: mailing_list_email.id unless mailing_list_email.new_record?
   .row.no-gutters.align-items-center.my-3
-    .col-auto
-      = f.label :email, class: 'side-label'
     .col
       .input-group
         .input-group-prepend
           .input-group-text
             = f.check_box :_destroy, { checked: true }, 0, 1
-        = f.text_field :email, class: 'form-control'
+        = f.text_field :email, class: 'form-control', placeholder: 'email@friendship.biz'

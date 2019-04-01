@@ -1,5 +1,10 @@
+- title "Events from #{@target_user.name}"
+
 %h1.title
-  Events
+  - if current_user && current_user == @target_user
+    Events organized by you
+  - else
+    = "Events organized by #{@target_user.name}"
   .btn-group{role: "group", "aria-label" => "event scopes"}
     = scope "Future", events_path(scope: :future), :future
     = scope "Past", events_path(scope: :past), :past
@@ -24,5 +29,11 @@
             .btn-group
               = link_to 'Edit', edit_event_path(event), class: 'btn btn-primary btn-small'
               = link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
-- if current_user && current_user.creator?
-  = link_to 'New Event', new_event_path, class: ['button', 'is-link']
+- if current_user
+  - if current_user == @target_user
+    - link_text = 'Organize new event'
+  - else
+    - link_text = 'Organize your own event'
+
+  = link_to link_text, new_event_path, class: ['btn', 'btn-primary']
+

@@ -2,16 +2,23 @@ class EventsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
   before_action :set_event, only: [:show, :rsvp]
   before_action :set_owned_event, only: [:edit, :update, :destroy]
-  before_action :require_creator!, except: [:show, :index, :rsvp]
 
   def index
+    if params[:user_id]
+      @target_user = User.find(params[:user_id])
+    else
+      @target_user = User.default_host
+    end
+
     @current_scope = params[:scope] || "future"
+
+    @events = @target_user.managed_events
 
     case @current_scope
     when "past"
-      @events = Event.where("end_time < ?", Time.current)
+      @events = @events.where("end_time < ?", Time.current)
     else
-      @events = Event.where("end_time > ?", Time.current)
+      @events = @events.where("end_time > ?", Time.current)
     end
   end
 
@@ -84,11 +91,5 @@ class EventsController < ApplicationController
       :state,
       :zip_code
     ])
-  end
-
-  def require_creator!
-    unless current_user.creator?
-      redirect_back fallback_location: root_path, alert: "You're not allowed to manage events yet."
-    end
   end
 end

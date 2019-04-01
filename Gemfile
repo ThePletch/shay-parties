@@ -1,4 +1,4 @@
-ruby '2.5.0'
+ruby '2.5.1'
 
 source 'https://rubygems.org'
 
@@ -46,9 +46,6 @@ gem 'commontator', '~> 5.1.0'
 gem 'acts_as_votable'
 # markdown for descriptions
 gem 'redcarpet', '~> 3.4.0'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
