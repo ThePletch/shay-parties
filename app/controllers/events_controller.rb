@@ -24,7 +24,7 @@ class EventsController < ApplicationController
 
   def show
     if user_signed_in?
-      @attendance = @event.attendances.find_by(invitable_id: current_user.id) || @event.attendances.build
+      @attendance = @event.attendances.find_by(user_id: current_user.id) || @event.attendances.build
     end
 
     @event = EventDecorator.decorate(@event)
@@ -64,12 +64,12 @@ class EventsController < ApplicationController
   end
 
   def rsvp
-    if @event.event_members.where(invitee_id: current_user.id).any?
+    if @event.attendees.find_by(user_id: current_user.id).exists?
       redirect_back fallback_location: root_path, alert: "You've already RSVPed!"
       return
     end
 
-    @event.event_members.create(invitee: current_user)
+    @event.attendances.create(user: current_user)
   end
 
   private

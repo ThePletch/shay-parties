@@ -6,7 +6,7 @@ class AttendancesController < ApplicationController
   # POST /attendances
   # POST /attendances.json
   def create
-    @attendance = @event.attendances.build(invitable: current_user, rsvp_status: attendance_params[:rsvp_status])
+    @attendance = @event.attendances.build(user: current_user, rsvp_status: attendance_params[:rsvp_status])
 
     if @attendance.save
       redirect_to @event, notice: 'RSVP successful.'
@@ -16,7 +16,7 @@ class AttendancesController < ApplicationController
   end
 
   def update
-    event = @attendance.attendable
+    event = @attendance.event
 
     if attendance_params[:rsvp_status] == "No RSVP"
       result = @attendance.destroy

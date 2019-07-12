@@ -12,10 +12,10 @@
     = form.text_field :title, class: 'form-control'
   .form-group
     = form.label :start_time
-    = form.text_field :start_time, class: 'form-control datetimepicker'
+    = form.text_field :start_time, class: 'form-control datetimepicker', value: event.start_time_str
   .form-group
     = form.label :end_time
-    = form.text_field :end_time, class: 'form-control datetimepicker'
+    = form.text_field :end_time, class: 'form-control datetimepicker', value: event.end_time_str
   = form.fields_for :address do |a_form|
     = render "addresses/form", form: a_form
   .form-group
