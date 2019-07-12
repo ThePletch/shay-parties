@@ -23,7 +23,7 @@ The main thing keeping me on Facebook was its (admittedly quite good) events sys
 
 It's got everything you need for the basics of managing events with friends and loved ones, but intentionally doesn't have many features for people looking to make money off people showing up. I also wouldn't recommend it for events with more than a few dozen attendees - it's not built for interacting with the masses.
 
-I develop this project as a hobby because I feel like this is a service that should exist without any restrictions, but if you'd like to support the costs associated with running the site, you can [send me a donation](zombo.com). It's not tax deductible, since I'm just some guy, but it goes toward things like domain name costs, server space on Heroku, and whatever AWS decides to charge me for network I/O.
+I develop this project as a hobby because I feel like this is a service that should exist without any restrictions. There are some associated costs, but they're minimal (and will be minimal unless this really takes off). I might have a donation option here in the future to defray those costs.
 
 And finally, since this is a personal project being provided free of charge and managed in my spare time, I can't guarantee things like service availability, data integrity, or fast issue resolution when bugs occur. I make no guarantees or promises about the service, and don't assume any liability for loss or damage that occurs from failure or undesirable behavior. Use this service at your own risk.
 
