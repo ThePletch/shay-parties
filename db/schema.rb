@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_075041) do
+ActiveRecord::Schema.define(version: 2019_04_01_164020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,22 +27,19 @@ ActiveRecord::Schema.define(version: 2019_04_01_075041) do
     t.text "original_attributes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "event_id"
-    t.index ["event_id"], name: "index_addresses_on_event_id"
   end
 
   create_table "attendances", force: :cascade do |t|
-    t.string "attendable_type"
-    t.integer "attendable_id"
-    t.string "invitable_type"
-    t.integer "invitable_id"
+    t.integer "event_id"
+    t.integer "user_id"
     t.string "invitation_token"
     t.string "invitation_key"
     t.string "rsvp_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["attendable_type", "attendable_id"], name: "index_attendances_on_attendable_type_and_attendable_id"
-    t.index ["invitable_type", "invitable_id"], name: "index_attendances_on_invitable_type_and_invitable_id"
+    t.index ["event_id", "user_id"], name: "index_attendances_on_event_id_and_user_id", unique: true
+    t.index ["event_id"], name: "index_attendances_on_event_id"
+    t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
   create_table "commontator_comments", force: :cascade do |t|
@@ -92,6 +89,8 @@ ActiveRecord::Schema.define(version: 2019_04_01_075041) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.bigint "address_id"
+    t.index ["address_id"], name: "index_events_on_address_id"
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
@@ -166,4 +165,5 @@ ActiveRecord::Schema.define(version: 2019_04_01_075041) do
     t.index ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope"
   end
 
+  add_foreign_key "events", "addresses"
 end

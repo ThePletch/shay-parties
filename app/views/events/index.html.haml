@@ -2,9 +2,9 @@
 
 %h1.title
   - if current_user && current_user == @target_user
-    Events organized by you
+    Your events
   - else
-    = "Events organized by #{@target_user.name}"
+    = "Events from #{@target_user.name}"
   .btn-group{role: "group", "aria-label" => "event scopes"}
     = scope "Future", user_events_path(@target_user, scope: :future), :future
     = scope "Past", user_events_path(@target_user, scope: :past), :past

@@ -21,7 +21,7 @@
       .m-3= link_to "Sign in to RSVP", new_user_session_path
     = render 'events/rsvps', event: @event
     - if @event.polls.any?
-      %h3.mt-3 Polls
+      %hr
       - @event.polls.each do |poll|
         = render 'polls/poll', poll: poll
     - if @event.owned_by?(current_user)

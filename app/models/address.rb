@@ -1,11 +1,22 @@
 class Address < ApplicationRecord
-  belongs_to :event
+  has_many :events
+
+  # temporary shim to let us do the migration in place
+  def event
+    if self.respond_to?(:event_id)
+      Event.find(self.event_id)
+    else
+      events.first
+    end
+  end
 
   def first_line
-    "#{street}, #{street2}"
+    [street, street2].select(&:present?).join(", ")
   end
 
   def second_line
-    "#{city}, #{state} #{zip_code}"
+    city_state = [city, state].select(&:present?).join(", ")
+
+    [city_state, zip_code].select(&:present?).join(" ")
   end
 end

@@ -1,13 +1,14 @@
 class Event < ApplicationRecord
   include Ownable
 
-  acts_as_attendable :attendances, by: :users
+  has_many :attendances
+  has_many :attendees, through: :attendances, class_name: 'User'
 
   # events can be commented on
   acts_as_commontable dependent: :destroy
 
   has_many :polls, dependent: :destroy
-  has_one :address
+  belongs_to :address
 
   accepts_nested_attributes_for :address, update_only: true
 

@@ -1,5 +1,5 @@
 %nav.navbar.navbar-expand-md.navbar-light.bg-light{role: :navigation, 'aria-label': "main navigation"}
-  = link_to "Steve Parties", root_path, class: "navbar-brand"
+  = link_to "Parties For All", root_path, class: "navbar-brand"
   %button.navbar-toggler{type: 'button', data: {toggle: 'collapse', target: '#main-nav'}, aria_controls: 'main-nav', aria_expanded: false, aria_label: "Toggle navigation"}
     %span.navbar-toggler-icon
   .collapse.navbar-collapse#main-nav
@@ -12,3 +12,10 @@
         %li.nav-item= button_to "Log out", destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
       - else
         %li.nav-item= link_to "Log in", new_user_session_path, class: "nav-link"
+    %ul.navbar-nav.pull-right
+      %li.nav-item
+        .nav-link
+          A
+          = link_to "free service", "https://www.github.com/ThePletch/steve-parties"
+          by
+          = link_to "Steve Pletcher", "https://steve-pletcher.com"
