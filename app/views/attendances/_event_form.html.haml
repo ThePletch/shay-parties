@@ -1,7 +1,7 @@
 - form_object = attendance.persisted? ? [attendance] : [event, attendance]
 .row.my-2.mx-1
   = form_for form_object, html: {class: 'form-inline col p-0'} do |form|
-    = form.hidden_field :invitable_id, value: current_user.id
+    = form.hidden_field :user_id, value: current_user.id
     .input-group.col.p-0
       .input-group-prepend
         .input-group-text RSVP:
