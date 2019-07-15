@@ -5,9 +5,14 @@ class PollResponsesController < ApplicationController
   def update
     @response = current_user.poll_responses.find(params[:id])
     if @response.update(poll_response_params)
-      message = { notice: "Poll response updated." }
+      response_message = "Poll response updated."
+      if rsvp = create_rsvp_if_not_exists(@response)
+        response_message += " Automatically marked your RSVP as 'Maybe'."
+      end
+
+      message = {notice: response_message}
     else
-      message = { alert: "Failed to update response: #{@response.errors}" }
+      message = {alert: "Failed to update response: #{@response.errors}"}
     end
 
     redirect_to event_path(@response.event), message
@@ -18,7 +23,11 @@ class PollResponsesController < ApplicationController
     @response = @poll.responses.build(poll_response_params.merge(user: current_user))
 
     if @response.save
-      message = {notice: "Responded to poll."}
+      response_message = "Responded to poll."
+      if rsvp = create_rsvp_if_not_exists(@response)
+        response_message += " Automatically marked your RSVP as 'Maybe'."
+      end
+      message = {notice: response_message}
     else
       message = {alert: "Failed to respond to poll: #{@response.errors}"}
     end
@@ -30,6 +39,14 @@ class PollResponsesController < ApplicationController
 
   def poll_response_params
     params.require(:poll_response).permit(:choice, :example_response)
+  end
+
+  def create_rsvp_if_not_exists(response)
+    # we don't use a find_or_create_by so that this method returns nil if
+    # an rsvp already exists
+    unless rsvp = response.event.attendances.find_by(user_id: current_user.id)
+      response.event.attendances.create(user: current_user, rsvp_status: "Maybe")
+    end
   end
 
   def set_poll
