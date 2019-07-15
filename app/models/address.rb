@@ -10,6 +10,10 @@ class Address < ApplicationRecord
     end
   end
 
+  def to_s
+    [first_line, second_line].join("\n")
+  end
+
   def first_line
     [street, street2].select(&:present?).join(", ")
   end
