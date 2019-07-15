@@ -1,11 +1,24 @@
 - title @event.title
+
+- if @event.photo.attached?
+  .row
+    .hero
+      .hero-image
+        = image_tag url_for(@event.landing_page_photo)
+      .hero-title
+        %h1.title
+          = @event.title
+          - if @event.owned_by?(current_user)
+            %small
+              = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
+- else
+  %h1.title
+    = @event.title
+    - if @event.owned_by?(current_user)
+      %small
+        = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
 .row
   .col-md-6
-    %h1.title
-      = @event.title
-      - if @event.owned_by?(current_user)
-        %small
-          = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
     %em
       = @event.start_time
       \-
