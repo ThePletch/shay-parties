@@ -1,10 +1,15 @@
 class Event < ApplicationRecord
   include Ownable
 
+  LANDING_PAGE_PHOTO_HEIGHT = 400
+
   TIMESTAMP_FORMAT = '%m/%d/%Y %l:%M %P'
 
   has_many :attendances
   has_many :attendees, through: :attendances, class_name: 'User'
+
+  # photo for header of event, will be thumbnailed for index view
+  has_one_attached :photo
 
   # events can be commented on
   acts_as_commontable dependent: :destroy
@@ -19,6 +24,10 @@ class Event < ApplicationRecord
   validate :ends_after_it_starts
 
   validates_associated :address
+
+  def landing_page_photo
+    photo.variant(resize: '1700', combine_options: {gravity: 'North', crop: '1700x500+0+0'})
+  end
 
   def parse_time(timestamp)
     return timestamp if timestamp.is_a?(Time)

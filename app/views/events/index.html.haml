@@ -17,7 +17,7 @@
       %th
   %tbody
     - @events.each do |event|
-      %tr
+      %tr.event-row
         %td= link_to event.title, event, class: 'is-size-5 is-link'
         %td
           %ul.list-unstyled
