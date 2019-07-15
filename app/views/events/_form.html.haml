@@ -17,6 +17,7 @@
     = form.label :end_time
     = form.text_field :end_time, class: 'form-control datetimepicker', value: event.end_time_str
   = form.fields_for :address do |a_form|
+    %h3 Address
     = render "addresses/form", form: a_form
   .form-group
     = form.label :description

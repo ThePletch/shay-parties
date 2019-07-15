@@ -2,6 +2,7 @@ class EventsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
   before_action :set_event, only: [:show, :rsvp]
   before_action :set_owned_event, only: [:edit, :update, :destroy]
+  before_action :load_prior_addresses, only: [:edit, :new]
 
   def index
     if params[:user_id]
@@ -81,6 +82,10 @@ class EventsController < ApplicationController
   # ensures that the event being access is owned by the current user
   def set_owned_event
     @event = current_user.managed_events.find(params[:id])
+  end
+
+  def load_prior_addresses
+    @prior_addresses = current_user.addresses
   end
 
   def event_params
