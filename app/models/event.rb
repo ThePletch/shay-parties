@@ -32,7 +32,7 @@ class Event < ApplicationRecord
   def parse_time(timestamp)
     return timestamp if timestamp.is_a?(Time)
 
-    return Time.strptime(timestamp, TIMESTAMP_FORMAT)
+    return Time.zone.strptime(timestamp, TIMESTAMP_FORMAT)
   rescue ArgumentError
     nil
   end
