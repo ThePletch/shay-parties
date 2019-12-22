@@ -26,7 +26,7 @@ class Event < ApplicationRecord
   validates_associated :address
 
   def landing_page_photo
-    photo.variant(resize: '1700', combine_options: {gravity: 'North', crop: '1700x500+0+0'})
+    photo.variant(resize: '1900', combine_options: {gravity: 'North', crop: '1900x500+0+0'})
   end
 
   def parse_time(timestamp)

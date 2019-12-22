@@ -23,4 +23,10 @@ class Address < ApplicationRecord
 
     [city_state, zip_code].select(&:present?).join(" ")
   end
+
+  def ==(other_address)
+    %I[street street2 city state zip_code].all? do |address_attr|
+      self.send(address_attr) == other_address.send(address_attr)
+    end
+  end
 end
