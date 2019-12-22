@@ -10,6 +10,7 @@ libjbig-dev
 libjpeg-dev
 liblcms2-dev
 libltdl-dev
+liblzma-dev
 libpng-dev
 libsm-dev
 libtiff-dev
@@ -18,7 +19,7 @@ libwmf-dev
 libx11-dev
 libxext-dev
 libxml2-dev
-libxslt-dev
+patch
 perl
 sharutils
 transfig
