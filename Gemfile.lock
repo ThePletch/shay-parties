@@ -317,7 +317,6 @@ DEPENDENCIES
   devise
   draper
   factory_bot_rails (>= 4.8.0)
-  ffi
   haml-rails (~> 1.0.0)
   image_processing (~> 1.2)
   jbuilder (~> 2.5)
