@@ -14,7 +14,7 @@ gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 4.3.1'
 # Use SCSS for stylesheets
-gem 'sassc', '~> 2.0.1'
+gem 'sassc'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
@@ -39,9 +39,9 @@ gem 'jbuilder', '~> 2.5'
 # gem 'bcrypt', '~> 3.1.7'
 
 # accounts and authentication
-gem 'devise', '>= 4.6.0'
+gem 'devise'
 # comments
-gem 'commontator', '~> 5.1.0'
+gem 'commontator'
 gem 'acts_as_votable'
 # markdown for descriptions
 gem 'redcarpet', '~> 3.4.0'
@@ -50,6 +50,9 @@ gem 'aws-sdk-s3', require: false
 gem 'nokogiri'
 gem 'image_processing', '~> 1.2'
 gem "mini_magick"
+
+gem 'bcrypt'
+gem 'ffi'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -105,9 +105,9 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    commontator (5.1.0)
-      jquery-rails
+    commontator (6.1.1)
       rails (>= 5.0)
+      will_paginate
     concurrent-ruby (1.1.5)
     crass (1.0.5)
     database_cleaner (1.7.0)
@@ -258,9 +258,8 @@ GEM
       ffi (~> 1.9)
     ruby_parser (3.14.1)
       sexp_processor (~> 4.9)
-    sassc (2.0.1)
+    sassc (2.2.1)
       ffi (~> 1.9)
-      rake
     sassc-rails (2.1.2)
       railties (>= 4.0.0)
       sassc (>= 2.0)
@@ -297,6 +296,7 @@ GEM
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
+    will_paginate (3.2.1)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.2.2)
@@ -307,15 +307,17 @@ PLATFORMS
 DEPENDENCIES
   acts_as_votable
   aws-sdk-s3
+  bcrypt
   bootstrap (>= 4.3.1)
   byebug
   capybara
   coffee-rails (~> 4.2)
-  commontator (~> 5.1.0)
+  commontator
   database_cleaner
-  devise (>= 4.6.0)
+  devise
   draper
   factory_bot_rails (>= 4.8.0)
+  ffi
   haml-rails (~> 1.0.0)
   image_processing (~> 1.2)
   jbuilder (~> 2.5)
@@ -331,7 +333,7 @@ DEPENDENCIES
   rb-readline
   redcarpet (~> 3.4.0)
   rspec-rails
-  sassc (~> 2.0.1)
+  sassc
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
