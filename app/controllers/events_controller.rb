@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
   before_action :set_event, only: [:show, :rsvp]
   before_action :set_owned_event, only: [:edit, :update, :destroy]
-  before_action :load_prior_addresses, only: [:edit, :new]
+  before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
   def index
     if params[:user_id]
@@ -11,15 +11,17 @@ class EventsController < ApplicationController
       @target_user = User.default_host
     end
 
-    @current_scope = params[:scope] || "future"
+    if @target_user
+      @current_scope = params[:scope] || "future"
 
-    @events = @target_user.managed_events
+      @events = @target_user.managed_events
 
-    case @current_scope
-    when "past"
-      @events = @events.where("end_time < ?", Time.current)
-    else
-      @events = @events.where("end_time > ?", Time.current)
+      case @current_scope
+      when "past"
+        @events = @events.where("end_time < ?", Time.current)
+      else
+        @events = @events.where("end_time > ?", Time.current)
+      end
     end
   end
 
@@ -42,6 +44,7 @@ class EventsController < ApplicationController
   end
 
   def create
+    byebug
     @event = current_user.managed_events.build(event_params)
 
     if @event.save
@@ -89,7 +92,7 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:title, :start_time, :end_time, :description, :photo, address_attributes: [
+    params.require(:event).permit(:title, :start_time, :end_time, :description, :photo, :address_id, address_attributes: [
       :street,
       :street2,
       :city,

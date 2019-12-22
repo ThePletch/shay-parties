@@ -20,6 +20,7 @@
     = form.label :photo, "Header Photo"
     = form.file_field :photo
     %small.form-text.text-muted Photos are scaled and cropped to full-screen width, so wide photos with a 3:1 aspect ratio appear best.
+  = form.hidden_field :address_id, id: 'existing_address_id'
   = form.fields_for :address do |a_form|
     %h3 Address
     = render "addresses/form", form: a_form

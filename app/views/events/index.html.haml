@@ -1,39 +1,45 @@
-- title "Events from #{@target_user.name}"
+- if @target_user
+  - title "Events from #{@target_user.name}"
 
-%h1.title
-  - if current_user && current_user == @target_user
-    Your events
-  - else
-    = "Events from #{@target_user.name}"
-  .btn-group{role: "group", "aria-label" => "event scopes"}
-    = scope "Future", user_events_path(@target_user, scope: :future), :future
-    = scope "Past", user_events_path(@target_user, scope: :past), :past
-%table.table
-  %thead
-    %tr
-      %th Title
-      %th Attendees
-      %th Date
-      %th
-  %tbody
-    - @events.each do |event|
-      %tr.event-row
-        %td= link_to event.title, event, class: 'is-size-5 is-link'
-        %td
-          %ul.list-unstyled
-            %li= "Going: #{event.attendances.going.count}"
-            %li= "Maybe: #{event.attendances.maybe.count}"
-        %td= EventDecorator.decorate(event).start_date
-        - if event.owned_by?(current_user)
+  %h1.title
+    - if current_user && current_user == @target_user
+      Your events
+    - else
+      = "Events from #{@target_user.name}"
+    .btn-group{role: "group", "aria-label" => "event scopes"}
+      = scope "Future", user_events_path(@target_user, scope: :future), :future
+      = scope "Past", user_events_path(@target_user, scope: :past), :past
+  %table.table
+    %thead
+      %tr
+        %th Title
+        %th Attendees
+        %th Date
+        %th
+    %tbody
+      - @events.each do |event|
+        %tr.event-row
+          %td= link_to event.title, event, class: 'is-size-5 is-link'
           %td
-            .btn-group
-              = link_to 'Edit', edit_event_path(event), class: 'btn btn-primary btn-small'
-              = link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
-- if current_user
-  - if current_user == @target_user
-    - link_text = 'Organize new event'
-  - else
-    - link_text = 'Organize your own event'
+            %ul.list-unstyled
+              %li= "Going: #{event.attendances.going.count}"
+              %li= "Maybe: #{event.attendances.maybe.count}"
+          %td= EventDecorator.decorate(event).start_date
+          - if event.owned_by?(current_user)
+            %td
+              .btn-group
+                = link_to 'Edit', edit_event_path(event), class: 'btn btn-primary btn-small'
+                = link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
+  - if current_user
+    - if current_user == @target_user
+      - link_text = 'Organize new event'
+    - else
+      - link_text = 'Organize your own event'
 
-  = link_to link_text, new_event_path, class: ['btn', 'btn-primary']
+    = link_to link_text, new_event_path, class: ['btn', 'btn-primary']
+- else
+  - title "Home Page"
 
+  %h1.title Events Index
+
+  %p Once the first user (the "main user") has been created, their events will be listed here.

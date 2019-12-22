@@ -220,6 +220,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    rb-readline (0.5.5)
     redcarpet (3.4.0)
     request_store (1.4.1)
       rack (>= 1.4)
@@ -318,6 +319,7 @@ DEPENDENCIES
   puma (~> 3.0)
   rails (~> 5.2.0)
   rails-controller-testing
+  rb-readline
   redcarpet (~> 3.4.0)
   rspec-rails
   sassc (~> 2.0.1)

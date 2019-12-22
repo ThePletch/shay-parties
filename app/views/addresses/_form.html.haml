@@ -1,7 +1,7 @@
 - if @prior_addresses.any?
   .row.m-2
     = label_tag(nil, "Use a prior address:", class: 'mx-2 col-form-label col-form-label-sm')
-    = select_tag('prior_addresses', options_for_select(@prior_addresses.map{|a| [a.to_s, a.id, a.attributes] }), include_blank: '[select an address]', class: 'form-control form-control-sm col')
+    = select_tag('prior_addresses', options_for_select(@prior_addresses.map{|a| [a.to_s, a.id, a.attributes] }), include_blank: '[create a new address]', class: 'form-control form-control-sm col')
 
 .form-group
   = form.label :street
