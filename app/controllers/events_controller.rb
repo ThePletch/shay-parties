@@ -5,23 +5,24 @@ class EventsController < ApplicationController
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
   def index
+    # nothing to look up if there aren't any users, so we short circuit.
+    return if User.none?
+
     if params[:user_id]
       @target_user = User.find(params[:user_id])
     else
       @target_user = User.default_host
     end
 
-    if @target_user
-      @current_scope = params[:scope] || "future"
+    @current_scope = params[:scope] || "future"
 
-      @events = @target_user.managed_events
+    @events = @target_user.managed_events
 
-      case @current_scope
-      when "past"
-        @events = @events.where("end_time < ?", Time.current)
-      else
-        @events = @events.where("end_time > ?", Time.current)
-      end
+    case @current_scope
+    when "past"
+      @events = @events.where("end_time < ?", Time.current)
+    else
+      @events = @events.where("end_time > ?", Time.current)
     end
   end
 
