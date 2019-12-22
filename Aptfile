@@ -18,6 +18,7 @@ libwebp-dev
 libwmf-dev
 libx11-dev
 libxext-dev
+libxml2-dev
 perl
 sharutils
 transfig
