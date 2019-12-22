@@ -322,6 +322,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   mini_magick
+  nokogiri
   pg
   poltergeist
   puma (~> 4.3.1)
