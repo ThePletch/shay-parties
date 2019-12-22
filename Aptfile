@@ -21,6 +21,7 @@ libxext-dev
 libxml2-dev
 patch
 perl
+ruby-dev
 sharutils
 transfig
 x11proto-core-dev
