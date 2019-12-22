@@ -3,6 +3,7 @@ g++
 gsfonts
 libbz2-dev
 libexif-dev
+libffi-dev
 libfreetype6-dev
 libice-dev
 libgmp-dev
