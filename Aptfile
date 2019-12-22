@@ -6,6 +6,7 @@ libbz2-dev
 libexif-dev
 libfreetype6-dev
 libice-dev
+libgmp-dev
 libjbig-dev
 libjpeg-dev
 liblcms2-dev
@@ -18,7 +19,6 @@ libwebp-dev
 libwmf-dev
 libx11-dev
 libxext-dev
-libxml2-dev
 patch
 perl
 ruby-dev
