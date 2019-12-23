@@ -2,18 +2,15 @@
 - # thread
 - # user
 - # per_page
-- hidden_class = @new_comment.nil? ? ' commontator_hidden' : ''
-.thread_reply{id: "thread_#{thread.id}_reply"}
+.reply{id: "commontator-thread-#{thread.id}-reply"}
   - if thread.is_closed?
     %p= t 'commontator.thread.status.cannot_post'
   - elsif !user
-    %p
-      = t 'commontator.require_login'
-      \.
+    %p= t 'commontator.require_login'
   - else
-    %div{id: "thread_#{thread.id}_new_comment_form_div"}
-      - unless @new_comment.nil?
-        = render partial: 'commontator/comments/form', locals: { comment: @new_comment, thread: thread, per_page: per_page }
-    - if @new_comment.nil?
-      %div{id: "thread_#{thread.id}_new_comment_link_div"}
-        = link_to t('commontator.comment.actions.new'), commontator.new_thread_comment_path(thread, per_page: per_page), remote: true, class: 'btn btn-primary m-2'
+    - if @commontator_new_comment.nil?
+      .new-comment{id: "commontator-thread-#{thread.id}-new-comment-link"}
+        = link_to t('commontator.comment.actions.new'), commontator.new_thread_comment_path(thread), remote: true, css_class: 'btn btn-primary m-2'
+    %div{class: "new-comment#{@commontator_new_comment.nil? ? ' hidden' : ''}", id: "commontator-thread-#{thread.id}-new-comment"}
+      - unless @commontator_new_comment.nil?
+        = render partial: 'commontator/comments/form', locals: {comment: @commontator_new_comment, thread: thread}
