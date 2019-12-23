@@ -1,19 +1,31 @@
-- per_page ||= nil
-- thread ||= nil
+- # Views that use this partial must provide the following variable:
+- # comment
+- #
+- new_record = comment.new_record?
+- # Optionally, they can also supply the following variables:
+- thread ||= new_record ? comment.thread : nil
 - no_remote ||= false
 - config = comment.thread.config
 - if comment.errors.any?
-  .comment_error_explanation
-    %h3= t "commontator.comment.errors.#{comment.id.blank? ? 'create' : 'update'}"
+  .error-explanation
+    %h3= t "commontator.comment.errors.#{new_record ? 'create' : 'update'}"
     %ul
       - comment.errors.full_messages.each do |msg|
         %li= msg
-= form_for([commontator, thread, comment], |
-  remote: !no_remote) do |f|               |
-  = hidden_field_tag :per_page, per_page
-  .comment_form_field
-    = f.text_area :body, class: 'form-control', rows: '7'
-    = javascript_tag('Commontator.initMentions()') if Commontator.mentions_enabled
-  .comment_form_actions
-    = f.submit t("commontator.comment.actions.#{comment.id.blank? ? 'create' : 'update'}"), class: 'btn btn-primary'
-    = f.submit t('commontator.comment.actions.cancel'), name: 'cancel', class: 'btn btn-default'
+= form_for([commontator, thread, comment], remote: !no_remote) do |form|
+  = form.hidden_field :parent_id
+  - unless comment.parent.nil?
+    .replying
+      = t('commontator.comment.status.replying',                            |
+        creator_name: Commontator.commontator_name(comment.parent.creator)) |
+  .field
+    = form.text_area :body, rows: '7', id: new_record ?                                       |
+      comment.parent.nil? ? "commontator-thread-#{@commontator_thread.id}-new-comment-body" : |
+                            "commontator-comment-#{comment.parent.id}-reply" :                |
+      "commontator-comment-#{comment.id}-edit-body", class: 'form-control'                    |
+    = javascript_tag('Commontator.initMentions();') if config.mentions_enabled
+  .submit
+    = form.submit t("commontator.comment.actions.#{new_record ? 'create' : 'update'}"), class: 'btn btn-primary'
+    = form.submit(                                                                        |
+        t('commontator.comment.actions.cancel'), name: 'cancel', class: 'btn btn-default' |
+      ) unless config.new_comment_style == :t && new_record && comment.parent.nil?        |
