@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_23_084100) do
+ActiveRecord::Schema.define(version: 2019_12_28_214007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 2019_12_23_084100) do
     t.bigint "poll_id"
     t.bigint "user_id"
     t.string "choice"
-    t.boolean "example_response"
+    t.boolean "example_response", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["poll_id"], name: "index_poll_responses_on_poll_id"

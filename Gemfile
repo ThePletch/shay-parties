@@ -47,7 +47,6 @@ gem 'acts_as_votable'
 gem 'redcarpet', '~> 3.4.0'
 
 gem 'aws-sdk-s3', require: false
-# gem 'nokogiri'
 gem 'image_processing', '~> 1.2'
 
 group :development, :test do
