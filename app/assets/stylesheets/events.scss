@@ -27,3 +27,15 @@
     position: relative;
     top: -75px;
 }
+
+.poll-response-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #bbf;
+}
+
+.poll-response-label {
+    position: relative;
+}

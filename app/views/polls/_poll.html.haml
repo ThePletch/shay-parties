@@ -6,11 +6,21 @@
   %ul.list-group
     - user_response = poll.response_for_user(current_user)
     - form_object = user_response.persisted? ? [user_response] : [poll, user_response]
+    - total_response_count = poll.responses.non_example.count
     = form_for form_object do |f|
+      = f.hidden_field :example_response, value: false
       - poll.responses_and_counts.each do |response, count|
-        %li.list-group-item
-          = f.radio_button :choice, response
-          = response
-          - if count > 0
-            = "(#{count})"
+        - if total_response_count.zero?
+          - percentage = 0
+        - else
+          - # multiply by 0.95 so the bar never takes up the whole line
+          - percentage = ((100 * count / total_response_count) * 0.95).round(0)
+
+        %li.poll-response.list-group-item
+          .poll-response-bar{role: 'progressbar', style: "width: #{percentage}%;"}
+          %span.poll-response-label
+            = f.radio_button :choice, response
+            = response
+            - if count > 0
+              = "(#{count})"
       = f.submit "Answer", class: 'btn btn-secondary btn-block'
