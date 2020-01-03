@@ -63,3 +63,4 @@ Running the tests is as simple as `bundle exec rspec`.
 ### Running your own instance of Parties for All
 
 If you want to host your own instance for privacy reasons (or whatever other reasons), this app works with Heroku out of the box. Just point it at either this repo directly or your personal fork of it. You'll need to attach (at minimum) a Postgres database add-on. I'd recommend also attaching a logging add-on of some kind.
+
