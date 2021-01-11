@@ -44,7 +44,7 @@ gem 'devise'
 gem 'commontator'
 gem 'acts_as_votable'
 # markdown for descriptions
-gem 'redcarpet', '~> 3.4.0'
+gem 'redcarpet', '~> 3.5.1'
 
 gem 'aws-sdk-s3', require: false
 gem 'image_processing', '~> 1.2'
