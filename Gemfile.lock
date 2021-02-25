@@ -230,7 +230,7 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     rb-readline (0.5.5)
-    redcarpet (3.4.0)
+    redcarpet (3.5.1)
     regexp_parser (1.6.0)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -327,7 +327,7 @@ DEPENDENCIES
   rails (~> 6.0.0)
   rails-controller-testing
   rb-readline
-  redcarpet (~> 3.4.0)
+  redcarpet (~> 3.5.1)
   rspec-rails
   sassc
   spring
