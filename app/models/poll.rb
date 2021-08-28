@@ -3,7 +3,6 @@ class Poll < ApplicationRecord
 
   belongs_to :event
   has_many :responses, class_name: "PollResponse", dependent: :destroy
-  has_many :users, through: :responses
 
   accepts_nested_attributes_for :responses, allow_destroy: true
 
@@ -13,9 +12,9 @@ class Poll < ApplicationRecord
     end
   end
 
-  def response_for_user(user)
-    return PollResponse.new if user.nil?
+  def response_for_respondent(respondent)
+    return PollResponse.new if respondent.nil?
 
-    responses.find_by(user: user) || PollResponse.new
+    responses.find_by(respondent: respondent) || PollResponse.new
   end
 end

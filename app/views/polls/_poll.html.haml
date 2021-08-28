@@ -3,11 +3,21 @@
     = poll.question
     - if poll.owned_by?(current_user)
       %small= link_to "Edit", edit_poll_path(poll), class: 'text-muted'
+  - if respondent.nil?
+    %em.text-muted
+      You need to
+      = link_to "sign in", new_user_session_path
+      or RSVP as a guest to answer polls.
   %ul.list-group
-    - user_response = poll.response_for_user(current_user)
-    - form_object = user_response.persisted? ? [user_response] : [poll, user_response]
+    - poll_response = poll.response_for_respondent(respondent)
+    - form_object = poll_response.persisted? ? [poll_response] : [poll, poll_response]
     - total_response_count = poll.responses.non_example.count
     = form_for form_object do |f|
+      - if current_user.nil?
+        = hidden_field_tag :guest_guid, params[:guest_guid]
+      = fields_for :respondent do |respondent_form|
+        = respondent_form.hidden_field :name
+        = respondent_form.hidden_field :email
       = f.hidden_field :example_response, value: false
       - poll.responses_and_counts.each do |response, count|
         - if total_response_count.zero?
@@ -19,8 +29,13 @@
         %li.poll-response.list-group-item
           .poll-response-bar{role: 'progressbar', style: "width: #{percentage}%;"}
           %span.poll-response-label
-            = f.radio_button :choice, response
+            = f.radio_button :choice, response, disabled: respondent.nil?
             = response
             - if count > 0
               = "(#{count})"
-      = f.submit "Answer", class: 'btn btn-secondary btn-block'
+      - if poll_response.persisted?
+        = f.submit "Update Answer", class: 'btn btn-secondary btn-block'
+      - else
+        = f.submit "Answer", class: 'btn btn-secondary btn-block'
+    - if poll_response.persisted?
+      = button_to "Clear answer", poll_response_path(poll_response, guest_guid: params[:guest_guid]), method: :delete, class: 'btn btn-danger btn-block'

@@ -1,5 +1,5 @@
 class PollResponse < ApplicationRecord
-  belongs_to :user
+  belongs_to :respondent, polymorphic: true
   belongs_to :poll
   has_one :event, through: :poll
 
