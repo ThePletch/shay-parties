@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :index]
-  before_action :set_event, only: [:show, :rsvp]
+  before_action :authenticate_user!, except: [:show, :ical, :index]
+  before_action :set_event, only: [:show, :ical]
   before_action :set_owned_event, only: [:edit, :update, :destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
@@ -41,6 +41,11 @@ class EventsController < ApplicationController
     commontator_thread_show(@event)
   end
 
+  # get an ical event version of this event
+  def ical
+    send_data @event.icalendar(event_path(@event)).to_ical, type: 'text/calendar', filename: "#{@event.title}.ics"
+  end
+
   def new
     @event = Event.new
     @event.build_address if @event.address.nil?
@@ -71,15 +76,6 @@ class EventsController < ApplicationController
   def destroy
     @event.destroy
     redirect_to events_url, notice: 'Event was successfully destroyed.'
-  end
-
-  def rsvp
-    if @event.attendees.find_by(user_id: current_user.id).exists?
-      redirect_back fallback_location: root_path, alert: "You've already RSVPed!"
-      return
-    end
-
-    @event.attendances.create(user: current_user)
   end
 
   private

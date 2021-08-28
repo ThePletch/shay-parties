@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   resources :events, shallow: true do
     member do
-      put 'rsvp'
+      get 'ical'
     end
 
     resources :attendances, only: [:create, :update, :destroy]
