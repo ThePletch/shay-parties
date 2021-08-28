@@ -9,7 +9,7 @@
     .btn-group{role: "group", "aria-label" => "event scopes"}
       = scope "Future", user_events_path(@target_user, scope: :future), :future
       = scope "Past", user_events_path(@target_user, scope: :past), :past
-  %table.table
+  %table.table.table-sm
     %thead
       %tr
         %th Title
