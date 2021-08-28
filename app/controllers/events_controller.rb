@@ -43,7 +43,7 @@ class EventsController < ApplicationController
 
   # get an ical event version of this event
   def ical
-    send_data @event.icalendar(event_path(@event)).to_ical, type: 'text/calendar', filename: "#{@event.title}.ics"
+    send_data @event.icalendar(event_url(@event)).to_ical, type: 'text/calendar', filename: "#{@event.title}.ics"
   end
 
   def new
