@@ -16,7 +16,7 @@ class User < ApplicationRecord
   has_many :rsvped_events, through: :attendances, class_name: "Event"
   has_many :attendances, as: :attendee, dependent: :destroy
   has_many :poll_responses, dependent: :destroy
-  has_many :polls, through: :poll_responses
+  has_many :polls, through: :managed_events
   has_many :mailing_lists, dependent: :destroy
 
   validate :only_one_default_host
