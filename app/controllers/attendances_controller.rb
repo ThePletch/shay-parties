@@ -30,12 +30,11 @@ class AttendancesController < ApplicationController
 
   def destroy
     if @attendance.destroy
-      message = {notice: 'RSVP destroyed.'}
+      redirect_to event_path(@attendance.event), {notice: 'RSVP destroyed.'}
     else
-      message = {alert: 'Failed to destroy RSVP.'}
+      redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), {alert: 'Failed to destroy RSVP.'}
     end
 
-    redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), message
   end
 
 
@@ -83,7 +82,7 @@ class AttendancesController < ApplicationController
 
   def require_own_attendance_or_event
     if not (@attendance.attendee == @user or @attendance.event.owned_by?(current_user))
-      redirect_to event_path(@event), alert: "You can't remove an RSVP unless it's your RSVP or your event."
+      redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), alert: "You can't remove an RSVP unless it's your RSVP or your event."
     end
   end
 

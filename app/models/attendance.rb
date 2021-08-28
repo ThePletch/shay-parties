@@ -12,6 +12,7 @@ class Attendance < ActiveRecord::Base
   scope :maybe, -> { where(rsvp_status: "Maybe") }
   scope :not_going, -> { where(rsvp_status: "No") }
 
+  validates :event, presence: true
   validates :rsvp_status, inclusion: {in: RSVP_TYPES, message: "Not a valid RSVP."}
   validates_associated :attendee
 
