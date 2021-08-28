@@ -5,7 +5,7 @@ class Event < ApplicationRecord
 
   TIMESTAMP_FORMAT = '%m/%d/%Y %l:%M %P'
 
-  has_many :attendances
+  has_many :attendances, dependent: :destroy
   has_many :attendees, through: :attendances, class_name: 'User'
 
   # photo for header of event, will be thumbnailed for index view

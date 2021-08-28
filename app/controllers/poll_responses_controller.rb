@@ -1,6 +1,6 @@
 class PollResponsesController < ApplicationController
-  before_action :set_poll, only: :create
   before_action :authenticate_user!
+  before_action :set_poll, only: :create
 
   def update
     @response = current_user.poll_responses.find(params[:id])
@@ -44,8 +44,8 @@ class PollResponsesController < ApplicationController
   def create_rsvp_if_not_exists(response)
     # we don't use a find_or_create_by so that this method returns nil if
     # an rsvp already exists
-    unless rsvp = response.event.attendances.find_by(user_id: current_user.id)
-      response.event.attendances.create(user: current_user, rsvp_status: "Maybe")
+    unless rsvp = response.event.attendances.find_by(attendee_id: current_user.id)
+      response.event.attendances.create(attendee: current_user, rsvp_status: "Maybe")
     end
   end
 

@@ -9,15 +9,15 @@ class User < ApplicationRecord
   acts_as_voter
 
   # events the user owns
-  has_many :managed_events, class_name: "Event"
+  has_many :managed_events, class_name: "Event", dependent: :destroy
   has_many :addresses, -> { distinct }, through: :managed_events
   # events the user has rsvped to - some of these may be 'no' rsvps,
   # hence not calling this 'attended_events'
   has_many :rsvped_events, through: :attendances, class_name: "Event"
-  has_many :attendances
-  has_many :poll_responses
-  has_many :polls
-  has_many :mailing_lists
+  has_many :attendances, as: :attendee, dependent: :destroy
+  has_many :poll_responses, dependent: :destroy
+  has_many :polls, through: :managed_events
+  has_many :mailing_lists, dependent: :destroy
 
   validate :only_one_default_host
 

@@ -3,19 +3,138 @@ require 'rails_helper'
 describe AttendancesController do
 
   describe "POST create" do
-    it "redirects to the login page when unauthenticated"
+    before do
+      @event = FactoryBot.create(:event)
+    end
+
+    context "when unauthenticated" do
+      it "rejects requests with no guest information" do
+        post :create, params: {event_id: @event.id, attendance: {rsvp_status: "Yes"}, attendee: {name: nil, email: nil}}
+        expect(response).to redirect_to event_path(@event)
+        expect(@event.attendances).to be_empty
+      end
+
+      it "registers a guest attendance when info is provided" do
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {rsvp_status: "Yes"},
+          attendee: {name: "Steve", email: "steve@steve.steve"}}
+        expect(@event.attendances.count).to eq 1
+        guest = @event.attendances.first.attendee
+        expect(guest).to be_a Guest
+        expect(guest.name).to eq "Steve"
+        expect(guest.email).to eq "steve@steve.steve"
+        expect(response).to redirect_to(event_path(@event, guest_guid: guest.guid))
+      end
+    end
+
     context "with a logged in user" do
-      it "creates an attendance"
-      it "updates the existing attendance for an event if the user has one"
+      before do
+        @user = FactoryBot.create(:user)
+        sign_in @user
+      end
+
+      it "creates an attendance" do
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {rsvp_status: "Yes"}
+        }
+        expect(@event.attendances.count).to eq 1
+        user = @event.attendances.first.attendee
+        expect(user).to be_a User
+        expect(user).to eq @user
+        expect(response).to redirect_to(event_path(@event))
+      end
     end
   end
 
   describe "PATCH update" do
-    it "redirects to the login page when unauthenticated"
+    before do
+      @event = FactoryBot.create(:event)
+    end
+
+    context "unauthenticated" do
+      it "redirects to the login page when no guest guid" do
+        attendance = FactoryBot.create(:attendance, event: @event)
+        patch :update, params: {id: attendance.id, attendance: {rsvp_status: 'No'}}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "redirects to the login page when invalid guest guid" do
+        attendance = FactoryBot.create(:attendance, event: @event)
+        patch :update, params: {id: attendance.id, guest_guid: SecureRandom.uuid, attendance: {rsvp_status: 'No'}}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      context "with a valid guest guid" do
+        before do
+          @attendance = FactoryBot.create(:guest_attendance, event: @event, rsvp_status: 'Yes')
+          @guest = @attendance.attendee
+        end
+
+        it "deletes the rsvp and guest if status is 'no rsvp'" do
+          patch :update, params: {
+            id: @attendance.id,
+            guest_guid: @guest.guid,
+            attendance: {rsvp_status: 'No RSVP'}
+          }
+          expect(response).to redirect_to(event_path(@event))
+          expect(Attendance.find_by(id: @attendance.id)).to be_nil
+          expect(Guest.find_by(id: @guest.id)).to be_nil
+        end
+
+        it "updates the rsvp status" do
+          patch :update, params: {
+            id: @attendance.id,
+            guest_guid: @guest.guid,
+            attendance: {rsvp_status: 'Maybe'}
+          }
+          expect(response).to redirect_to(event_path(@event, guest_guid: @guest.guid))
+          expect(@attendance.reload.rsvp_status).to eq 'Maybe'
+        end
+
+        it "does not alter other RSVPs for guests or users" do
+          some_other_attendance = FactoryBot.create(:attendance, event: @event, rsvp_status: 'Yes')
+          some_guest_attendance = FactoryBot.create(:guest_attendance, event: @event, rsvp_status: 'Yes')
+          patch :update, params: {
+            id: @attendance.id,
+            guest_guid: @guest.guid,
+            attendance: {rsvp_status: 'Maybe'}
+          }
+          expect(response).to redirect_to(event_path(@event, guest_guid: @guest.guid))
+          expect(@attendance.reload.rsvp_status).to eq 'Maybe'
+          expect(some_other_attendance.reload.rsvp_status).to eq 'Yes'
+          expect(some_guest_attendance.reload.rsvp_status).to eq 'Yes'
+        end
+      end
+    end
+
     context "with a logged in user" do
-      it "deletes the rsvp if status is 'no rsvp'"
-      it "updates the rsvp status"
-      it "creates a new rsvp if the target attendance doesn't exist"
+      before do
+        @attendance = FactoryBot.create(:attendance, event: @event)
+        @user = @attendance.attendee
+        sign_in @user
+      end
+
+      it "deletes the rsvp if status is 'no rsvp'" do
+        patch :update, params: {
+          id: @attendance.id,
+          attendance: {rsvp_status: 'No RSVP'}
+        }
+        expect(response).to redirect_to(event_path(@event))
+        expect(Attendance.find_by(id: @attendance.id)).to be_nil
+        # make sure it doesn't delete the user, since there's logic to delete guests
+        expect(User.find_by(id: @user.id)).to eq @user
+      end
+
+      it "updates the rsvp status" do
+        patch :update, params: {
+          id: @attendance.id,
+          attendance: {rsvp_status: 'Maybe'}
+        }
+        expect(response).to redirect_to(event_path(@event))
+        expect(@attendance.reload.rsvp_status).to eq 'Maybe'
+      end
     end
   end
 

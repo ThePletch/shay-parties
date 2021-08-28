@@ -51,35 +51,115 @@ describe EventsController do
   end
 
   describe "GET show" do
-    it "finds an event"
-    it "errors if there is no such event"
+    it "finds an event" do
+      event = FactoryBot.create(:event)
+      get :show, params: {id: event.id}
+      expect(assigns(:event)).to eq event
+    end
+
+    it "errors if there is no such event" do
+      expect { get :show, params: {id: 999999} }.to raise_error(ActiveRecord::RecordNotFound)
+    end
   end
 
   describe "GET edit" do
-    # this will change when we switch to scoped indexes
-    it "redirects to the index page if the user can't make events"
-    it "redirects to the index page if the user doesn't own the event"
-    it "finds an event and builds an address for it if it doesn't have one"
+    it "errors if the user doesn't own the event" do
+      event = FactoryBot.create(:event)
+      user = FactoryBot.create(:user)
+      sign_in user
+
+      expect { get :edit, params: {id: event.id} }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "finds an event and builds an address for it if it doesn't have one" do
+      event = FactoryBot.create(:event, address: nil)
+      sign_in event.owner
+
+      get :edit, params: {id: event.id}
+      expect(assigns(:event)).to eq event
+      expect(assigns(:event).address).to be_a_new(Address)
+    end
   end
 
   describe "POST create" do
-    # this will change when we switch to scoped indexes
-    it "redirects to the index page if the user can't make events"
-    it "creates the event"
-    # validation spec, specific validation being tested is arbitrary
-    it "does not create events that start after they end"
+    it "redirects to the login page if unauthenticated" do
+      post :create, params: {event: {}}
+      expect(response).to redirect_to(new_user_session_path)
+    end
+
+    context "authenticated" do
+      before do
+        @user = FactoryBot.create(:user)
+        sign_in @user
+      end
+
+      it "creates the event" do
+        start_time = 10.minutes.ago
+        post :create, params: {event: {
+          title: 'foobar',
+          start_time: start_time.strftime(Event::TIMESTAMP_FORMAT),
+          end_time: Time.current.strftime(Event::TIMESTAMP_FORMAT),
+        }}
+        expect(response).to redirect_to(event_path(assigns(:event)))
+        expect(assigns(:event)).to be_persisted
+        expect(assigns(:event).title).to eq 'foobar'
+        expect(assigns(:event).start_time).to be_within(1.minute).of(start_time)
+      end
+
+      # validation spec, specific validation being tested is arbitrary
+      it "does not create events that start after they end" do
+        end_time = 10.minutes.ago
+        start_time = Time.current
+        post :create, params: {event: {
+          title: 'foobar',
+          start_time: start_time.strftime(Event::TIMESTAMP_FORMAT),
+          end_time: end_time.strftime(Event::TIMESTAMP_FORMAT),
+        }}
+
+        expect(Event.all).to be_empty
+        expect(assigns(:event)).not_to be_persisted
+        expect(assigns(:event)).not_to be_valid
+      end
+    end
   end
 
   describe "PATCH update" do
-    # this will change when we switch to scoped indexes
-    it "redirects to the index page if the user can't make events"
-    it "redirects to the index page if the user doesn't own the event"
-    it "updates the event"
+    it "errors if the user doesn't own the event" do
+      event = FactoryBot.create(:event)
+      user = FactoryBot.create(:user)
+      sign_in user
+
+      expect { patch :update, params: {id: event.id} }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "updates the event" do
+      event = FactoryBot.create(:event)
+      new_title = event.title + " AAAAA"
+      sign_in event.owner
+      patch :update, params: {id: event.id, event: {
+        title: new_title
+      }}
+
+      expect(event.reload.title).to eq new_title
+    end
   end
 
   describe "DELETE destroy" do
-    it "redirects to the index page if the user doesn't own the event"
-    it "deletes the event"
+    it "errors if the user doesn't own the event" do
+      event = FactoryBot.create(:event)
+      user = FactoryBot.create(:user)
+      sign_in user
+
+      expect { delete :destroy, params: {id: event.id} }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "deletes the event" do
+      event = FactoryBot.create(:event)
+      sign_in event.owner
+      delete :destroy, params: {id: event.id}
+
+      expect(Event.find_by(id: event.id)).to be_nil
+    end
   end
 
 end

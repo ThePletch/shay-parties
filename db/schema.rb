@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_28_214007) do
+ActiveRecord::Schema.define(version: 2021_08_28_144330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,15 +52,16 @@ ActiveRecord::Schema.define(version: 2019_12_28_214007) do
 
   create_table "attendances", force: :cascade do |t|
     t.integer "event_id"
-    t.integer "user_id"
+    t.integer "attendee_id"
     t.string "invitation_token"
     t.string "invitation_key"
     t.string "rsvp_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["event_id", "user_id"], name: "index_attendances_on_event_id_and_user_id", unique: true
+    t.string "attendee_type", null: false
+    t.index ["attendee_id"], name: "index_attendances_on_attendee_id"
+    t.index ["event_id", "attendee_id"], name: "index_attendances_on_event_id_and_attendee_id", unique: true
     t.index ["event_id"], name: "index_attendances_on_event_id"
-    t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
   create_table "commontator_comments", force: :cascade do |t|
@@ -115,6 +116,14 @@ ActiveRecord::Schema.define(version: 2019_12_28_214007) do
     t.bigint "address_id"
     t.index ["address_id"], name: "index_events_on_address_id"
     t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
+  create_table "guests", force: :cascade do |t|
+    t.string "guid"
+    t.string "name"
+    t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "mailing_list_emails", force: :cascade do |t|
