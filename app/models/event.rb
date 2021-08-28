@@ -53,6 +53,22 @@ class Event < ApplicationRecord
     end_time.try(:strftime, TIMESTAMP_FORMAT)
   end
 
+  def icalendar(event_url)
+    cal = Icalendar::Calendar.new
+    cal.prodid = "-//#{self.owner.name}//NONSGML ExportToCalendar//EN"
+    cal.version = '2.0'
+    cal.event do |e|
+      e.dtstart = Icalendar::Values::DateTime.new(self.start_time)
+      e.dtend = Icalendar::Values::DateTime.new(self.end_time)
+      e.summary = self.title
+      e.description = self.description
+      e.url = event_url
+      e.location = self.address.to_s
+    end
+
+    return cal
+  end
+
   private
 
   def ends_after_it_starts
