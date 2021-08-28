@@ -1,1 +1,10 @@
-%li.list-group-item= attendance.attendee.name
+%li.list-group-item
+    %span= attendance.attendee.name
+    - if attendance.attendee.is_a?(Guest)
+        %small.text-muted (Guest account)
+    - if attendance.event.owned_by?(current_user)
+        .float-right
+            %em= attendance.attendee.email
+            = button_to "X", attendance_path(attendance), method: :delete, data: {confirm: "Remove the RSVP and poll answers for #{attendance.attendee.name}?"}, class: 'btn btn-sm btn-link text-danger ml-2 p-0', form_class: 'd-inline'
+    - else
+        %em.float-right.text-muted.small Email hidden from guests

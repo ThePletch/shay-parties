@@ -29,4 +29,14 @@ describe Attendance do
     expect(rsvp.attendee).to be_a Guest
   end
 
+  it "deletes poll responses for its event when destroyed" do
+    user = FactoryBot.create(:user)
+    rsvp = FactoryBot.create(:attendance, attendee: user)
+    poll = FactoryBot.create(:poll, event: rsvp.event)
+    response = FactoryBot.create(:poll_response, poll: poll, respondent: user)
+
+    rsvp.destroy!
+
+    expect(PollResponse.find_by(id: response.id)).to be_nil
+  end
 end

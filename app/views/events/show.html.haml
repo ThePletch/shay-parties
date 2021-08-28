@@ -28,12 +28,12 @@
 
     .content= @event.description
   .col-md-6
-    = render 'attendances/event_form', attendance: @attendance, event: @event, user: current_user
+    = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
     = render 'events/rsvps', event: @event
     - if @event.polls.any?
       %hr
       - @event.polls.each do |poll|
-        = render 'polls/poll', poll: poll, user: current_user
+        = render 'polls/poll', poll: poll, respondent: @attendee
     - if @event.owned_by?(current_user)
       = link_to "Add Poll", new_event_poll_path(@event), class: 'btn btn-primary btn-sm my-2'
 %hr

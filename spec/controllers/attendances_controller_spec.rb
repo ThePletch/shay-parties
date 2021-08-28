@@ -138,4 +138,87 @@ describe AttendancesController do
     end
   end
 
+  describe "DELETE destroy" do
+    before do
+      @event = FactoryBot.create(:event)
+    end
+
+    context "unauthenticated" do
+      it "redirects to the login page when no guest guid" do
+        attendance = FactoryBot.create(:attendance, event: @event)
+        delete :destroy, params: {id: attendance.id}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "redirects to the login page when invalid guest guid" do
+        attendance = FactoryBot.create(:attendance, event: @event)
+        delete :destroy, params: {id: attendance.id, guest_guid: SecureRandom.uuid}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      context "with a valid guest guid" do
+        before do
+          @attendance = FactoryBot.create(:guest_attendance, event: @event, rsvp_status: 'Yes')
+          @guest = @attendance.attendee
+        end
+
+        it "redirects to the event page if the guest does not own the rsvp" do
+          some_other_attendance = FactoryBot.create(:guest_attendance, event: @event)
+          delete :destroy, params: {
+            id: some_other_attendance.id,
+            guest_guid: @guest.guid
+          }
+          expect(response).to redirect_to(event_path(@event, guest_guid: @guest.guid))
+          expect(Attendance.find_by(id: some_other_attendance.id)).to be_persisted
+        end
+
+        it "deletes the rsvp" do
+          delete :destroy, params: {
+            id: @attendance.id,
+            guest_guid: @guest.guid
+          }
+          expect(response).to redirect_to(event_path(@event))
+          expect(Attendance.find_by(id: @attendance.id)).to be_nil
+          expect(Guest.find_by(id: @guest.id)).to be_nil
+        end
+      end
+
+      context "with a logged in user" do
+        before do
+          @user = FactoryBot.create(:user)
+          sign_in @user
+        end
+
+        it "redirects to the event page if the user does not own the rsvp" do
+          some_other_attendance = FactoryBot.create(:attendance, event: @event)
+          delete :destroy, params: {
+            id: some_other_attendance.id
+          }
+          expect(response).to redirect_to(event_path(@event))
+          expect(Attendance.find_by(id: some_other_attendance.id)).to be_persisted
+        end
+
+        it "deletes the rsvp if the user owns the rsvp" do
+          attendance = FactoryBot.create(:attendance, attendee: @user, event: @event)
+          delete :destroy, params: {
+            id: attendance.id
+          }
+          expect(response).to redirect_to(event_path(@event))
+          expect(Attendance.find_by(id: attendance.id)).to be_nil
+        end
+
+        it "deletes the rsvp if the user owns the event" do
+          owned_event = FactoryBot.create(:event, owner: @user)
+          attendance = FactoryBot.create(:attendance, event: owned_event)
+
+          delete :destroy, params: {
+            id: attendance.id
+          }
+          expect(response).to redirect_to(event_path(owned_event))
+          expect(Attendance.find_by(id: attendance.id)).to be_nil
+        end
+      end
+    end
+  end
+
 end

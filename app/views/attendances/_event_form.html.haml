@@ -1,7 +1,7 @@
 - form_object = attendance.persisted? ? [attendance] : [event, attendance]
 = form_for form_object, html: {class: 'col p-0'} do |form|
-  - if user
-    = form.hidden_field :user_id, value: user.id
+  - if current_user
+    = form.hidden_field :user_id, value: current_user.id
   - else
     = hidden_field_tag :guest_guid, params[:guest_guid]
     .row.my-2.mx-1

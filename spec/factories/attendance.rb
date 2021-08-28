@@ -1,11 +1,11 @@
 FactoryBot.define do
   factory :attendance do
+    event
     attendee factory: :user
     rsvp_status { "Yes" }
-  end
 
-  factory :guest_attendance, class: 'Attendance' do
-    attendee factory: :guest
-    rsvp_status { "Yes" }
+    factory :guest_attendance do
+      attendee factory: :guest
+    end
   end
 end
