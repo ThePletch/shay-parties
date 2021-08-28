@@ -1,7 +1,29 @@
 - form_object = attendance.persisted? ? [attendance] : [event, attendance]
-.row.my-2.mx-1
-  = form_for form_object, html: {class: 'form-inline col p-0'} do |form|
-    = form.hidden_field :user_id, value: current_user.id
+= form_for form_object, html: {class: 'col p-0'} do |form|
+  - if user
+    = form.hidden_field :user_id, value: user.id
+  - else
+    = hidden_field_tag :guest_guid, params[:guest_guid]
+    .row.my-2.mx-1
+      %h5.col-lg-8.p-0
+        %div RSVP as a guest
+        %small.font-italic.text-muted You'll be able to change your RSVP later.
+      %h6.col-lg-4.p-0.text-right
+        = link_to "...or sign in.", new_user_session_path
+
+    = fields_for :attendee do |attendee_form|
+      .row.my-2.mx-1
+        .input-group.col.p-0
+          .input-group-prepend
+            = attendee_form.label :name, "NAME:", class: 'input-group-text'
+          = attendee_form.text_field :name, class: 'form-control col-auto'
+
+      .row.my-2.mx-1
+        .input-group.col.p-0
+          .input-group-prepend
+            .input-group-text EMAIL:
+          = attendee_form.email_field :email, class: 'form-control col-auto'
+  .row.my-2.mx-1
     .input-group.col.p-0
       .input-group-prepend
         .input-group-text RSVP:

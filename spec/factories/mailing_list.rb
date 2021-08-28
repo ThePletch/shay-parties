@@ -4,7 +4,7 @@ FactoryBot.define do
     sequence(:name) {|x| "Mailing List #{x}" }
 
     transient do
-      emails []
+      emails { [] }
     end
 
     after :create do |mailing_list, eval|

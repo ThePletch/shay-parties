@@ -1,4 +1,4 @@
-ruby '2.5.1'
+ruby '3.0.1'
 
 source 'https://rubygems.org'
 
@@ -18,15 +18,15 @@ gem 'sassc'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
-gem 'haml-rails', '~> 1.0.0'
+gem 'coffee-rails', '~> 5.0'
+gem 'haml-rails', '~> 2.0.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
 gem 'draper'
 
 # use bootstrap as css framework
-gem 'bootstrap', '>= 4.3.1'
+gem 'bootstrap', '~> 4.3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -66,7 +66,7 @@ end
 group :test do
   gem 'rspec-rails'
   gem 'rails-controller-testing'
-  gem 'factory_bot_rails', '>= 4.8.0'
+  gem 'factory_bot_rails', '~> 4.8'
   gem 'capybara'
   gem 'poltergeist'
   gem 'database_cleaner'

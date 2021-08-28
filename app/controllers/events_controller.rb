@@ -28,7 +28,13 @@ class EventsController < ApplicationController
 
   def show
     if user_signed_in?
-      @attendance = @event.attendances.find_by(user_id: current_user.id) || @event.attendances.build
+      @attendee = current_user
+      @attendance = @event.attendances.find_by(attendee: current_user) || @event.attendances.build
+    elsif params[:guest_guid] and guest = Guest.find_by(guid: params[:guest_guid])
+      @attendee = guest
+      @attendance = @event.attendances.find_by(attendee: guest) || @event.attendances.build
+    else
+      @attendance = @event.attendances.build
     end
 
     @event = EventDecorator.decorate(@event)
