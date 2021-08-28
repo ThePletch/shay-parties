@@ -24,10 +24,12 @@
       = @event.start_time
       \-
       = @event.end_time
-    %div
-      = link_to '📅 Download as a calendar event', ical_event_path(@event)
     - if @event.address
       = render 'addresses/show', address: @event.address
+    %div
+      = link_to '📅 Add to Google Calendar', gcal_url(@event)
+    %div
+      = link_to '📅 Download as a calendar event', ical_event_path(@event)
 
     .content= @event.description
   .col-md-6
