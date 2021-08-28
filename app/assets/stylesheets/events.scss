@@ -24,6 +24,7 @@
     bottom: 0;
     width: 100%;
     max-height: 100%;
+    min-height: 100%;
     height: $hero-gradient-height;
     background-image: linear-gradient(to bottom, transparent 0%, white 100%);
 }
@@ -34,7 +35,7 @@
 
 .hero-title {
     position: relative;
-    top: -75px;
+    bottom: 5vh;
 }
 
 .poll-response-bar {

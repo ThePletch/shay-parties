@@ -5,12 +5,13 @@
     .hero
       .hero-image
         = image_tag url_for(@event.landing_page_photo)
-      .hero-title
-        %h1.title
-          = @event.title
-          - if @event.owned_by?(current_user)
-            %small
-              = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
+      .col
+        .hero-title
+          %h1.title
+            = @event.title
+            - if @event.owned_by?(current_user)
+              %small
+                = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
 - else
   %h1.title
     = @event.title
