@@ -9,12 +9,20 @@
 
  $hero-gradient-height: 200px;
 
+ .hero {
+    width: 100%;
+ }
+
+.hero-image {
+    position: relative;
+}
+
 .hero-image::after {
     content: '';
     display: block;
-    position: relative;
+    position: absolute;
+    bottom: 0;
     width: 100%;
-    margin-top: -$hero-gradient-height;
     height: $hero-gradient-height;
     background-image: linear-gradient(to bottom, transparent 0%, white 100%);
 }
