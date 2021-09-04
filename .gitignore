@@ -20,5 +20,19 @@
 # Ignore Byebug command history file.
 .byebug_history
 
+# dotenv files
+.env*
+
 # Ignore rspec timing output
 /spec/examples.txt
+
+# ignore SAM builds
+.aws-sam
+
+# ignore compiled assets
+public/assets
+public/packs
+
+# ignore vendored bundles
+vendor/development
+vendor/production

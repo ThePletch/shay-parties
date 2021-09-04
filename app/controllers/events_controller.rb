@@ -5,18 +5,14 @@ class EventsController < ApplicationController
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
   def index
-    # nothing to look up if there aren't any users, so we short circuit.
-    return if User.none?
-
     if params[:user_id]
       @target_user = User.find(params[:user_id])
+      @events = @target_user.managed_events.not_secret
     else
-      @target_user = User.default_host
+      @events = Event.not_secret
     end
 
     @current_scope = params[:scope] || "future"
-
-    @events = @target_user.managed_events
 
     case @current_scope
     when "past"
@@ -94,7 +90,7 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:title, :start_time, :end_time, :description, :photo, :address_id, address_attributes: [
+    params.require(:event).permit(:title, :secret, :start_time, :end_time, :description, :photo, :address_id, address_attributes: [
       :street,
       :street2,
       :city,

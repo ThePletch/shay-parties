@@ -19,24 +19,4 @@ class User < ApplicationRecord
   has_many :polls, through: :managed_events
   has_many :answered_polls, through: :poll_responses
   has_many :mailing_lists, dependent: :destroy
-
-  validate :only_one_default_host
-
-  def default_host?
-    default_host
-  end
-
-  # if we haven't set the default host yet, default to the first user in the system
-  # until we set the default host.
-  def self.default_host
-    User.find_by(default_host: true) || User.first
-  end
-
-  private
-
-  def only_one_default_host
-    if default_host? && User.where(default_host: true).where.not(id: id).exists?
-      errors.add(:default_host, "Cannot have more than one default host.")
-    end
-  end
 end

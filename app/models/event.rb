@@ -25,6 +25,9 @@ class Event < ApplicationRecord
 
   validates_associated :address
 
+  scope :secret, -> { where(secret: true) }
+  scope :not_secret, -> { where(secret: false) }
+
   def landing_page_photo
     photo.variant(resize: '1900', combine_options: {gravity: 'North', crop: '1900x500+0+0'})
   end
