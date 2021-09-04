@@ -1,9 +1,12 @@
 class Event < ApplicationRecord
+  extend FriendlyId
   include Ownable
 
   LANDING_PAGE_PHOTO_HEIGHT = 400
 
   TIMESTAMP_FORMAT = '%m/%d/%Y %l:%M %P'
+
+  friendly_id :title, use: :slugged
 
   has_many :attendances, dependent: :destroy
   has_many :attendees, through: :attendances, class_name: 'User'
@@ -79,5 +82,9 @@ class Event < ApplicationRecord
     unless end_time > start_time
       errors.add(:end_time, "End time must be after start time.")
     end
+  end
+
+  def should_generate_new_friendly_id?
+    title_changed? || super
   end
 end

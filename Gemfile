@@ -78,3 +78,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "icalendar", "~> 2.7"
 
 gem "add_to_calendar", "~> 0.2.5"
+
+gem "friendly_id", "~> 5.4"
