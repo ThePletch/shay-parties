@@ -6,7 +6,7 @@ class EventsController < ApplicationController
 
   def index
     if params[:user_id]
-      @target_user = User.find(params[:user_id])
+      @target_user = User.friendly.find(params[:user_id])
       @events = @target_user.managed_events.not_secret
     else
       @events = Event.not_secret
@@ -77,12 +77,12 @@ class EventsController < ApplicationController
   private
 
   def set_event
-    @event = Event.find(params[:id])
+    @event = Event.friendly.find(params[:id])
   end
 
   # ensures that the event being access is owned by the current user
   def set_owned_event
-    @event = current_user.managed_events.find(params[:id])
+    @event = current_user.managed_events.friendly.find(params[:id])
   end
 
   def load_prior_addresses

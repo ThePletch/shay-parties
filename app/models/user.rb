@@ -1,8 +1,11 @@
 class User < ApplicationRecord
+  extend FriendlyId
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  friendly_id :name, use: :slugged
 
   # users can leave comments
   acts_as_commontator
@@ -19,4 +22,10 @@ class User < ApplicationRecord
   has_many :polls, through: :managed_events
   has_many :answered_polls, through: :poll_responses
   has_many :mailing_lists, dependent: :destroy
+
+  private
+
+  def should_generate_new_friendly_id?
+    name_changed? || super
+  end
 end
