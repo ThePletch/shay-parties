@@ -20,6 +20,8 @@ class EventsController < ApplicationController
     else
       @events = @events.where("end_time > ?", Time.current)
     end
+
+    @events = @events.order(end_time: :desc)
   end
 
   def show
