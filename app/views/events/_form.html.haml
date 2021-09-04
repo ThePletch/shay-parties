@@ -1,4 +1,4 @@
-= form_with(model: event, local: true) do |form|
+= form_for(event, local: true) do |form|
   - if event.errors.any?
     #error_explanation
       %h2
@@ -10,6 +10,12 @@
   .form-group
     = form.label :title
     = form.text_field :title, class: 'form-control'
+  .form-group
+    .form-check
+      = form.check_box :secret, class: 'form-check-input'
+      = form.label :secret, "Make this event secret"
+    %small.form-text.text-muted
+      Secret events don't appear on the home page or in your events index - you'll need to send people the event link yourself. This won't stop people you send the link to from giving it to others without your permission.
   .form-group
     = form.label :start_time
     = form.text_field :start_time, class: 'form-control datetimepicker', value: event.start_time_str

@@ -5,47 +5,65 @@ describe EventsController do
   describe "GET index" do
     before do
       # we make both to test 'wrong user' cases more thoroughly
-      @non_default_user = FactoryBot.create(:user)
-      @default_user = FactoryBot.create(:user, default_host: true)
+      @user_a = FactoryBot.create(:user)
+      @user_b = FactoryBot.create(:user)
     end
 
     context "with unspecified user" do
       it "shows all events for default host with end times after the current time" do
-        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @default_user)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @default_user)
-        later_non_default = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @non_default_user)
+        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
+        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
+        later_a = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
 
         get :index
-        expect(assigns(:events)).to match_array([later_event])
+        expect(assigns(:events)).to match_array([later_event, later_a])
       end
 
       it "shows all past events for default host when set to 'past' scope" do
-        earlier_non_default = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @non_default_user)
-        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @default_user)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @default_user)
+        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
+        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
 
         get :index, params: {scope: :past}
-        expect(assigns(:events)).to match_array([earlier_event])
+        expect(assigns(:events)).to match_array([earlier_a, earlier_event])
+      end
+
+      it "excludes secret events" do
+        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+        secret_event = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
+        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
+
+        get :index, params: {scope: :past}
+        expect(assigns(:events)).to match_array([earlier_a])
       end
     end
 
     context "with specified user" do
       it "shows all events for specified user with end times after the current time" do
-        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @default_user)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @default_user)
-        later_non_default = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @non_default_user)
+        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
+        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
+        later_a = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
 
-        get :index, params: {user_id: @non_default_user.id}
-        expect(assigns(:events)).to match_array([later_non_default])
+        get :index, params: {user_id: @user_a.id}
+        expect(assigns(:events)).to match_array([later_a])
       end
 
       it "shows all past events for specified user when set to 'past' scope" do
-        earlier_non_default = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @non_default_user)
-        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @default_user)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @default_user)
+        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
+        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
 
-        get :index, params: {scope: :past, user_id: @non_default_user.id}
-        expect(assigns(:events)).to match_array([earlier_non_default])
+        get :index, params: {scope: :past, user_id: @user_a.id}
+        expect(assigns(:events)).to match_array([earlier_a])
+      end
+
+      it "excludes secret events" do
+        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+        earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
+
+        get :index, params: {scope: :past, user_id: @user_a.id}
+        expect(assigns(:events)).to match_array([earlier_a])
       end
     end
   end
