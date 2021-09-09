@@ -87,7 +87,7 @@ class AttendancesController < ApplicationController
   end
 
   def set_event
-    @event = Event.find(params[:event_id])
+    @event = Event.friendly.find(params[:event_id])
   end
 
   # Once an RSVP is created, you can't change its attendee or its event.
