@@ -42,4 +42,5 @@
     - if @event.owned_by?(current_user)
       = link_to "Add Poll", new_event_poll_path(@event), class: 'btn btn-primary btn-sm my-2'
 %hr
+
 = commontator_thread(@event)

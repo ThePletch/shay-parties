@@ -130,7 +130,7 @@ Commontator.configure do |config|
   # Returns: a Boolean, true if and only if the user is a moderator for that thread
   # If you want global moderators, make this proc true for them regardless of thread
   # Default: ->(thread, user) { false } (no moderators)
-  config.thread_moderator_proc = ->(thread, user) { false }
+  config.thread_moderator_proc = ->(thread, user) { thread.commontable.owner == user }
 
   # comment_editing
   # Type: Symbol
@@ -224,7 +224,7 @@ Commontator.configure do |config|
   #   :b (both <blockquote> the original comment and indent replies)
   # It might be a good idea to add some CSS to hide <blockquote>s when converting from :q to :i
   # Default: :n
-  config.comment_reply_style = :n
+  config.comment_reply_style = :i
 
   # comments_per_page
   # Type: Array
