@@ -11,7 +11,7 @@
   //   padding: 0;
   // }
 
-  .hidden {
+  .hidden, .commontator-hidden {
     display: none;
   }
 
@@ -22,8 +22,6 @@
   }
 
   .actions {
-    float: right;
-
     margin-left: 10px;
   }
 
@@ -39,11 +37,6 @@
 
   .children {
     padding-left: 15px;
-  }
-
-  /* Modified from: https://www.strangerstudios.com/sandbox/pagination/diggstyle.php */
-  .page-entries-info, .will-paginate {
-  	margin: 10px 0;
   }
 
   .pagination {

@@ -28,13 +28,6 @@
       = render partial: 'commontator/comments/body', locals: { comment: comment }
     .clearfix
     .section.bottom{id: "commontator-comment-#{comment.id}-section-bottom"}
-      - unless comment.is_deleted?
-        %span.reply{id: "commontator-comment-#{comment.id}-reply-link"}
-          = link_to(                                                                           |
-              t('commontator.comment.actions.reply'),                                          |
-              commontator.new_thread_comment_path(thread, comment: { parent_id: comment.id }), |
-              remote: true                                                                     |
-            ) if thread.config.comment_reply_style != :n && !thread.is_closed?                 |
     .children{id: "commontator-comment-#{comment.id}-children"}
       - if thread.config.comment_order == :l
         .reply{id: "commontator-comment-#{comment.id}-reply"}
@@ -44,15 +37,11 @@
         .reply{id: "commontator-comment-#{comment.id}-reply"}
     .pagination{id: "commontator-comment-#{comment.id}-pagination"}
       .will-paginate{id: "commontator-comment-#{comment.id}-will-paginate"}
-        = will_paginate nested_children,                     |
-          renderer: Commontator::LinkRenderer,               |
-          name: t('commontator.comment.status.reply_pages'), |
-          remote: true,                                      |
-          params: { controller: 'commontator/comments',      |
-          action: 'show',                                    |
-          id: comment.id }                                   |
-    %span.actions.float-right{id: "commontator-comment-#{comment.id}-actions"}
-      .mt-3
+        = will_paginate nested_children, renderer: Commontator::LinkRenderer, name: t('commontator.comment.status.reply_pages'), remote: true, params: { controller: 'commontator/comments',action: 'show', id: comment.id }
+
+
+    %span.actions
+      .float-right{id: "commontator-comment-#{comment.id}-actions"}
         .btn-group
           - if comment.can_be_edited_by?(user)
             = link_to(t('commontator.comment.actions.edit'), commontator.edit_comment_path(comment), id: "commontator-comment-#{comment.id}-edit", class: 'edit btn btn-sm btn-primary', remote: true)
@@ -60,3 +49,6 @@
             - is_deleted = comment.is_deleted?
             - del_string = is_deleted ? :undelete : :delete
             = link_to t("commontator.comment.actions.#{del_string}"), commontator.polymorphic_path([del_string, comment]), data: is_deleted ? {} : { confirm: t('commontator.comment.actions.confirm_delete') }, method: :put, id: "commontator-comment-#{comment.id}-#{del_string}", class: "#{del_string} btn btn-sm btn-danger", remote: true
+      - unless comment.is_deleted?
+        .float-left{id: "commontator-comment-#{comment.id}-reply-link"}
+          = link_to("Reply", commontator.new_thread_comment_path(thread, comment: { parent_id: comment.id }), remote: true, class: 'btn btn-sm btn-primary') if thread.config.comment_reply_style != :n && !thread.is_closed?

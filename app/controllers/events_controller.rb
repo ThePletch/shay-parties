@@ -36,6 +36,7 @@ class EventsController < ApplicationController
     end
 
     @event = EventDecorator.decorate(@event)
+    # load page with comments displayed
     commontator_thread_show(@event)
   end
 
