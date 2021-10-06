@@ -41,7 +41,7 @@ class PollsController < ApplicationController
   end
 
   def set_event
-    @event = current_user.managed_events.find(params[:event_id])
+    @event = current_user.managed_events.friendly.find(params[:event_id])
   end
 
   def set_poll

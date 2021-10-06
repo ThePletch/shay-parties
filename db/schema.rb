@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_04_181340) do
+ActiveRecord::Schema.define(version: 2021_10_06_234723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2021_09_04_181340) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "attendee_type", null: false
+    t.string "guid"
     t.index ["attendee_id"], name: "index_attendances_on_attendee_id"
     t.index ["event_id", "attendee_id", "attendee_type"], name: "index_attendances_on_event_id_and_attendee_id_and_attendee_type", unique: true
     t.index ["event_id"], name: "index_attendances_on_event_id"
@@ -163,7 +164,7 @@ ActiveRecord::Schema.define(version: 2021_09_04_181340) do
     t.boolean "example_response", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "respondent_type", null: false
+    t.string "respondent_type"
     t.index ["poll_id"], name: "index_poll_responses_on_poll_id"
     t.index ["respondent_id"], name: "index_poll_responses_on_respondent_id"
   end
