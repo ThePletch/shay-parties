@@ -7,7 +7,13 @@ class EventsController < ApplicationController
   def index
     if params[:user_id]
       @target_user = User.friendly.find(params[:user_id])
-      @events = @target_user.managed_events.not_secret
+
+      # users can see their own secret events
+      if current_user and current_user == @target_user
+        @events = @target_user.managed_events
+      else
+        @events = @target_user.managed_events.not_secret
+      end
     else
       @events = Event.not_secret
     end
