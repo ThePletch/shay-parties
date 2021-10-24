@@ -4,6 +4,8 @@ class EventsController < ApplicationController
   before_action :set_owned_event, only: [:edit, :update, :destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
+  PRELOAD = [:owner, {attendances: :attendee, commontator_thread: :comments, polls: :responses}]
+
   def index
     if params[:user_id]
       @target_user = User.friendly.find(params[:user_id])
@@ -96,12 +98,12 @@ class EventsController < ApplicationController
   private
 
   def set_event
-    @event = Event.friendly.find(params[:id])
+    @event = Event.includes(*EventsController::PRELOAD).friendly.find(params[:id])
   end
 
   # ensures that the event being access is owned by the current user
   def set_owned_event
-    @event = current_user.managed_events.friendly.find(params[:id])
+    @event = current_user.managed_events.includes(**EventsController::PRELOAD).friendly.find(params[:id])
   end
 
   def load_prior_addresses

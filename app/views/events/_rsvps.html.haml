@@ -18,4 +18,9 @@
         - if collection.empty?
           %li.list-group-item
             %small.text-muted Nobody yet!
+        - elsif @event.owned_by?(current_user)
+          %li.list-group-item
+            %div.mb-2
+              %strong Emails
+              = text_area_tag nil, collection.map(&:attendee).pluck(:email).join(",\n"), class: 'form-control'
         = render partial: "attendances/attendance", collection: collection
