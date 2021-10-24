@@ -103,7 +103,7 @@ class EventsController < ApplicationController
 
   # ensures that the event being access is owned by the current user
   def set_owned_event
-    @event = current_user.managed_events.includes(**EventsController::PRELOAD).friendly.find(params[:id])
+    @event = current_user.managed_events.includes(*EventsController::PRELOAD).friendly.find(params[:id])
   end
 
   def load_prior_addresses
