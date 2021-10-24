@@ -4,7 +4,7 @@
 - new_record = comment.new_record?
 - # Optionally, they can also supply the following variables:
 - thread ||= new_record ? comment.thread : nil
-- no_remote ||= false
+- no_remote ||= true
 - config = comment.thread.config
 - if comment.errors.any?
   .error-explanation
