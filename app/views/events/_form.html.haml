@@ -15,7 +15,7 @@
       = form.check_box :secret, class: 'form-check-input'
       = form.label :secret, "Make this event secret"
     %small.form-text.text-muted
-      Secret events don't appear on the home page or in your events index - you'll need to send people the event link yourself. This won't stop people you send the link to from giving it to others without your permission.
+      Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it. This won't stop people you send the link to from giving it to others without your permission. You can find your secret events in the "My Events" section up top.
   .form-group
     = form.label :start_time
     = form.text_field :start_time, class: 'form-control datetimepicker', value: event.start_time_str

@@ -12,10 +12,18 @@ class EventsController < ApplicationController
       if current_user and current_user == @target_user
         @events = @target_user.managed_events
       else
-        @events = @target_user.managed_events.not_secret
+        if current_user
+          @events = @target_user.managed_events.left_joins(:attendances).where("NOT events.secret OR (attendances.attendee_id = ? and attendances.attendee_type = 'User')", current_user.id).distinct
+        else
+          @events = @target_user.managed_events.not_secret
+        end
       end
     else
-      @events = Event.not_secret
+      if current_user
+        @events = Event.left_joins(:attendances).where("NOT events.secret OR (attendances.attendee_id = ? and attendances.attendee_type = 'User')", current_user.id).distinct
+      else
+        @events = Event.not_secret
+      end
     end
 
     @current_scope = params[:scope] || "future"
@@ -26,6 +34,8 @@ class EventsController < ApplicationController
     else
       @events = @events.where("end_time > ?", Time.current)
     end
+
+
 
     @events = @events.order(end_time: :desc)
   end

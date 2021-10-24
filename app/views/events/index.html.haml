@@ -30,7 +30,11 @@
   %tbody
     - @events.each do |event|
       %tr.event-row
-        %td= link_to event.title, event, class: 'is-size-5 is-link'
+        %td
+          = link_to event.title, event
+          - if event.secret
+            %em
+              (secret event)
         - if @target_user.nil?
           %td= event.owner.name
         %td

@@ -30,6 +30,7 @@ class Event < ApplicationRecord
 
   scope :secret, -> { where(secret: true) }
   scope :not_secret, -> { where(secret: false) }
+  scope :attended_by, ->(user) { joins(:attendances).where(attendances: {attendee_id: user.id, attendee_type: "User"}) }
 
   def landing_page_photo
     photo.variant(resize: '1900', combine_options: {gravity: 'North', crop: '1900x500+0+0'})
