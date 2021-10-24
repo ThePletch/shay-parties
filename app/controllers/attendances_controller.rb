@@ -19,7 +19,7 @@ class AttendancesController < ApplicationController
       if current_user
         notice = 'RSVP successful.'
       else
-        notice = "RSVP successful. You can manage your RSVP at #{event_url(@event, guest_guid: @attendance.attendee.guid)}"
+        notice = "RSVP successful. Bookmark this link to change your RSVP later: #{event_url(@event, guest_guid: @attendance.attendee.guid)}"
       end
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice

@@ -9,7 +9,6 @@ class Event < ApplicationRecord
   friendly_id :title, use: :slugged
 
   has_many :attendances, dependent: :destroy
-  has_many :attendees, through: :attendances, class_name: 'User'
 
   # photo for header of event, will be thumbnailed for index view
   has_one_attached :photo
