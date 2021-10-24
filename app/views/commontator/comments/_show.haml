@@ -4,28 +4,37 @@
 - # nested_children or page
 - # show_all
 - thread = comment.thread
-- nested_children ||= begin
-  - children = thread.paginated_comments(page, comment.id, show_all)
-  - thread.nested_comments_for(user, children, show_all)
+- nested_children ||= thread.nested_comments_for(user, children, show_all)
 - creator = comment.creator
 - link = Commontator.commontator_link(creator, main_app)
 - name = Commontator.commontator_name(creator) || ''
+- is_deleted = comment.is_deleted?
 .card
-  .card-body
+  .card-body{class: (is_deleted && 'text-muted em')}
     %strong.author{id: "commontator-comment-#{comment.id}-author"}
       = link.blank? ? name : link_to(name, link)
     %small
       %span.timestamp{id: "commontator-comment-#{comment.id}-created-timestamp"}
         = comment.created_timestamp
       %span.timestamp{id: "commontator-comment-#{comment.id}-updated-timestamp"}
-        - if comment.is_modified?
+        - if is_deleted
+          - deletion_title = comment.editor == creator ? "" : "Deleted by #{comment.editor.name}"
+          %strong{title: deletion_title, data: {toggle: 'tooltip', placement: 'right'}} [deleted]
+        - elsif comment.is_modified?
           %span{title: comment.updated_timestamp, data: {toggle: 'tooltip', placement: 'right'}} ✏️
-    %span.avatar.float-left.mt-2.mr-3.mb-1{id: "commontator-comment-#{comment.id}-avatar"}
-      = Commontator.commontator_avatar(creator, self)
-    %span.votes{id: "commontator-comment-#{comment.id}-votes"}
-      - # render partial: 'commontator/comments/votes', locals: { comment: comment, user: user }
-    .body{id: "commontator-comment-#{comment.id}-body"}
-      = render partial: 'commontator/comments/body', locals: { comment: comment }
+    - unless is_deleted
+      %span.avatar.float-left.mt-2.mr-3.mb-1{id: "commontator-comment-#{comment.id}-avatar"}
+        = Commontator.commontator_avatar(creator, self)
+    - if is_deleted
+      %span.actions
+        .float-right{id: "commontator-comment-#{comment.id}-actions"}
+          .btn-group
+            - if comment.can_be_deleted_by?(user)
+              - del_string = :undelete
+              = link_to t("commontator.comment.actions.#{del_string}"), commontator.polymorphic_path([del_string, comment]), data: is_deleted ? {} : { confirm: t('commontator.comment.actions.confirm_delete') }, method: :put, id: "commontator-comment-#{comment.id}-#{del_string}", class: "#{del_string} btn btn-sm btn-danger", remote: false
+    - else
+      .body{id: "commontator-comment-#{comment.id}-body"}
+        = render partial: 'commontator/comments/body', locals: { comment: comment }
     .clearfix
     .section.bottom{id: "commontator-comment-#{comment.id}-section-bottom"}
     .children{id: "commontator-comment-#{comment.id}-children"}
@@ -35,20 +44,14 @@
         locals: { user: user, nested_comments: nested_children } |
       - if thread.config.comment_order != :l
         .reply{id: "commontator-comment-#{comment.id}-reply"}
-    .pagination{id: "commontator-comment-#{comment.id}-pagination"}
-      .will-paginate{id: "commontator-comment-#{comment.id}-will-paginate"}
-        = will_paginate nested_children, renderer: Commontator::LinkRenderer, name: t('commontator.comment.status.reply_pages'), remote: true, params: { controller: 'commontator/comments',action: 'show', id: comment.id }
-
-
-    %span.actions
-      .float-right{id: "commontator-comment-#{comment.id}-actions"}
-        .btn-group
-          - if comment.can_be_edited_by?(user)
-            = link_to(t('commontator.comment.actions.edit'), commontator.edit_comment_path(comment), id: "commontator-comment-#{comment.id}-edit", class: 'edit btn btn-sm btn-primary', remote: true)
-          - if comment.can_be_deleted_by?(user)
-            - is_deleted = comment.is_deleted?
-            - del_string = is_deleted ? :undelete : :delete
-            = link_to t("commontator.comment.actions.#{del_string}"), commontator.polymorphic_path([del_string, comment]), data: is_deleted ? {} : { confirm: t('commontator.comment.actions.confirm_delete') }, method: :put, id: "commontator-comment-#{comment.id}-#{del_string}", class: "#{del_string} btn btn-sm btn-danger", remote: true
-      - unless comment.is_deleted?
+    - unless is_deleted
+      %span.actions
+        .float-right{id: "commontator-comment-#{comment.id}-actions"}
+          .btn-group
+            - if comment.can_be_edited_by?(user)
+              = link_to(t('commontator.comment.actions.edit'), commontator.edit_comment_path(comment), id: "commontator-comment-#{comment.id}-edit", class: 'edit btn btn-sm btn-primary', remote: true)
+            - if comment.can_be_deleted_by?(user)
+              - del_string = is_deleted ? :undelete : :delete
+              = link_to t("commontator.comment.actions.#{del_string}"), commontator.polymorphic_path([del_string, comment]), data: is_deleted ? {} : { confirm: t('commontator.comment.actions.confirm_delete') }, method: :put, id: "commontator-comment-#{comment.id}-#{del_string}", class: "#{del_string} btn btn-sm btn-danger", remote: false
         .float-left{id: "commontator-comment-#{comment.id}-reply-link"}
           = link_to("Reply", commontator.new_thread_comment_path(thread, comment: { parent_id: comment.id }), remote: true, class: 'btn btn-sm btn-primary') if thread.config.comment_reply_style != :n && !thread.is_closed?
