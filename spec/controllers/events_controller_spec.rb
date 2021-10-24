@@ -36,6 +36,31 @@ describe EventsController do
         get :index, params: {scope: :past}
         expect(assigns(:events)).to match_array([earlier_a])
       end
+
+      context "logged in" do
+        before do
+          sign_in @user_a
+        end
+
+        it "excludes secret events the user hasn't RSVPed to" do
+          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
+
+          get :index, params: {scope: :past}
+          expect(assigns(:events)).to match_array([earlier_a])
+        end
+
+        it "includes secret events the user has RSVPed to" do
+          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
+          attendance = FactoryBot.create(:attendance, event: earlier_secret, attendee: @user_a)
+          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
+
+          get :index, params: {scope: :past}
+          expect(assigns(:events)).to match_array([earlier_a, earlier_secret])
+        end
+      end
     end
 
     context "with specified user" do
@@ -64,6 +89,42 @@ describe EventsController do
 
         get :index, params: {scope: :past, user_id: @user_a.id}
         expect(assigns(:events)).to match_array([earlier_a])
+      end
+
+      context "logged in" do
+        before do
+          sign_in @user_b
+        end
+
+        it "excludes secret events the user hasn't RSVPed to" do
+          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
+
+          get :index, params: {scope: :past, user_id: @user_a.id}
+          expect(assigns(:events)).to match_array([earlier_a])
+        end
+
+        it "includes secret events the user has RSVPed to" do
+          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          attendance = FactoryBot.create(:attendance, event: earlier_secret, attendee: @user_b)
+          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
+
+          get :index, params: {scope: :past, user_id: @user_a.id}
+          expect(assigns(:events)).to match_array([earlier_a, earlier_secret])
+        end
+
+        it "doesn't include RSVPed secret events from other users" do
+          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+          earlier_secret_b = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
+          attendance = FactoryBot.create(:attendance, event: earlier_secret_b, attendee: @user_b)
+          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
+
+          get :index, params: {scope: :past, user_id: @user_a.id}
+          expect(assigns(:events)).to match_array([earlier_a])
+        end
       end
     end
   end
