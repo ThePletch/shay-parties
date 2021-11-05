@@ -27,7 +27,7 @@ jobs:
       with:
         bundler-cache: true
     - name: Set up database
-      run: rails db:setup
+      run: bundle exec rails db:setup
     - name: Test with Rspec
       run: |
         bundle exec rspec
