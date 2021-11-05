@@ -10,6 +10,7 @@ jobs:
       postgres:
         image: postgres:latest
         env:
+          POSTGRES_HOST: postgres
           POSTGRES_DB: steve_parties_test
           POSTGRES_PASSWORD: asdf
           POSTGRES_USER: postgres
