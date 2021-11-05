@@ -16,6 +16,10 @@ class Attendance < ActiveRecord::Base
   validates :rsvp_status, inclusion: {in: RSVP_TYPES, message: "Not a valid RSVP."}
   validates_associated :attendee
 
+  def attending?
+    %w(Yes Maybe).include?(rsvp_status)
+  end
+
   private
 
   def clean_up_guest_on_destroy

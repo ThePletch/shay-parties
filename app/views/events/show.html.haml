@@ -26,14 +26,13 @@
       = @event.end_time
     - if @event.address
       = render 'addresses/show', address: @event.address
-    %div
-      = link_to '📅 Add to Google Calendar', gcal_url(@event)
-    %div
-      = link_to '📅 Download as a calendar event', ical_event_path(@event)
 
     .content= @event.description
   .col-md-6
     = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
+    - if @event.attended_by?(@attendee)
+      .m-2= link_to '📅 Add to Google Calendar', gcal_url(@event)
+      .m-2= link_to '📅 Download as a calendar event', ical_event_path(@event)
     = render 'events/rsvps', event: @event
     - if @event.polls.any?
       %hr
