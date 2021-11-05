@@ -2,7 +2,7 @@ on: [push]
 
 env:
   RAILS_ENV: test
-  POSTGRES_PASSWORD: asdf
+  DATABASE_URL: postgres://postgres:asdf@postgres:5432/steve_parties_test
 jobs:
   build:
     runs-on: ubuntu-latest
