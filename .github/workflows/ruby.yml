@@ -1,0 +1,35 @@
+on: [push]
+
+env:
+  RAILS_ENV: test
+  DATABASE_URL: postgres://postgres:asdf@localhost:5432/steve_parties_test
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: steve_parties_test
+          POSTGRES_PASSWORD: asdf
+          POSTGRES_USER: postgres
+        ports:
+          # maps tcp port 5432 on service container to the host
+          - 5432:5432
+        # set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: Set up database
+      run: bundle exec rails db:setup
+    - name: Test with Rspec
+      run: |
+        bundle exec rspec
