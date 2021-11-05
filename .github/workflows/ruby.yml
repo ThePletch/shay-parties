@@ -2,15 +2,17 @@ on: [push]
 
 env:
   RAILS_ENV: test
-  POSTGRES_DB: steve_parties_test
   POSTGRES_PASSWORD: asdf
-  POSTGRES_USER: postgres
 jobs:
   build:
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:latest
+        env:
+          POSTGRES_DB: steve_parties_test
+          POSTGRES_PASSWORD: asdf
+          POSTGRES_USER: postgres
         ports:
           # maps tcp port 5432 on service container to the host
           - 5432:5432
