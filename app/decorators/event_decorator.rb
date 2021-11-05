@@ -24,7 +24,15 @@ class EventDecorator < Draper::Decorator
   end
 
   def description
-    ActionController::Base.helpers.sanitize markdown.render(event.description)
+    ActionController::Base.helpers.sanitize markdown.render(event.description || '')
+  end
+
+  def attended_by?(user)
+    if user and attendance = event.attendances.find_by(attendances: {attendee: user})
+      attendance.attending?
+    else
+      false
+    end
   end
 
   private

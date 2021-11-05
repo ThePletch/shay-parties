@@ -1,4 +1,5 @@
 %li.list-group-item
+    %span.m-1= commontator_gravatar_image_tag(attendance.attendee, 1, s: 25, d: 'identicon')
     %span= attendance.attendee.name
     - if attendance.attendee.is_a?(Guest)
         %small.text-muted (Guest account)
