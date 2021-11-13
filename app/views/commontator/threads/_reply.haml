@@ -10,7 +10,7 @@
   - else
     - if @commontator_new_comment.nil?
       .new-comment{id: "commontator-thread-#{thread.id}-new-comment-link"}
-        = link_to t('commontator.comment.actions.new'), commontator.new_thread_comment_path(thread), remote: false, class: 'btn btn-primary m-2'
+        = link_to t('commontator.comment.actions.new'), commontator.new_thread_comment_path(thread), remote: true, class: 'btn btn-primary m-2'
     %div{class: "new-comment#{@commontator_new_comment.nil? ? ' hidden' : ''}", id: "commontator-thread-#{thread.id}-new-comment"}
       - unless @commontator_new_comment.nil?
         = render partial: 'commontator/comments/form', locals: {comment: @commontator_new_comment, thread: thread}
