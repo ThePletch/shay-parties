@@ -24,8 +24,12 @@
     = form.text_field :end_time, class: 'form-control datetimepicker', value: event.end_time_str
   .form-group
     = form.label :photo, "Header Photo"
-    = form.file_field :photo
+    = form.file_field :photo, direct_upload: true
+    %svg#image-handler{width: 600, height: 300}
+      %image#header-image
+      %rect{width: 600, height: 157, y: 72, stroke: 'black', fill: 'none'}
     %small.form-text.text-muted Photos are scaled and cropped to full-screen width, so wide photos with a 3:1 aspect ratio appear best.
+    %small.form-text.text-muted#drag-interface Click and drag to select how your image will be cropped.
   = form.hidden_field :address_id, id: 'existing_address_id'
   = form.fields_for :address do |a_form|
     %h3 Address
