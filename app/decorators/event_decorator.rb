@@ -54,7 +54,7 @@ class EventDecorator < Draper::Decorator
   end
 
   def event_date_format
-    "%B %-d, %Y"
+    "%b %-d, %Y"
   end
 
   def event_time_format

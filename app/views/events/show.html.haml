@@ -23,23 +23,27 @@
               = @event.owner.name
 .row
   .col-md-6
-    %em
-      - # show a simplified format for events spanning a single day
-      - if @event.start_datetime.to_date == @event.end_datetime.to_date
-        .font-weight-bold= @event.start_date
-        = "#{@event.start_time} - #{@event.end_time}"
-      - else
-        %strong= @event.start_date
-        = @event.start_time
-        %p
-          = "...until"
-          %strong= @event.end_date
-          = @event.end_time
-    - if @event.address
-      .mt-2= render 'addresses/show', address: @event.address
+    .row
+      .col-md-auto
+        %em
+          - # show a simplified format for events spanning a single day
+          - if @event.start_datetime.to_date == @event.end_datetime.to_date
+            .font-weight-bold= @event.start_date
+            = "#{@event.start_time} - #{@event.end_time}"
+          - else
+            %strong= @event.start_date
+            = @event.start_time
+            %p
+              = "...until"
+              %strong= @event.end_date
+              = @event.end_time
+      - if @event.address
+        .col-md
+          .d-md-none.mt-2= render 'addresses/show', address: @event.address
+          .d-none.d-md-inline.text-right= render 'addresses/show', address: @event.address
 
     .d-md-none= render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
-
+    %hr.d-none.d-md-block
     .content= @event.description
   .col-md-6
     .d-none.d-md-block= render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
