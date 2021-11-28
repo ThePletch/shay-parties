@@ -45,13 +45,14 @@
       - if thread.config.comment_order != :l
         .reply{id: "commontator-comment-#{comment.id}-reply"}
     - unless is_deleted
-      %span.actions
-        .float-right{id: "commontator-comment-#{comment.id}-actions"}
-          .btn-group
-            - if comment.can_be_edited_by?(user)
-              = link_to(t('commontator.comment.actions.edit'), commontator.edit_comment_path(comment), id: "commontator-comment-#{comment.id}-edit", class: 'edit btn btn-sm btn-primary', remote: true)
-            - if comment.can_be_deleted_by?(user)
-              - del_string = is_deleted ? :undelete : :delete
-              = link_to t("commontator.comment.actions.#{del_string}"), commontator.polymorphic_path([del_string, comment]), data: is_deleted ? {} : { confirm: t('commontator.comment.actions.confirm_delete') }, method: :put, id: "commontator-comment-#{comment.id}-#{del_string}", class: "#{del_string} btn btn-sm btn-danger", remote: false
-        .float-left{id: "commontator-comment-#{comment.id}-reply-link"}
-          = link_to("Reply", commontator.new_thread_comment_path(thread, comment: { parent_id: comment.id }), remote: true, class: 'btn btn-sm btn-primary') if thread.config.comment_reply_style != :n && !thread.is_closed?
+      - if user
+        %span.actions
+          .float-right{id: "commontator-comment-#{comment.id}-actions"}
+            .btn-group
+              - if comment.can_be_edited_by?(user)
+                = link_to(t('commontator.comment.actions.edit'), commontator.edit_comment_path(comment), id: "commontator-comment-#{comment.id}-edit", class: 'edit btn btn-sm btn-primary', remote: true)
+              - if comment.can_be_deleted_by?(user)
+                - del_string = is_deleted ? :undelete : :delete
+                = link_to t("commontator.comment.actions.#{del_string}"), commontator.polymorphic_path([del_string, comment]), data: is_deleted ? {} : { confirm: t('commontator.comment.actions.confirm_delete') }, method: :put, id: "commontator-comment-#{comment.id}-#{del_string}", class: "#{del_string} btn btn-sm btn-danger", remote: false
+          .float-left{id: "commontator-comment-#{comment.id}-reply-link"}
+            = link_to("Reply", commontator.new_thread_comment_path(thread, comment: { parent_id: comment.id }), remote: true, class: 'btn btn-sm btn-primary') if thread.config.comment_reply_style != :n && !thread.is_closed?
