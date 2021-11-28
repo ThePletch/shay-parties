@@ -21,11 +21,19 @@
 .row
   .col-md-6
     %em
-      = @event.start_time
-      \-
-      = @event.end_time
+      - # show a simplified format for events spanning a single day
+      - if @event.start_datetime.to_date == @event.end_datetime.to_date
+        .font-weight-bold= @event.start_date
+        = "#{@event.start_time} - #{@event.end_time}"
+      - else
+        %strong= @event.start_date
+        = @event.start_time
+        %p
+          = "...until"
+          %strong= @event.end_date
+          = @event.end_time
     - if @event.address
-      = render 'addresses/show', address: @event.address
+      .mt-2= render 'addresses/show', address: @event.address
 
     .content= @event.description
   .col-md-6

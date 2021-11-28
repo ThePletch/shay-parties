@@ -24,5 +24,5 @@ Rails.application.routes.draw do
     end
   end
 
-  root "events#index"
+  root "home#index"
 end

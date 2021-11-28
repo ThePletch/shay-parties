@@ -3,20 +3,32 @@ class EventDecorator < Draper::Decorator
 
   delegate_all
 
-  def start_time
+  def start_timestamp
+    event.start_time.strftime(event_datetime_format)
+  end
+
+  def start_date
     event.start_time.strftime(event_date_format)
+  end
+
+  def start_time
+    event.start_time.strftime(event_time_format)
   end
 
   def start_datetime
     event.start_time
   end
 
-  def start_date
-    event.start_time.strftime("%B %-d, %Y")
+  def end_timestamp
+    event.end_time.strftime(event_datetime_format)
+  end
+
+  def end_date
+    event.end_time.strftime(event_date_format)
   end
 
   def end_time
-    event.end_time.strftime(event_date_format)
+    event.end_time.strftime(event_time_format)
   end
 
   def end_datetime
@@ -37,8 +49,16 @@ class EventDecorator < Draper::Decorator
 
   private
 
+  def event_datetime_format
+    [event_date_format, event_time_format].join(" ")
+  end
+
   def event_date_format
-    "%B %-d, %Y %l:%M %p"
+    "%B %-d, %Y"
+  end
+
+  def event_time_format
+    "%l:%M %P"
   end
 
   def markdown

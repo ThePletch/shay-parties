@@ -10,6 +10,7 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
+ *= require fonts
  *= require commontator/application
  *= require_tree .
  *= require_self
@@ -18,4 +19,9 @@
 
 label.side-label {
   margin: 0 1em;
+}
+
+.navbar-brand {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.75rem;
 }

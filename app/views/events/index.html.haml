@@ -13,40 +13,60 @@
       Public events
   .btn-group{role: "group", "aria-label" => "event scopes"}
     - if @target_user
-      = scope "Future", user_events_path(@target_user, scope: :future), :future
+      = scope "Upcoming", user_events_path(@target_user, scope: :future), :future
       = scope "Past", user_events_path(@target_user, scope: :past), :past
     - else
-      = scope "Future", events_path(scope: :future), :future
+      = scope "Upcoming", events_path(scope: :future), :future
       = scope "Past", events_path(scope: :past), :past
-%table.table.table-sm
-  %thead
-    %tr
-      %th Title
-      - if @target_user.nil?
-        %th Host
-      %th Attendees
-      %th Date
-      %th
-  %tbody
-    - @events.each do |event|
-      %tr.event-row
-        %td
-          = link_to event.title, event
-          - if event.secret
-            %em
-              (secret event)
+- if @events.any?
+  %table.table.table-sm
+    %thead
+      %tr
+        %th Title
         - if @target_user.nil?
-          %td= event.owner.name
-        %td
-          %ul.list-unstyled
-            %li= "Going: #{event.attendances.going.count}"
-            %li= "Maybe: #{event.attendances.maybe.count}"
-        %td= EventDecorator.decorate(event).start_date
-        - if event.owned_by?(current_user)
+          %th Host
+        %th Attendees
+        %th Date
+        %th
+    %tbody
+      - @events.each do |event|
+        %tr.event-row
           %td
-            .btn-group
-              = link_to 'Edit', edit_event_path(event), class: 'btn btn-primary btn-small'
-              = link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
+            = link_to event.title, event
+            - if event.secret
+              %em
+                (secret event)
+          - if @target_user.nil?
+            %td= event.owner.name
+          %td
+            %ul.list-unstyled
+              %li= "Going: #{event.attendances.going.count}"
+              %li= "Maybe: #{event.attendances.maybe.count}"
+          %td= EventDecorator.decorate(event).start_date
+          - if event.owned_by?(current_user)
+            %td
+              .btn-group
+                = link_to 'Edit', edit_event_path(event), class: 'btn btn-primary btn-small'
+                = link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
+- else
+  %p
+    %strong It looks like there aren't any events here.
+  - if @target_user
+    - if @target_user == current_user
+      %p Try clicking the button below to organize a new event.
+    - else
+      %p This user might not have organized any events you can see. If you're looking for a specific event, you might need to ask for a link to the event page from the host.
+  - elsif @current_scope
+    - if @current_scope == "future"
+      %p
+        Did you want to look at
+        = link_to "past events", events_path(scope: "past")
+        instead?
+    - elsif @current_scope == "past"
+      %p
+        Try looking at
+        = link_to "upcoming events", events_path(scope: "future")
+        instead.
 - if current_user
   - if current_user == @target_user
     - link_text = 'Organize new event'
