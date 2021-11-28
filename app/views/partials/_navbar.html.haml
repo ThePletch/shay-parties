@@ -6,9 +6,17 @@
     %ul.navbar-nav.mr-auto
       %li.nav-item= link_to "Home", root_path, class: 'nav-link'
       - if user_signed_in?
-        %li.nav-item= link_to "Mailing Lists", mailing_lists_path, class: "nav-link"
+        %li.nav-item.dropdown
+          %a.nav-link.dropdown-toggle#host-dropdown{href: '#', role: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}} Host
+          .dropdown-menu{aria: {labelledBy: 'host-dropdown'}}
+            = link_to "Organize an Event", new_event_path, class: "dropdown-item"
+            = link_to "My Hosted Events", user_events_path(current_user), class: "dropdown-item"
+            = link_to "Manage Mailing Lists", mailing_lists_path, class: "dropdown-item"
+        %li.nav-item.dropdown
+          %a.nav-link.dropdown-toggle#attendee-dropdown{href: '#', role: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}} Attendee
+          .dropdown-menu{aria: {labelledBy: 'attendee-dropdown'}}
+            = link_to "Public Events", events_path, class: "dropdown-item"
         %li.nav-item= link_to "Profile", edit_user_registration_path, class: "nav-link"
-        %li.nav-item= link_to "My Events", user_events_path(current_user), class: "nav-link"
         %li.nav-item= button_to "Log out", destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
       - else
         %li.nav-item= link_to "Log in", new_user_session_path, class: "nav-link"

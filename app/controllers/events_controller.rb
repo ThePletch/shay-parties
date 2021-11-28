@@ -76,7 +76,10 @@ class EventsController < ApplicationController
     @event = current_user.managed_events.build(event_params)
 
     if @event.save
-      redirect_to @event, notice: 'Event was successfully created.'
+      redirect_to @event, notice: (
+        "Event created. To invite people to your event, send them the link to this page "\
+        "along with your invitation."
+      )
     else
       render :new
     end
