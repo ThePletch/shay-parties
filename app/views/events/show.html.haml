@@ -1,32 +1,26 @@
 - title @event.title
 
-- if @event.photo.attached?
-  .row
-    .hero
-      .hero-image
+.row
+  .hero
+    .hero-image
+      - if @event.photo.attached?
         = image_tag url_for(@event.landing_page_photo)
-      .col
-        .hero-title
-          %h1.title
-            = @event.title
+      - else
+        = image_tag 'default_event_image.jpg'
+    .col
+      .hero-title
+        %h1.title
+          = @event.title
+          - if @event.owned_by?(current_user)
+            %small
+              = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
+        %em.text-muted.mb-2
+          Hosted by
+          %strong
             - if @event.owned_by?(current_user)
-              %small
-                = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
-          %em.text-muted.mb-2
-            Hosted by
-            %strong
-              - if @event.owned_by?(current_user)
-                you
-              - else
-                = @event.owner.name
-
-- else
-  %h1.title
-    = @event.title
-    - if @event.owned_by?(current_user)
-      %small
-        = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
-  .text-muted.mb-2= "Hosted by #{@event.owner.name}"
+              you
+            - else
+              = @event.owner.name
 .row
   .col-md-6
     %em

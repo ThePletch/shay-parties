@@ -25,7 +25,7 @@
   .form-group
     = form.label :photo, "Header Photo"
     = form.file_field :photo
-    %small.form-text.text-muted Photos are scaled and cropped to full-screen width, so wide photos with a 3:1 aspect ratio appear best.
+    %small.form-text.text-muted Photos are scaled and cropped to full-screen width (1900px by 500px), so wide photos with a ~4:1 aspect ratio appear best. If you don't provide a photo, a default header photo will be used.
   = form.hidden_field :address_id, id: 'existing_address_id'
   = form.fields_for :address do |a_form|
     %h3 Address
