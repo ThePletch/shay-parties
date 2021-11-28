@@ -3,6 +3,8 @@
     %span= attendance.attendee.name
     - if attendance.attendee.is_a?(Guest)
         %small.text-muted (Guest account)
+    - elsif attendance.event.owned_by?(attendance.attendee)
+        %small.text-muted (Host)
     - if attendance.event.owned_by?(current_user)
         .float-right
             %em.small= attendance.attendee.email
