@@ -36,3 +36,10 @@ public/packs
 # ignore vendored bundles
 vendor/development
 vendor/production
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

@@ -1,6 +1,8 @@
-//= require jquery-ui/widgets/datepicker
-//= require jquery-ui/widgets/slider
-//= require jquery-ui-timepicker-addon
+import $ from 'jquery';
+import { datepickerFactory, slider } from 'jquery-ui/widgets';
+import timepicker from 'jquery-ui-timepicker-addon';
+
+datepickerFactory($);
 
 $(function() {
   $('.datetimepicker').datetimepicker({

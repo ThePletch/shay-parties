@@ -103,13 +103,6 @@ GEM
     carmen (1.1.3)
       activesupport (>= 3.0.0)
     cliver (0.3.2)
-    coffee-rails (5.0.0)
-      coffee-script (>= 2.2.0)
-      railties (>= 5.2.0)
-    coffee-script (2.4.1)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.12.2)
     commontator (6.3.1)
       rails (>= 5.2)
       will_paginate
@@ -173,12 +166,6 @@ GEM
     jbuilder (2.11.2)
       activesupport (>= 5.0.0)
     jmespath (1.4.0)
-    jquery-rails (4.4.0)
-      rails-dom-testing (>= 1, < 3)
-      railties (>= 4.2.0)
-      thor (>= 0.14, < 2.0)
-    jquery-ui-rails (6.0.1)
-      railties (>= 3.2.16)
     listen (3.7.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -209,6 +196,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
+    rack-proxy (0.7.0)
+      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.4.1)
@@ -275,6 +264,8 @@ GEM
     ruby2_keywords (0.0.5)
     ruby_parser (3.17.0)
       sexp_processor (~> 4.15, >= 4.15.1)
+    sass-rails (6.0.0)
+      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -283,6 +274,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    semantic_range (3.0.0)
     sexp_processor (4.15.3)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
@@ -303,8 +295,6 @@ GEM
       thread_safe (~> 0.1)
     tzinfo-data (1.2021.1)
       tzinfo (>= 1.0.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.1.0)
@@ -312,6 +302,11 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    webpacker (5.4.3)
+      activesupport (>= 5.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.2)
+      semantic_range (>= 2.3.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -332,7 +327,6 @@ DEPENDENCIES
   byebug
   capybara
   carmen
-  coffee-rails (~> 5.0)
   commontator
   database_cleaner
   devise
@@ -343,8 +337,6 @@ DEPENDENCIES
   icalendar (~> 2.7)
   image_processing (~> 1.2)
   jbuilder (~> 2.5)
-  jquery-rails
-  jquery-ui-rails
   pg
   poltergeist
   puma (~> 4.3.5)
@@ -353,12 +345,12 @@ DEPENDENCIES
   rb-readline
   redcarpet (~> 3.5.1)
   rspec-rails
-  sassc
+  sass-rails (>= 6)
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
-  uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
+  webpacker (~> 5.0)
 
 RUBY VERSION
    ruby 3.0.1p64

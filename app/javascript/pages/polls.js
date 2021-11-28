@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(function() {
   $('[data-form-prepend]').click(function(e) {
     const obj = $($(this).attr('data-form-prepend'));
