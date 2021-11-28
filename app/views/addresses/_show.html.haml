@@ -1,6 +1,6 @@
 - if address.first_line.present? || address.second_line.present?
-  %address
+  %address.pr-1
     - if address.first_line.present?
-      %div= address.first_line
+      .font-weight-bold= address.first_line
     - if address.second_line.present?
       %div= address.second_line

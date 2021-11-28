@@ -22,9 +22,9 @@
             - else
               = @event.owner.name
 .row
-  .col-md-6
+  .col-lg
     .row
-      .col-md-auto
+      .col-sm-auto
         %em
           - # show a simplified format for events spanning a single day
           - if @event.start_datetime.to_date == @event.end_datetime.to_date
@@ -38,18 +38,19 @@
               %strong= @event.end_date
               = @event.end_time
       - if @event.address
-        .col-md
-          .d-md-none.mt-2= render 'addresses/show', address: @event.address
-          .d-none.d-md-inline.text-right= render 'addresses/show', address: @event.address
+        .col-sm
+          .d-sm-none.mt-2= render 'addresses/show', address: @event.address
+          .d-none.d-sm-inline.text-right= render 'addresses/show', address: @event.address
 
-    .d-md-none= render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
-    %hr.d-none.d-md-block
+    .d-lg-none
+      = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
+      = render 'events/calendar_links', attendee: @attendee, event: @event
+    %hr.d-none.d-lg-block
     .content= @event.description
-  .col-md-6
-    .d-none.d-md-block= render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
-    - if @event.attended_by?(@attendee)
-      .m-2= link_to '📅 Add to Google Calendar', gcal_url(@event)
-      .m-2= link_to '📅 Download as a calendar event', ical_event_path(@event)
+  .col-lg
+    .d-none.d-lg-block
+      = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
+      = render 'events/calendar_links', attendee: @attendee, event: @event
     = render 'events/rsvps', event: @event
     - if @event.polls.any?
       %hr
