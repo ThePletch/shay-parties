@@ -1,9 +1,7 @@
 = form_for(event, local: true) do |form|
   - if event.errors.any?
     #error_explanation
-      %h2
-        = pluralize(event.errors.count, "error")
-        prohibited this event from being saved:
+      %h2= t('event.form.errors_msg', count: event.errors.count)
       %ul
         - event.errors.full_messages.each do |message|
           %li= message
@@ -13,9 +11,8 @@
   .form-group
     .form-check
       = form.check_box :secret, class: 'form-check-input'
-      = form.label :secret, "Make this event secret"
-    %small.form-text.text-muted
-      Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it. This won't stop people you send the link to from giving it to others without your permission. You can find your secret events in the "My Events" section up top.
+      = form.label :secret, t('event.form.labels.secret')
+    %small.form-text.text-muted= t('event.form.secret_event_help')
   .form-group
     = form.label :start_time
     = form.text_field :start_time, class: 'form-control datetimepicker', value: event.start_time_str
@@ -23,12 +20,12 @@
     = form.label :end_time
     = form.text_field :end_time, class: 'form-control datetimepicker', value: event.end_time_str
   .form-group
-    = form.label :photo, "Header Photo"
+    = form.label :photo
     = form.file_field :photo
-    %small.form-text.text-muted Photos are scaled and cropped to full-screen width (1900px by 500px), so wide photos with a ~4:1 aspect ratio appear best. If you don't provide a photo, a default header photo will be used.
+    %small.form-text.text-muted= t('event.form.header_photo_help')
   = form.hidden_field :address_id, id: 'existing_address_id'
   = form.fields_for :address do |a_form|
-    %h3 Address
+    %h3= t('activerecord.models.address')
     = render "addresses/form", form: a_form
   .form-group
     = form.label :description

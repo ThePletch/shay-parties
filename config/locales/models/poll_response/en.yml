@@ -1,0 +1,16 @@
+en:
+  poll_response:
+    created: Responded to poll.
+    created_automaybe: Responded to poll. Automatically marked your RSVP as 'Maybe'.
+    created_failed: Failed to respond to poll.
+    updated: Poll response updated.
+    updated_automaybe: Poll response updated. Automatically marked your RSVP as 'Maybe'.
+    updated_failed: Failed to update response.
+    destroyed: Poll response cleared.
+    destroyed_failed: Could not clear poll response.
+    rejection:
+      unauthenticated: You must be authenticated as a user or guest to answer polls.
+    form:
+      update: Update Answer
+      create: Answer
+      destroy: Clear Answer

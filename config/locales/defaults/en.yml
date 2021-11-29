@@ -1,0 +1,25 @@
+en:
+  back: Back
+  form:
+    edit: Edit
+    show: Show
+    delete: Delete
+    confirm: "Are you sure?"
+  navbar:
+    home: Home
+    host:
+      header: Host
+      organize: Organize an Event
+      my_events: My Hosted Events
+      mailing_lists: Manage Mailing Lists
+    attendee:
+      header: Attendee
+      public_events: Public Events
+    profile: My Profile
+    log_out: Log out
+    log_in: Log in
+    byline:
+      message: A %{repo_link} by %{personal_link}
+      repo_link_msg: free service
+      personal_link_msg: Steve Pletcher
+

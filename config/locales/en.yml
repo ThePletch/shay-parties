@@ -18,22 +18,5 @@
 #
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
-
-en:
-  commontator:
-    comment:
-      status:
-        created_at: "%{created_at}"
-        deleted_by: Deleted (%{deleter_name})
-        updated_at: Edited %{updated_at} by %{editor_name}
-    thread:
-      actions:
-        close: Close
-        confirm_close: Are you sure you want to close this discussion?
-        reopen: Reopen
-        show: Comments
-        hide: Hide
-      status:
-        cannot_post: New comments cannot be posted at this time.
-        closed: Comments (Closed by %{closer_name})
-        open: Comments
+---
+en: {}

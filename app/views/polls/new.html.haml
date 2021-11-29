@@ -1,4 +1,4 @@
-- title "New Poll"
-%h1.title New Poll
+- title t('poll.form.title.new')
+%h1.title= t('poll.form.header.new')
 = render 'form', poll: @poll, form_object: [@event, @poll]
-= link_to 'Back', event_path(@event), class: 'button is-white'
+= link_to t('back'), event_path(@event), class: 'button is-white'

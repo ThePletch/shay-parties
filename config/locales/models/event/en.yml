@@ -1,0 +1,78 @@
+en:
+  activerecord:
+    models:
+      event: Event
+    attributes:
+      event:
+        title: Title
+        start_time: Start Time
+        end_time: End Time
+        photo: Header Photo
+        description: Description
+  event:
+    created: Event created. To invite people to your event, send them the link to this page along with your invitation.
+    updated: Event was successfully updated.
+    destroyed: Event was successfully deleted.
+    add_to_gcal: 📅 Add to Google Calendar
+    download_ics: 📅 Download as a file (.ics)
+    form:
+      title:
+        edit: "Edit %{title}"
+        new: New Event
+      header:
+        edit: "Editing %{title}"
+        new: New Event
+      show_event_link: See Event
+      errors_msg:
+        one: "One error prohibited this event from being saved:"
+        other: "%{count} errors prohibited this event from being saved:"
+      secret_event_help:
+        Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it.
+        This won't stop people you send the link to from giving it to others without your permission.
+        You can find your secret events in the "Host > My Hosted Events" section in the navigation bar.
+      header_photo_help:
+        Photos are scaled and cropped to full-screen width (1900px by 500px), so wide photos with a ~4:1 aspect ratio appear best.
+        If you don't provide a photo, a default header photo will be used.
+      labels:
+        secret: Make this event secret
+    rsvp_list:
+      headers:
+        'yes': "Yes (%{count})"
+        maybe: "Maybe (%{count})"
+        'no': "No (%{count})"
+      empty_category: Nobody yet.
+      host_email_collection_header: Emails
+    index:
+      for_user: "Events from %{name}"
+      public: Public Events
+      self: Your Events
+      category:
+        upcoming: Upcoming
+        past: Past
+      labels:
+        title: Title
+        host: Host
+        attendees: Attendees
+        date: Date
+        going_count: "Going: %{count}"
+        maybe_count: "Maybe: %{count}"
+        secret: (secret event)
+      zero_state:
+        message: It looks like there aren't any events here.
+        click_to_make: Try clicking the button below to organize a new event.
+        other_user:
+          This user might not have organized any events you can see.
+          If you're looking for a specific event, you might need to ask for a link to the event page from the host.
+        past_prompt: Did you want to look at %{past_link} instead?
+        past_events: past events
+        upcoming_prompt: Try looking at %{upcoming_link} instead.
+        upcoming_events: upcoming events
+      new_button:
+        self: Organize new event
+        other: Organize your own event
+    show:
+      time_separator: ...until
+      hosted_by_other: Hosted by %{name}
+      hosted_by_you: Hosted by you
+    validation:
+      time_is_linear: End time must be after start time.

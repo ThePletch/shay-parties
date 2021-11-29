@@ -1,0 +1,39 @@
+en:
+  mailing_list:
+    created: Mailing list was successfully created.
+    updated: Mailing list was successfully updated.
+    destroyed: Mailing list was successfully deleted.
+    synced: Users synced to mailing list.
+    index:
+      title: Mailing Lists
+      header: Mailing Lists
+      headings:
+        name: Name
+        emails_count: Emails
+      new_button: New Mailing List
+    show:
+      headings:
+        email: Email
+        user: User
+      no_user: No User
+      copypastable: Copypastable List
+      manage: Manage List
+      sync: Sync Users
+      filters:
+        exclude_no_for: "Exclude 'No' RSVPs for:"
+        attendees: "Attendees for:"
+        button: Filter
+        clear: Clear Filters
+    form:
+      delete: Delete mailing list
+      confirm_delete: Are you sure you want to delete this mailing list?
+      errors_msg:
+        one: "One error prohibited this mailing list from being saved:"
+        other: "%{count} errors prohibited this mailing list from being saved:"
+      add_email: Add an email
+      title:
+        edit: Edit %{name}
+        new: New Mailing List
+      header:
+        edit: Editing %{name}
+        new: New Mailing List

@@ -1,0 +1,13 @@
+en:
+  commontator:
+    thread:
+      actions:
+        close: Close
+        confirm_close: Are you sure you want to close this discussion?
+        reopen: Reopen
+        show: Comments
+        hide: Hide
+      status:
+        cannot_post: New comments cannot be posted at this time.
+        closed: Comments (Closed by %{closer_name})
+        open: Comments

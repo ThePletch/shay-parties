@@ -13,14 +13,12 @@
           = @event.title
           - if @event.owned_by?(current_user)
             %small
-              = link_to 'Edit', edit_event_path(@event), class: 'text-muted'
+              = link_to t('form.edit'), edit_event_path(@event), class: 'text-muted'
         %em.text-muted.mb-2
-          Hosted by
-          %strong
-            - if @event.owned_by?(current_user)
-              you
-            - else
-              = @event.owner.name
+          - if @event.owned_by?(current_user)
+            = t('event.show.hosted_by_you')
+          - else
+            = t('event.show.hosted_by_other', name: @event.owner.name)
 .row
   .col-lg
     .row
@@ -34,7 +32,7 @@
             %strong= @event.start_date
             = @event.start_time
             %p
-              = "...until"
+              = t('event.show.time_separator')
               %strong= @event.end_date
               = @event.end_time
       - if @event.address
@@ -57,7 +55,7 @@
       - @event.polls.each do |poll|
         = render 'polls/poll', poll: poll, respondent: @attendee
     - if @event.owned_by?(current_user)
-      = link_to "Add Poll", new_event_poll_path(@event), class: 'btn btn-primary btn-sm my-2'
+      = link_to t('poll.add_prompt'), new_event_poll_path(@event), class: 'btn btn-primary btn-sm my-2'
 %hr
 
 = commontator_thread(@event)

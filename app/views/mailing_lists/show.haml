@@ -3,12 +3,12 @@
   .col-lg-6
     %h1.title
       = @mailing_list.name
-      = link_to "Edit", edit_mailing_list_path(@mailing_list)
+      = link_to t('form.edit'), edit_mailing_list_path(@mailing_list)
     %table.table
       %thead
         %tr
-          %td Email
-          %td User
+          %td= t('mailing_list.show.headings.email')
+          %td= t('mailing_list.show.headings.user')
       %tbody
         - @emails.each do |email|
           %tr
@@ -16,18 +16,18 @@
             - if email.user.present?
               %td= email.user.name
             - else
-              %td.text-muted No User
-    %h4 Copypastable List
+              %td.text-muted= t('mailing_list.show.no_user')
+    %h4= t('mailing_list.show.copypastable')
     = text_area_tag nil, @emails.pluck(:email).join(",\n"), class: 'form-control'
   .col-lg-6
-    %h2.text-center Manage List
-    = button_to "Sync Users", sync_users_mailing_list_path(@mailing_list), method: :put, class: 'btn btn-primary btn-block btn-sm'
+    %h2.text-center= t('mailing_list.show.manage')
+    = button_to t('mailing_list.show.sync'), sync_users_mailing_list_path(@mailing_list), method: :put, class: 'btn btn-primary btn-block btn-sm'
     .row
       = form_tag '', class: 'form-inline col p-0', method: :get do
         = hidden_field_tag :scope, 'exclude_no_rsvps'
         .input-group.col
           .input-group-prepend
-            .input-group-text Exclude 'No' RSVPs for:
+            .input-group-text= t('mailing_list.show.filters.exclude_no_for')
           = select_tag :event_id, options_for_select(Event.all.pluck(:title, :id)), class: 'form-control'
           = submit_tag "Filter", class: 'btn btn-primary col-auto m-0'
     .row
@@ -35,8 +35,8 @@
         = hidden_field_tag :scope, 'attendees'
         .input-group.col
           .input-group-prepend
-            .input-group-text Attendees for:
+            .input-group-text= t('mailing_list.show.filters.attendees')
           = select_tag :event_id, options_for_select(Event.all.pluck(:title, :id)), class: 'form-control'
-          = submit_tag "Filter", class: 'btn btn-primary col-auto m-0'
+          = submit_tag t('mailing_list.show.filters.button'), class: 'btn btn-primary col-auto m-0'
 
-    = link_to "Clear Filters", mailing_list_path(@mailing_list), class: 'btn btn-secondary btn-block btn-sm'
+    = link_to t('mailing_list.show.filters.clear'), mailing_list_path(@mailing_list), class: 'btn btn-secondary btn-block btn-sm'

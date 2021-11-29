@@ -4,26 +4,22 @@
     %span.navbar-toggler-icon
   .collapse.navbar-collapse#main-nav
     %ul.navbar-nav.mr-auto
-      %li.nav-item= link_to "Home", root_path, class: 'nav-link'
+      %li.nav-item= link_to t('navbar.home'), root_path, class: 'nav-link'
       - if user_signed_in?
         %li.nav-item.dropdown
-          %a.nav-link.dropdown-toggle#host-dropdown{href: '#', role: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}} Host
+          %a.nav-link.dropdown-toggle#host-dropdown{href: '#', role: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}}= t('navbar.host.header')
           .dropdown-menu{aria: {labelledBy: 'host-dropdown'}}
-            = link_to "Organize an Event", new_event_path, class: "dropdown-item"
-            = link_to "My Hosted Events", user_events_path(current_user), class: "dropdown-item"
-            = link_to "Manage Mailing Lists", mailing_lists_path, class: "dropdown-item"
+            = link_to t('navbar.host.organize'), new_event_path, class: "dropdown-item"
+            = link_to t('navbar.host.my_events'), user_events_path(current_user), class: "dropdown-item"
+            = link_to t('navbar.host.mailing_lists'), mailing_lists_path, class: "dropdown-item"
         %li.nav-item.dropdown
-          %a.nav-link.dropdown-toggle#attendee-dropdown{href: '#', role: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}} Attendee
+          %a.nav-link.dropdown-toggle#attendee-dropdown{href: '#', role: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}}= t('navbar.attendee.header')
           .dropdown-menu{aria: {labelledBy: 'attendee-dropdown'}}
-            = link_to "Public Events", events_path, class: "dropdown-item"
-        %li.nav-item= link_to "Profile", edit_user_registration_path, class: "nav-link"
-        %li.nav-item= button_to "Log out", destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
+            = link_to t('navbar.attendee.public_events'), events_path, class: "dropdown-item"
+        %li.nav-item= link_to t('navbar.profile'), edit_user_registration_path, class: "nav-link"
+        %li.nav-item= button_to t('navbar.log_out'), destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
       - else
-        %li.nav-item= link_to "Log in", new_user_session_path, class: "nav-link"
+        %li.nav-item= link_to t('navbar.log_in'), new_user_session_path, class: "nav-link"
     %ul.navbar-nav.pull-right
       %li.nav-item
-        .nav-link
-          A
-          = link_to "free service", "https://www.github.com/ThePletch/steve-parties"
-          by
-          = link_to "Steve Pletcher", "https://steve-pletcher.com"
+        .nav-link= t('navbar.byline.message', repo_link: link_to(t('navbar.byline.repo_link_msg'), "https://www.github.com/ThePletch/steve-parties"), personal_link: link_to(t('navbar.byline.personal_link_msg'), "https://steve-pletcher.com")).html_safe

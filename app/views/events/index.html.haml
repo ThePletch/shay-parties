@@ -1,32 +1,32 @@
 - if @target_user
-  - title "Events from #{@target_user.name}"
+  - title t('event.index.for_user', name: @target_user.name)
 - else
-  - title "Public Events"
+  - title t('event.index.public')
 
 %h1.title
   - if current_user && current_user == @target_user
-    Your events
+    = t('event.index.self')
   - else
     - if @target_user
-      = "Events from #{@target_user.name}"
+      = t('event.index.for_user', name: @target_user.name)
     - else
-      Public events
+      = t('event.index.public')
   .btn-group{role: "group", "aria-label" => "event scopes"}
     - if @target_user
-      = scope "Upcoming", user_events_path(@target_user, scope: :future), :future
-      = scope "Past", user_events_path(@target_user, scope: :past), :past
+      = scope t('event.index.category.upcoming'), user_events_path(@target_user, scope: :future), :future
+      = scope t('event.index.category.past'), user_events_path(@target_user, scope: :past), :past
     - else
-      = scope "Upcoming", events_path(scope: :future), :future
-      = scope "Past", events_path(scope: :past), :past
+      = scope t('event.index.category.upcoming'), events_path(scope: :future), :future
+      = scope t('event.index.category.past'), events_path(scope: :past), :past
 - if @events.any?
   %table.table.table-sm
     %thead
       %tr
-        %th Title
+        %th= t('event.index.labels.title')
         - if @target_user.nil?
-          %th Host
-        %th Attendees
-        %th Date
+          %th= t('event.index.labels.host')
+        %th= t('event.index.labels.attendees')
+        %th= t('event.index.labels.date')
         %th
     %tbody
       - @events.each do |event|
@@ -34,43 +34,36 @@
           %td
             = link_to event.title, event
             - if event.secret
-              %em
-                (secret event)
+              %em= t('event.index.labels.secret')
           - if @target_user.nil?
             %td= event.owner.name
           %td
             %ul.list-unstyled
-              %li= "Going: #{event.attendances.going.count}"
-              %li= "Maybe: #{event.attendances.maybe.count}"
+              %li= t('event.index.labels.going_count', count: event.attendances.going.count)
+              %li= t('event.index.labels.maybe_count', count: event.attendances.maybe.count)
           %td= EventDecorator.decorate(event).start_date
           - if event.owned_by?(current_user)
             %td
               .btn-group
-                = link_to 'Edit', edit_event_path(event), class: 'btn btn-primary btn-small'
-                = link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
+                = link_to t('form.edit'), edit_event_path(event), class: 'btn btn-primary btn-small'
+                = link_to t('form.delete'), event, method: :delete, data: { confirm: t('form.confirm') }, class: 'btn btn-danger'
 - else
   %p
-    %strong It looks like there aren't any events here.
+    %strong= t('event.index.zero_state.message')
   - if @target_user
     - if @target_user == current_user
-      %p Try clicking the button below to organize a new event.
+      %p= t('event.index.zero_state.click_to_make')
     - else
-      %p This user might not have organized any events you can see. If you're looking for a specific event, you might need to ask for a link to the event page from the host.
+      %p= t('event.index.zero_state.other_user')
   - elsif @current_scope
     - if @current_scope == "future"
-      %p
-        Did you want to look at
-        = link_to "past events", events_path(scope: "past")
-        instead?
+      %p= t('event.index.zero_state.past_prompt', past_link: link_to(t('event.index.zero_state.past_events'), events_path(scope: 'past'))).html_safe
     - elsif @current_scope == "past"
-      %p
-        Try looking at
-        = link_to "upcoming events", events_path(scope: "future")
-        instead.
+      %p= t('event.index.zero_state.upcoming_prompt', upcoming_link: link_to(t('event.index.zero_state.upcoming_events'), events_path(scope: 'future'))).html_safe
 - if current_user
   - if current_user == @target_user
-    - link_text = 'Organize new event'
+    - link_text = t('event.index.new_button.self')
   - else
-    - link_text = 'Organize your own event'
+    - link_text = t('event.index.new_button.other')
 
   = link_to link_text, new_event_path, class: ['btn', 'btn-primary']

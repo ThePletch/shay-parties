@@ -1,0 +1,4 @@
+en:
+  guest:
+    rejection:
+      bad_id: Unrecognized guest ID.

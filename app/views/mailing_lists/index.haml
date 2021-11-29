@@ -1,11 +1,10 @@
-- title "Mailing Lists"
-%h1.title
-  Mailing Lists
+- title t('mailing_list.index.title')
+%h1.title= t('mailing_list.index.header')
 %table.table
   %thead
     %tr
-      %th Name
-      %th Emails
+      %th= t('mailing_list.index.headings.name')
+      %th= t('mailing_list.index.headings.emails_count')
       %th
   %tbody
     - @mailing_lists.each do |mailing_list|
@@ -14,6 +13,6 @@
         %td= mailing_list.emails.count
         %td
           .btn-group
-            = link_to 'Edit', edit_mailing_list_path(mailing_list), class: 'btn btn-primary btn-small'
-            = link_to 'Delete', mailing_list, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
-= link_to 'New Mailing List', new_mailing_list_path, class: ['btn', 'btn-primary']
+            = link_to t('form.edit'), edit_mailing_list_path(mailing_list), class: 'btn btn-primary btn-small'
+            = link_to t('form.delete'), mailing_list, method: :delete, data: { confirm: t('form.confirm') }, class: 'btn btn-danger'
+= link_to t('mailing_list.index.new_button'), new_mailing_list_path, class: ['btn', 'btn-primary']

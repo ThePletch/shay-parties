@@ -1,0 +1,4 @@
+es:
+  guest:
+    rejection:
+      bad_id: ID temporal poco reconocido.

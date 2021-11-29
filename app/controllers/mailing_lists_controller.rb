@@ -30,7 +30,7 @@ class MailingListsController < ApplicationController
     @mailing_list = current_user.mailing_lists.build(mailing_list_params)
 
     if @mailing_list.save
-      redirect_to @mailing_list, notice: 'Mailing list was successfully created.'
+      redirect_to @mailing_list, notice: t('mailing_list.created')
     else
       render :new
     end
@@ -38,7 +38,7 @@ class MailingListsController < ApplicationController
 
   def update
     if @mailing_list.update(mailing_list_params)
-      redirect_to @mailing_list, notice: 'Mailing list was successfully updated.'
+      redirect_to @mailing_list, notice: t('mailing_list.updated')
     else
       render :edit
     end
@@ -46,12 +46,12 @@ class MailingListsController < ApplicationController
 
   def destroy
     @mailing_list.destroy
-    redirect_to events_url, notice: 'Mailing list was successfully destroyed.'
+    redirect_to events_url, notice: t('mailing_list.destroyed')
   end
 
   def sync_users
     @mailing_list.sync_users
-    redirect_to @mailing_list, notice: 'Users synced to mailing list.'
+    redirect_to @mailing_list, notice: t('mailing_list.synced')
   end
 
   private

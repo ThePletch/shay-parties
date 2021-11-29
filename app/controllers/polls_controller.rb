@@ -8,7 +8,7 @@ class PollsController < ApplicationController
 
   def update
     if @poll.update(poll_params)
-      redirect_to event_path(@poll.event), notice: 'Poll was successfully updated.'
+      redirect_to event_path(@poll.event), notice: t('poll.updated')
     else
       render :edit
     end
@@ -22,7 +22,7 @@ class PollsController < ApplicationController
     @poll = @event.polls.build(poll_params.merge(owner: current_user))
 
     if @poll.save
-      redirect_to event_path(@poll.event), notice: 'Poll was successfully created.'
+      redirect_to event_path(@poll.event), notice: t('poll.created')
     else
       render :new
     end
@@ -31,7 +31,7 @@ class PollsController < ApplicationController
   def destroy
     @poll.destroy
 
-    redirect_to event_path(@poll.event), notice: 'Poll was deleted.'
+    redirect_to event_path(@poll.event), notice: t('poll.destroyed')
   end
 
   private
