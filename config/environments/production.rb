@@ -57,7 +57,7 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "steve-parties_#{Rails.env}"
   config.action_mailer.perform_caching = false
 
-  config.action_mailer.default_url_options = { host: 'steve-events.herokuapp.com' }
+  config.action_mailer.default_url_options = { host: ENV['PARTIES_FULL_DOMAIN'] }
 
   config.action_mailer.smtp_settings = {
     address: "email-smtp.us-east-1.amazonaws.com",
