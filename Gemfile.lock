@@ -205,7 +205,7 @@ GEM
       websocket-driver (>= 0.2.0)
     popper_js (1.16.0)
     public_suffix (4.0.6)
-    puma (4.3.8)
+    puma (4.3.9)
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
@@ -347,7 +347,7 @@ DEPENDENCIES
   jquery-ui-rails
   pg
   poltergeist
-  puma (~> 4.3.5)
+  puma (~> 4.3.9)
   rails (~> 6.0.0)
   rails-controller-testing
   rb-readline
