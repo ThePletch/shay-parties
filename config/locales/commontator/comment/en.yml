@@ -1,0 +1,7 @@
+en:
+  commontator:
+    comment:
+      status:
+        created_at: "%{created_at}"
+        deleted_by: Deleted (%{deleter_name})
+        updated_at: Edited %{updated_at} by %{editor_name}

@@ -4,15 +4,16 @@ class PollResponsesController < ApplicationController
 
   def update
     if @response.update(poll_response_params)
-      response_message = "Poll response updated."
 
       if rsvp = create_rsvp_if_not_exists(@response)
-        response_message += " Automatically marked your RSVP as 'Maybe'."
+        response_message = t('poll_response.updated_automaybe')
+      else
+        response_message = t('poll_response.updated')
       end
 
       message = {notice: response_message}
     else
-      message = {alert: "Failed to update response: #{@response.errors}"}
+      message = {alert: t('poll_response.updated_failed') + "#{@response.errors}"}
     end
 
     redirect_to event_path(@response.event, guest_guid: params[:guest_guid]), message
@@ -20,9 +21,9 @@ class PollResponsesController < ApplicationController
 
   def destroy
     if @response.destroy
-      message = {notice: "Poll response cleared."}
+      message = {notice: t('poll_response.destroyed')}
     else
-      message = {alert: "Could not clear poll response."}
+      message = {alert: t('poll_response.destroyed_failed')}
     end
 
     redirect_to event_path(@response.event, guest_guid: params[:guest_guid]), message
@@ -35,19 +36,20 @@ class PollResponsesController < ApplicationController
     elsif params[:guest_guid].present? and guest = Guest.find_by(guid: params[:guest_guid])
       @response = @poll.responses.build(poll_response_params.merge(respondent: guest))
     else
-      redirect_to new_user_session_path, alert: "You must be authenticated as a user or guest to answer polls."
+      redirect_to new_user_session_path, alert: t('poll_response.rejection.unauthenticated')
       return
     end
 
 
     if @response.save
-      response_message = "Responded to poll."
       if rsvp = create_rsvp_if_not_exists(@response)
-        response_message += " Automatically marked your RSVP as 'Maybe'."
+        response_message = t('poll_response.created_automaybe')
+      else
+        response_message = t('poll_response.created')
       end
       message = {notice: response_message}
     else
-      message = {alert: "Failed to respond to poll: #{@response.errors}"}
+      message = {alert: t('poll_response.created_failed') + "#{@response.errors}"}
     end
 
     redirect_to event_path(@poll.event, guest_guid: params[:guest_guid]), message
@@ -64,7 +66,7 @@ class PollResponsesController < ApplicationController
       if guest = Guest.find_by(guid: params[:guest_guid])
         @response = guest.poll_responses.find(params[:id])
       else
-        redirect_to new_user_session_path, notice: "Unrecognized guest ID."
+        redirect_to new_user_session_path, notice: t('guest.rejection.bad_id')
       end
     end
   end

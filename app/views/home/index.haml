@@ -1,24 +1,20 @@
-%h1 Welcome to Parties for All!
+%h1= t('.welcome')
 
-%p You can organize events with your friends here.
+%p= t('.purpose')
 .row.align-items-end
     .col-md.my-2
-        %p
-            %strong If you're here to RSVP to a friend's event,
-            click the button below to find the event in the list of public events.
-        %p.mb-3 If the event is secret, you'll need to go directly to the link you got from the host. Secret events don't show up in event lists until you RSVP to them.
+        %p= t('.rsvp_prompt.full_text', bolded_section: content_tag(:strong, t('.rsvp_prompt.bolded_section'))).html_safe
+        %p.mb-3= t('.secret_info')
 
-        = link_to "Browse public events", events_path, class: 'btn btn-primary btn-lg btn-block'
+        = link_to t('.events_button'), events_path, class: 'btn btn-primary btn-lg btn-block'
     .col-md.my-2
         %p
-            %strong If you're here to host your own event,
             - if current_user
-                click the button below to organize a new event, or click "Organize an event" under "Host" in the navigation bar.
+                = t('.host_prompt.logged_in.full_text', bolded_section: content_tag(:strong, t('.host_prompt.logged_in.bolded_section'))).html_safe
             - else
-                you'll need to log in first. Click the button below to log in, or click 'Log in' in the navigation bar.
-
+                = t('.host_prompt.unauthenticated.full_text', bolded_section: content_tag(:strong, t('.host_prompt.unauthenticated.bolded_section'))).html_safe
         - if current_user
-            = link_to "Organize an event", new_event_path, class: 'btn btn-success btn-lg btn-block'
+            = link_to t('.new_event_button'), new_event_path, class: 'btn btn-success btn-lg btn-block'
         - else
-            = link_to "Log in", new_user_session_path, class: 'btn btn-success btn-lg btn-block'
+            = link_to t('.log_in_button'), new_user_session_path, class: 'btn btn-success btn-lg btn-block'
 

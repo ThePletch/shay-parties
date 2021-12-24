@@ -1,25 +1,29 @@
-- if @prior_addresses.any?
-  .row.m-2
-    = label_tag(nil, "Use a prior address:", class: 'mx-2 col-form-label col-form-label-sm')
-    = select_tag('prior_addresses', options_for_select(@prior_addresses.map{|a| [a.to_s, a.id, a.attributes] }), include_blank: '[create a new address]', class: 'form-control form-control-sm col')
+- parent_form ||= nil
+- address ||= nil
+%h3= t('activerecord.models.address')
+= optional_parent_wrap(parent_form, address || Address.new) do |form|
+  - if @prior_addresses.any?
+    .row.m-2
+      = label_tag(nil, t('address.form.use_prior'), class: 'mx-2 col-form-label col-form-label-sm')
+      = select_tag('prior_addresses', options_for_select(@prior_addresses.map{|a| [a.to_s, a.id, a.attributes] }), include_blank: t('address.form.address_placeholder'), class: 'form-control form-control-sm col')
 
-.form-group
-  = form.label :street
-  = form.text_field :street, class: 'form-control'
+  .form-group
+    = form.label :street
+    = form.text_field :street, class: 'form-control'
 
-.form-group
-  = form.label :street2, "Unit #, etc."
-  = form.text_field :street2, class: 'form-control'
+  .form-group
+    = form.label :street2, t('address.form.street2_unit_number_explain')
+    = form.text_field :street2, class: 'form-control'
 
-.form-group
-  .row
-    .col-md-4
-      = form.label :city
-      = form.text_field :city, class: 'form-control'
-    .col-md-4
-      = form.label :state
-      - states = Carmen::Country.coded('USA').subregions.typed('state').map{|state| [state.name, state.code] }
-      = form.select :state, [["[no state]", nil]] + states, {}, class: 'form-control'
-    .col-md-4
-      = form.label :zip_code
-      = form.text_field :zip_code, class: 'form-control'
+  .form-group
+    .row
+      .col-md-4
+        = form.label :city
+        = form.text_field :city, class: 'form-control'
+      .col-md-4
+        = form.label :state
+        - states = Carmen::Country.coded('USA').subregions.typed('state').map{|state| [state.name, state.code] }
+        = form.select :state, [[t('address.form.state_placeholder'), nil]] + states, {}, class: 'form-control'
+      .col-md-4
+        = form.label :zip_code
+        = form.text_field :zip_code, class: 'form-control'

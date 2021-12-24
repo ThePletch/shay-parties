@@ -17,9 +17,9 @@ class AttendancesController < ApplicationController
 
     if @attendance.save
       if current_user
-        notice = 'RSVP successful.'
+        notice = t 'attendance.created'
       else
-        notice = "RSVP successful. Bookmark this link to change your RSVP later: #{event_url(@event, guest_guid: @attendance.attendee.guid)}"
+        notice = t 'attendance.created_with_link_html', link: event_url(@event, guest_guid: @attendance.attendee.guid)
       end
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
@@ -30,9 +30,9 @@ class AttendancesController < ApplicationController
 
   def destroy
     if @attendance.destroy
-      redirect_to event_path(@attendance.event), {notice: 'RSVP destroyed.'}
+      redirect_to event_path(@attendance.event), {notice: t('attendance.destroyed')}
     else
-      redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), {alert: 'Failed to destroy RSVP.'}
+      redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), {alert: t('destroyed_failed')}
     end
 
   end
@@ -49,9 +49,9 @@ class AttendancesController < ApplicationController
 
     if result
       if @attendance.persisted?
-        redirect_to event_path(event, guest_guid: params[:guest_guid]), notice: 'RSVP updated.'
+        redirect_to event_path(event, guest_guid: params[:guest_guid]), notice: t('attendance.updated')
       else
-        redirect_to event_path(event), notice: 'RSVP removed.'
+        redirect_to event_path(event), notice: t('attendance.destroyed')
       end
     else
       redirect_to event_path(event, guest_guid: params[:guest_guid]), alert: @attendance.errors.values.flatten.join("\n")
@@ -64,11 +64,11 @@ class AttendancesController < ApplicationController
     if current_user.present?
       @user = current_user
     elsif params[:guest_guid].nil?
-      redirect_to new_user_session_path, alert: "You must be logged in or authenticate as a guest to manage your RSVP."
+      redirect_to new_user_session_path, alert: t('attendance.rejection.unauthenticated')
     elsif guest = Guest.find_by(guid: params[:guest_guid])
       @user = guest
     else
-      redirect_to new_user_session_path, alert: "Unrecognized guest ID."
+      redirect_to new_user_session_path, alert: t('guest.rejection.bad_id')
     end
   end
 
@@ -82,7 +82,7 @@ class AttendancesController < ApplicationController
 
   def require_own_attendance_or_event
     if not (@attendance.attendee == @user or @attendance.event.owned_by?(current_user))
-      redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), alert: "You can't remove an RSVP unless it's your RSVP or your event."
+      redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), alert: t('attendance.rejection.unauthorized_removal')
     end
   end
 

@@ -1,4 +1,4 @@
-- title "New Mailing List"
-%h1.title New Mailing List
+- title t('mailing_list.form.title.new')
+%h1.title= t('mailing_list.form.header.new')
 = render 'form', mailing_list: @mailing_list
-= link_to 'Back', mailing_lists_path, class: 'button is-white'
+= link_to t('back'), mailing_lists_path, class: 'button is-white'

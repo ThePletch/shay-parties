@@ -1,4 +1,4 @@
-- title "New Event"
-%h1.title New Event
+- title t('event.form.title.new')
+%h1.title= t('event.form.header.new')
 = render 'form', event: @event
-= link_to 'Back', events_path, class: 'button is-white'
+= link_to t('back'), events_path, class: 'button is-white'

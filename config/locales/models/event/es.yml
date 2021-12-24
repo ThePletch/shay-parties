@@ -1,0 +1,82 @@
+es:
+  activerecord:
+    models:
+      event: Evento
+    attributes:
+      event:
+        title: Título
+        start_time: Hora de Inicio
+        end_time: Hora Final
+        photo: Foto de Encabezado
+        description: Descripción
+    errors:
+      models:
+        event:
+          attributes:
+            end_time:
+              ends_before_start: debe ser después de la hora de inicio.
+  event:
+    created: Evento creado. Para invitar gente a su evento, envíase el enlace para esta página junto con su invitación.
+    updated: Evento actualizado exitosamente.
+    destroyed: Evento eliminado exitosamente.
+    add_to_gcal: 📅 Añadir a Google Calendar
+    download_ics: 📅 Descargar como una ficha (.ics)
+    form:
+      title:
+        edit: "Editar a %{title}"
+        new: Evento Nuevo
+      header:
+        edit: "Editando a %{title}"
+        new: Evento Nuevo
+      show_event_link: Mira a Evento
+      errors_msg:
+        one: "Un errór prohibió que se guardara este evento:"
+        other: "%{count} errores prohibieron que se guardara este evento:"
+      secret_event_help:
+        Eventos secretos no aparecen en la página de inicio a menos que el usuario haya respondido - se necesita enviar el enlace a las personas usted mismo para que lo encuentren.
+        Esto no impedirá que las personas a las que usted envíe el enlace se lo darlo a otras personas sin su permiso.
+        Se puede encontrar a sus eventos secretos en la "Hospedador -> Mis Eventos Hospedados" sección en la barra de navegación.
+      header_photo_help:
+        Fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px), por lo que las fotos anchas con una relación de aspecto ~4:1 aparecen mejor.
+        Si no proporciona una foto, se utilizará un foto de encabezado predeterminado.
+      labels:
+        secret: Haz que este evento sea secreto
+    rsvp_list:
+      headers:
+        'yes': "Sí (%{count})"
+        maybe: "Quizás (%{count})"
+        'no': "No (%{count})"
+      empty_category: Todavía nadie.
+      host_email_collection_header: Emails
+    index:
+      for_user: "Eventos de %{name}"
+      public: Eventos Públicos
+      self: Sus Eventos
+      category:
+        upcoming: Próximo
+        past: Pasado
+      labels:
+        title: Título
+        host: Hospedador
+        attendees: Asistentes
+        date: Fecha
+        going_count: "Yendo: %{count}"
+        maybe_count: "Quizás: %{count}"
+        secret: (evento secreto)
+      zero_state:
+        message: Parece que no hay eventos aquí.
+        click_to_make: Intente presionar el botón de abajo para organizar un nuevo evento.
+        other_user:
+          Este usuario podría no haber organizado ningúnos eventos que pueda ver.
+          Si está buscando usted a un evento específico, es posible que necesita pedir el hospedador en un enlace a la página de evento.
+        past_prompt: Quería mirar a %{past_link} en su lugar?
+        past_events: eventos pasados
+        upcoming_prompt: Intente mirar a %{upcoming_link} en su lugar.
+        upcoming_events: eventos próximos
+      new_button:
+        self: Organiza un evento nuevo
+        other: Organiza su propio evento
+    show:
+      time_separator: ...hace
+      hosted_by_other: Hospedado por %{name}
+      hosted_by_you: Hospedado por usted

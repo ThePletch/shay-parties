@@ -1,4 +1,4 @@
-- title "Edit #{@poll.question}"
-%h1.title Editing Poll
+- title t('poll.form.title.edit', name: @poll.question)
+%h1.title= t('poll.form.header.edit', name: @poll.question)
 = render 'form', poll: @poll, form_object: [@poll]
-= link_to 'Back', event_path(@poll.event), class: 'button is-white'
+= link_to t('back'), event_path(@poll.event), class: 'button is-white'

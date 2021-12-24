@@ -80,7 +80,7 @@ class Event < ApplicationRecord
   def ends_after_it_starts
     return unless [end_time, start_time].all?
     unless end_time > start_time
-      errors.add(:end_time, "End time must be after start time.")
+      errors.add(:end_time, :ends_before_start)
     end
   end
 

@@ -1,6 +1,6 @@
-- title "Edit #{@mailing_list.name}"
-%h1.title Editing Mailing List
+- title t('mailing_list.form.title.edit', name: @mailing_list.name)
+%h1.title= t('mailing_list.form.header.edit', name: @mailing_list.name)
 = render 'form', mailing_list: @mailing_list
-= link_to 'Show', @mailing_list
+= link_to t('form.show'), @mailing_list
 |
-= link_to 'Back', mailing_lists_path
+= link_to t('back'), mailing_lists_path

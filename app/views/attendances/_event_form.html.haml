@@ -6,29 +6,29 @@
     = hidden_field_tag :guest_guid, params[:guest_guid]
     .row.my-2.mx-1
       %h5.col-lg-8.p-0
-        %div RSVP as a guest
-        %small.font-italic.text-muted You'll be able to change your RSVP later.
+        %div= t('attendance.form.prompt_guest')
+        %small.font-italic.text-muted= t('attendance.form.can_change_later')
       %h6.col-lg-4.p-0.text-right
-        = link_to "...or sign in.", new_user_session_path
+        = link_to t('attendance.form.sign_in_alt'), new_user_session_path
 
     = fields_for :attendee do |attendee_form|
       .row.my-2.mx-1
         .input-group.col.p-0
           .input-group-prepend
-            = attendee_form.label :name, "NAME:", class: 'input-group-text'
+            = attendee_form.label :name, t('attendance.form.labels.name'), class: 'input-group-text'
           = attendee_form.text_field :name, class: 'form-control col-auto'
 
       .row.my-2.mx-1
         .input-group.col.p-0
           .input-group-prepend
-            .input-group-text EMAIL:
+            .input-group-text= t('attendance.form.labels.email')
           = attendee_form.email_field :email, class: 'form-control col-auto'
   .row.my-2.mx-1
     .input-group.col.p-0
       .input-group-prepend
-        .input-group-text RSVP:
-      = form.select :rsvp_status, options_for_select(["No RSVP"] + Attendance::RSVP_TYPES, selected: attendance.rsvp_status), {}, class: 'form-control'
+        .input-group-text= t('attendance.form.labels.rsvp')
+      = form.select :rsvp_status, options_for_select(attendance_types_localized, selected: attendance.rsvp_status), {}, class: 'form-control'
     - if attendance.persisted?
-      = form.submit "Update", class: 'btn btn-primary col-auto m-0'
+      = form.submit t('attendance.form.buttons.update'), class: 'btn btn-primary col-auto m-0'
     - else
-      = form.submit "RSVP", class: 'btn btn-primary col-auto m-0'
+      = form.submit t('attendance.form.buttons.create'), class: 'btn btn-primary col-auto m-0'

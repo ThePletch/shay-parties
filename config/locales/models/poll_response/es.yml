@@ -1,0 +1,16 @@
+es:
+  poll_response:
+    created: Respondió a la encuesta.
+    created_automaybe: Respondió a la encuesta. Marcó automáticamente su RSVP como 'Quizás'.
+    created_failed: No pudo responder a la encuesta.
+    updated: Actualizó la respuesta.
+    updated_automaybe: Actualizó la respuesta. Marcó automáticamente su RSVP como 'Quizás'.
+    updated_failed: No pudo actualizar la respuesta.
+    destroyed: Respuesta despejado.
+    destroyed_failed: No pudo despejar la respuesta.
+    rejection:
+      unauthenticated: Debe ser autenticado como usuario o como cuenta temporal para responder a encuestas.
+    form:
+      update: Actualizar Respuesta
+      create: Responder
+      destroy: Despejar Respuesta

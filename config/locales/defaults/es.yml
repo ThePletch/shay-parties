@@ -1,0 +1,25 @@
+es:
+  back: Volver
+  form:
+    edit: Editar
+    show: Mirar
+    delete: Borrar
+    confirm: "¿Está usted seguro?"
+  navbar:
+    home: Inicio
+    host:
+      header: Hospedador
+      organize: Organizar un Evento
+      my_events: Mis Eventos Hospedados
+      mailing_lists: Administrar Listas de Correo
+    attendee:
+      header: Invitado
+      public_events: Eventos Públicos
+    profile: Mi Perfil
+    log_out: Cerrar sessión
+    log_in: Iniciar sessión
+    byline:
+      message: Un %{repo_link} por %{personal_link}
+      repo_link_msg: servicio libre
+      personal_link_msg: Steve Pletcher
+

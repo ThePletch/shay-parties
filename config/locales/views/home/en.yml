@@ -1,0 +1,19 @@
+en:
+  home:
+    index:
+      welcome: Welcome to Parties for All!
+      purpose: You can organize events with your friends here.
+      rsvp_prompt:
+        full_text: "%{bolded_section}, click the button below to find the event in the list of public events."
+        bolded_section: If you're here to RSVP to a friend's event
+      secret_info: If the event is secret, you'll need to go directly to the link you got from the host. Secret events don't show up in event lists until you RSVP to them.
+      events_button: Browse public events
+      host_prompt:
+        logged_in:
+          full_text: "%{bolded_section}, click the button below to organize a new event, or click 'Organize an event' under 'Host' in the navigation bar."
+          bolded_section: If you're here to host your own event
+        unauthenticated:
+          full_text: "%{bolded_section}, you'll need to log in first. Click the button below to log in, or click 'Log in' in the navigation bar."
+          bolded_section: If you're here to host your own event
+      new_event_button: Organize an event
+      log_in_button: Log in
