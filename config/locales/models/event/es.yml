@@ -9,6 +9,12 @@ es:
         end_time: Hora Final
         photo: Foto de Encabezado
         description: Descripción
+    errors:
+      models:
+        event:
+          attributes:
+            end_time:
+              ends_before_start: debe ser después de la hora de inicio.
   event:
     created: Evento creado. Para invitar gente a su evento, envíase el enlace para esta página junto con su invitación.
     updated: Evento actualizado exitosamente.
@@ -74,5 +80,3 @@ es:
       time_separator: ...hace
       hosted_by_other: Hospedado por %{name}
       hosted_by_you: Hospedado por usted
-    validation:
-      time_is_linear: Hora final debe ser después de la hora de inicio.

@@ -9,6 +9,13 @@ en:
         end_time: End Time
         photo: Header Photo
         description: Description
+    errors:
+      models:
+        event:
+          attributes:
+            end_time:
+              ends_before_start: must be after start time.
+
   event:
     created: Event created. To invite people to your event, send them the link to this page along with your invitation.
     updated: Event was successfully updated.
@@ -74,5 +81,3 @@ en:
       time_separator: ...until
       hosted_by_other: Hosted by %{name}
       hosted_by_you: Hosted by you
-    validation:
-      time_is_linear: End time must be after start time.

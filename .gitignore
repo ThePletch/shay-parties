@@ -36,3 +36,7 @@ public/packs
 # ignore vendored bundles
 vendor/development
 vendor/production
+
+*.DS_Store
+
+storage/*
