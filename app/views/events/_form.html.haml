@@ -24,9 +24,7 @@
     = form.file_field :photo
     %small.form-text.text-muted= t('event.form.header_photo_help')
   = form.hidden_field :address_id, id: 'existing_address_id'
-  = form.fields_for :address do |a_form|
-    %h3= t('activerecord.models.address')
-    = render "addresses/form", form: a_form
+  = render "addresses/form", parent_form: form
   .form-group
     = form.label :description
     = form.text_area :description, class: 'form-control', rows: "6"

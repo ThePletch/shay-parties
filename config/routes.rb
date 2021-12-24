@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   scope "(:locale)" do
-    devise_for :users
+    devise_for :users, defaults: { locale: I18n.locale }
     mount Commontator::Engine => '/comments_api'
 
     resources :events, shallow: true do
@@ -14,8 +14,13 @@ Rails.application.routes.draw do
       end
     end
 
+    # only for testing
+    resources :addresses, only: [:create]
+
+
     # user-scoped events index
     resources :user, shallow: true, only: [] do
+      resources :addresses, only: [:create]
       resources :events, only: [:index]
     end
 

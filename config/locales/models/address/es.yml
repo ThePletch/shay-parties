@@ -13,5 +13,5 @@ es:
     form:
       use_prior: "Usar una dirección previo:"
       address_placeholder: "[crear una dirección nueva]"
-      street2: "# de Unidad, etc."
+      street2_unit_number_explain: "# de Unidad, etc."
       state_placeholder: "[sin estado]"
