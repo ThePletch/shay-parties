@@ -24,7 +24,7 @@ class AttendancesController < ApplicationController
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
     else
-      redirect_to @event, alert: @attendance.errors.values.flatten.join("\n")
+      redirect_to @event, alert: @attendance.errors.map{|e| e.message }.join("\n")
     end
   end
 
