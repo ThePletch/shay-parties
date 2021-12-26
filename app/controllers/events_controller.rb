@@ -8,25 +8,10 @@ class EventsController < ApplicationController
 
   def index
     if params[:user_id]
-      @target_user = User.friendly.find(params[:user_id])
-
-      # users can see their own secret events
-      if current_user and current_user == @target_user
-        @events = @target_user.managed_events
-      else
-        if current_user
-          @events = @target_user.managed_events.left_joins(:attendances).where("NOT events.secret OR (attendances.attendee_id = ? and attendances.attendee_type = 'User')", current_user.id).distinct
-        else
-          @events = @target_user.managed_events.not_secret
-        end
-      end
-    else
-      if current_user
-        @events = Event.left_joins(:attendances).where("NOT events.secret OR (attendances.attendee_id = ? and attendances.attendee_type = 'User')", current_user.id).distinct
-      else
-        @events = Event.not_secret
-      end
+      @host = User.friendly.find(params[:user_id])
     end
+
+    @events = get_events_list_for(@host)
 
     @current_scope = params[:scope] || "future"
 
@@ -37,23 +22,19 @@ class EventsController < ApplicationController
       @events = @events.where("end_time > ?", Time.current)
     end
 
-
-
     @events = @events.order(end_time: :desc)
   end
 
   def show
-    if user_signed_in?
-      @attendee = current_user
-      @attendance = @event.attendances.find_by(attendee: current_user) || @event.attendances.build
-    elsif params[:guest_guid] and guest = Guest.find_by(guid: params[:guest_guid])
-      @attendee = guest
-      @attendance = @event.attendances.find_by(attendee: guest) || @event.attendances.build
-    else
-      @attendance = @event.attendances.build
+    if @authenticated_user
+      @attendee = @authenticated_user
+      @attendance = @event.attendances.find_by(attendee: @authenticated_user)
     end
 
+    @attendance ||= @event.attendances.build
+
     @event = EventDecorator.decorate(@event)
+
     # load page with comments displayed
     commontator_thread_show(@event)
   end
@@ -96,6 +77,32 @@ class EventsController < ApplicationController
   end
 
   private
+
+  def get_events_list_for(host)
+    if host
+      events = host.managed_events
+
+      # users can see all their own events, so we short-circuit here for users
+      # viewing their own events list to avoid any further filtering
+      if @authenticated_user == host
+        return events
+      end
+    else
+      events = Event.all
+    end
+
+    user_scoped_events_list(events, @authenticated_user)
+  end
+
+  # Hides all secret events except ones the user has already RSVPed to.
+  # Obviously, unauthenticated users haven't RSVPed to any events.
+  def user_scoped_events_list(events, viewing_user)
+    if viewing_user
+      events.left_joins(:attendances).where("NOT events.secret OR (attendances.attendee_id = ? and attendances.attendee_type = 'User')", viewing_user.id).distinct
+    else
+      events.not_secret
+    end
+  end
 
   def set_event
     @event = Event.includes(*EventsController::PRELOAD).friendly.find(params[:id])

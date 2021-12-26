@@ -1,20 +1,20 @@
-- if @target_user
-  - title t('event.index.for_user', name: @target_user.name)
+- if @host
+  - title t('event.index.for_user', name: @host.name)
 - else
   - title t('event.index.public')
 
 %h1.title
-  - if current_user && current_user == @target_user
+  - if current_user && current_user == @host
     = t('event.index.self')
   - else
-    - if @target_user
-      = t('event.index.for_user', name: @target_user.name)
+    - if @host
+      = t('event.index.for_user', name: @host.name)
     - else
       = t('event.index.public')
   .btn-group{role: "group", "aria-label" => "event scopes"}
-    - if @target_user
-      = scope t('event.index.category.upcoming'), user_events_path(@target_user, scope: :future), :future
-      = scope t('event.index.category.past'), user_events_path(@target_user, scope: :past), :past
+    - if @host
+      = scope t('event.index.category.upcoming'), user_events_path(@host, scope: :future), :future
+      = scope t('event.index.category.past'), user_events_path(@host, scope: :past), :past
     - else
       = scope t('event.index.category.upcoming'), events_path(scope: :future), :future
       = scope t('event.index.category.past'), events_path(scope: :past), :past
@@ -23,7 +23,7 @@
     %thead
       %tr
         %th= t('event.index.labels.title')
-        - if @target_user.nil?
+        - if @host.nil?
           %th= t('event.index.labels.host')
         %th= t('event.index.labels.attendees')
         %th= t('event.index.labels.date')
@@ -35,7 +35,7 @@
             = link_to event.title, event
             - if event.secret
               %em= t('event.index.labels.secret')
-          - if @target_user.nil?
+          - if @host.nil?
             %td= event.owner.name
           %td
             %ul.list-unstyled
@@ -50,8 +50,8 @@
 - else
   %p
     %strong= t('event.index.zero_state.message')
-  - if @target_user
-    - if @target_user == current_user
+  - if @host
+    - if @host == current_user
       %p= t('event.index.zero_state.click_to_make')
     - else
       %p= t('event.index.zero_state.other_user')
@@ -61,7 +61,7 @@
     - elsif @current_scope == "past"
       %p= t('event.index.zero_state.upcoming_prompt', upcoming_link: link_to(t('event.index.zero_state.upcoming_events'), events_path(scope: 'future'))).html_safe
 - if current_user
-  - if current_user == @target_user
+  - if current_user == @host
     - link_text = t('event.index.new_button.self')
   - else
     - link_text = t('event.index.new_button.other')

@@ -31,10 +31,8 @@ class PollResponsesController < ApplicationController
 
   def create
     # todo prevent multiple responses of the same type
-    if current_user
-      @response = @poll.responses.build(poll_response_params.merge(respondent: current_user))
-    elsif params[:guest_guid].present? and guest = Guest.find_by(guid: params[:guest_guid])
-      @response = @poll.responses.build(poll_response_params.merge(respondent: guest))
+    if @authenticated_user
+      @response = @poll.responses.build(poll_response_params.merge(respondent: @authenticated_user))
     else
       redirect_to new_user_session_path, alert: t('poll_response.rejection.unauthenticated')
       return
@@ -58,16 +56,10 @@ class PollResponsesController < ApplicationController
   private
 
   def set_response
-    if current_user
-      @response = current_user.poll_responses.find(params[:id])
-    elsif params[:guest_guid].nil?
-      redirect_to new_user_session_path
+    if @authenticated_user
+      @response = @authenticated_user.poll_responses.find(params[:id])
     else
-      if guest = Guest.find_by(guid: params[:guest_guid])
-        @response = guest.poll_responses.find(params[:id])
-      else
-        redirect_to new_user_session_path, notice: t('guest.rejection.bad_id')
-      end
+      redirect_to new_user_session_path
     end
   end
 
