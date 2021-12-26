@@ -32,7 +32,7 @@ class Event < ApplicationRecord
   scope :attended_by, ->(user) { joins(:attendances).where(attendances: {attendee_id: user.id, attendee_type: "User"}) }
 
   def landing_page_photo
-    photo.variant(resize: '1900', combine_options: {gravity: 'North', crop: '1900x500+0+0'})
+    photo.variant(resize: '1900', gravity: 'North', crop: '1900x500+0+0')
   end
 
   def parse_time(timestamp)
