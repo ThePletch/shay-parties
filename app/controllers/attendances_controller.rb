@@ -13,9 +13,9 @@ class AttendancesController < ApplicationController
 
     if @attendance.save
       if @attendance.attendee.guest?
-        notice = t 'attendance.created'
-      else
         notice = t 'attendance.created_with_link_html', link: event_url(@event, guest_guid: @attendance.attendee.guid)
+      else
+        notice = t 'attendance.created'
       end
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
