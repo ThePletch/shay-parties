@@ -42,8 +42,8 @@
               %li= t('event.index.labels.going_count', count: event.attendances.going.count)
               %li= t('event.index.labels.maybe_count', count: event.attendances.maybe.count)
           %td= EventDecorator.decorate(event).start_date
-          - if event.owned_by?(current_user)
-            %td
+          %td
+            - if event.owned_by?(current_user)
               .btn-group
                 = link_to t('form.edit'), edit_event_path(event), class: 'btn btn-primary btn-small'
                 = link_to t('form.delete'), event, method: :delete, data: { confirm: t('form.confirm') }, class: 'btn btn-danger'
