@@ -83,3 +83,5 @@ gem "icalendar", "~> 2.7"
 gem "add_to_calendar", "~> 0.2.5"
 
 gem "friendly_id", "~> 5.4"
+
+gem "bootstrap_form", "~> 4.5"

@@ -30,9 +30,7 @@ en:
         edit: "Editing %{title}"
         new: New Event
       show_event_link: See Event
-      errors_msg:
-        one: "One error prohibited this event from being saved:"
-        other: "%{count} errors prohibited this event from being saved:"
+      errors_msg: Couldn't save this event.
       secret_event_help:
         Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it.
         This won't stop people you send the link to from giving it to others without your permission.

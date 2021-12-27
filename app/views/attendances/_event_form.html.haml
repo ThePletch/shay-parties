@@ -1,5 +1,5 @@
 - form_object = attendance.persisted? ? [attendance] : [event, attendance]
-= form_for form_object, html: {class: 'col p-0'} do |form|
+= bootstrap_form_for(form_object) do |form|
   - if current_user
     = form.hidden_field :user_id, value: current_user.id
   - else
@@ -11,24 +11,7 @@
       %h6.col-lg-4.p-0.text-right
         = link_to t('attendance.form.sign_in_alt'), new_user_session_path
 
-    = fields_for :attendee do |attendee_form|
-      .row.my-2.mx-1
-        .input-group.col.p-0
-          .input-group-prepend
-            = attendee_form.label :name, t('attendance.form.labels.name'), class: 'input-group-text'
-          = attendee_form.text_field :name, class: 'form-control col-auto'
-
-      .row.my-2.mx-1
-        .input-group.col.p-0
-          .input-group-prepend
-            .input-group-text= t('attendance.form.labels.email')
-          = attendee_form.email_field :email, class: 'form-control col-auto'
-  .row.my-2.mx-1
-    .input-group.col.p-0
-      .input-group-prepend
-        .input-group-text= t('attendance.form.labels.rsvp')
-      = form.select :rsvp_status, options_for_select(attendance_types_localized, selected: attendance.rsvp_status), {}, class: 'form-control'
-    - if attendance.persisted?
-      = form.submit t('attendance.form.buttons.update'), class: 'btn btn-primary col-auto m-0'
-    - else
-      = form.submit t('attendance.form.buttons.create'), class: 'btn btn-primary col-auto m-0'
+    = fields_for(:attendee, form.object.attendee, builder: BootstrapForm::FormBuilder) do |attendee_form|
+      = attendee_form.text_field :name, prepend: t('activerecord.attributes.attendee.name') + ":", skip_label: true, wrapper_class: 'my-2'
+      = attendee_form.email_field :email, prepend: t('activerecord.attributes.attendee.email') + ":", prepend_class: 'aeiou', skip_label: true, wrapper_class: 'my-2'
+  = form.select :rsvp_status, options_for_select(attendance_types_localized, selected: attendance.rsvp_status), prepend: t('activerecord.attributes.attendance.rsvp_status') + ":", append: form.primary('RSVP'), skip_label: true, wrapper_class: 'my-2'

@@ -1,0 +1,18 @@
+es:
+  time:
+    am: am
+    pm: pm
+  date:
+    abbr_month_names:
+      - Ene
+      - Feb
+      - Mar
+      - Abr
+      - May
+      - Jun
+      - Jul
+      - Ago
+      - Sep
+      - Oct
+      - Nov
+      - Dic

@@ -2,19 +2,5 @@ es:
   time:
     formats:
       commontator: "%b %-d, %Y %l:%M %P"
-    am: am
-    pm: pm
-  date:
-    abbr_month_names:
-      - Ene
-      - Feb
-      - Mar
-      - Abr
-      - May
-      - Jun
-      - Jul
-      - Ago
-      - Sep
-      - Oct
-      - Nov
-      - Dic
+  commontator:
+    require_login: Debe iniciar sesión antes de poder publicar un comentario.
