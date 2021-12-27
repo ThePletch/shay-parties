@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  before_action :get_user, except: [:create]
+  before_action :require_user_or_guest_auth, except: [:create]
   before_action :set_event, only: [:create]
   before_action :set_owned_attendance, only: [:update]
   before_action :set_attendance, only: [:destroy]
@@ -8,18 +8,14 @@ class AttendancesController < ApplicationController
   # POST /attendances
   # POST /attendances.json
   def create
-    if current_user
-      @attendance = @event.attendances.build(attendee: current_user, rsvp_status: attendance_params[:rsvp_status])
-    else
-      guest = Guest.new(attendee_params)
-      @attendance = @event.attendances.build(attendee: guest, rsvp_status: attendance_params[:rsvp_status])
-    end
+    attendee = @authenticated_user || Guest.new(attendee_params)
+    @attendance = @event.attendances.build(attendee: attendee, rsvp_status: attendance_params[:rsvp_status])
 
     if @attendance.save
-      if current_user
-        notice = t 'attendance.created'
-      else
+      if @attendance.attendee.guest?
         notice = t 'attendance.created_with_link_html', link: event_url(@event, guest_guid: @attendance.attendee.guid)
+      else
+        notice = t 'attendance.created'
       end
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
@@ -60,20 +56,15 @@ class AttendancesController < ApplicationController
 
   private
 
-  def get_user
-    if current_user.present?
-      @user = current_user
-    elsif params[:guest_guid].nil?
+  def require_user_or_guest_auth
+    unless @authenticated_user
       redirect_to new_user_session_path, alert: t('attendance.rejection.unauthenticated')
-    elsif guest = Guest.find_by(guid: params[:guest_guid])
-      @user = guest
-    else
-      redirect_to new_user_session_path, alert: t('guest.rejection.bad_id')
+      return
     end
   end
 
   def set_owned_attendance
-    @attendance = @user.attendances.find(params[:id])
+    @attendance = @authenticated_user.attendances.find(params[:id])
   end
 
   def set_attendance
@@ -81,7 +72,7 @@ class AttendancesController < ApplicationController
   end
 
   def require_own_attendance_or_event
-    if not (@attendance.attendee == @user or @attendance.event.owned_by?(current_user))
+    if not (@attendance.attendee == @authenticated_user or @attendance.event.owned_by?(current_user))
       redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), alert: t('attendance.rejection.unauthorized_removal')
     end
   end

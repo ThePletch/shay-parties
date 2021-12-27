@@ -1,16 +1,20 @@
 class Guest < ApplicationRecord
-    has_many :attendances, as: :attendee, dependent: :destroy
-    has_many :poll_responses, as: :respondent, dependent: :destroy
-    has_many :events, through: :attendances
+  has_many :attendances, as: :attendee, dependent: :destroy
+  has_many :poll_responses, as: :respondent, dependent: :destroy
+  has_many :events, through: :attendances
 
-    validates :name, presence: true
-    validates :email, presence: true
+  validates :name, presence: true
+  validates :email, presence: true
 
-    before_create :generate_guid
+  before_create :generate_guid
 
-    private
+  def guest?
+    true
+  end
 
-    def generate_guid
-        self.guid = SecureRandom.uuid
-    end
+  private
+
+  def generate_guid
+    self.guid = SecureRandom.uuid
+  end
 end

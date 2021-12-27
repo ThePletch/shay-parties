@@ -1,8 +1,10 @@
 class ApplicationController < ActionController::Base
+  include AuthHelper
+
   protect_from_forgery with: :exception
 
   before_action :permit_additional_user_params, if: :devise_controller?
-  before_action :set_locale
+  before_action :set_locale, :set_authenticated_user
   before_action :store_user_location!, if: :storable_location?
 
   def after_sign_in_path_for(resource_or_scope)
@@ -30,6 +32,10 @@ class ApplicationController < ActionController::Base
     else
       I18n.locale = I18n.default_locale
     end
+  end
+
+  def set_authenticated_user
+    @authenticated_user = user_or_guest
   end
 
   def default_url_options

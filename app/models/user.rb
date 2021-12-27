@@ -23,6 +23,10 @@ class User < ApplicationRecord
   has_many :answered_polls, through: :poll_responses
   has_many :mailing_lists, dependent: :destroy
 
+  def guest?
+    false
+  end
+
   private
 
   def should_generate_new_friendly_id?
