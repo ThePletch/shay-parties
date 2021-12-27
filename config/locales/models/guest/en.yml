@@ -1,4 +1,13 @@
 en:
+  activerecord:
+    errors:
+      models:
+        guest:
+          attributes:
+            name:
+              blank: Name can't be blank.
+            email:
+              blank: Email can't be blank.
   guest:
     rejection:
       bad_id: Unrecognized guest ID.

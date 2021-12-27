@@ -10,7 +10,7 @@ describe AttendancesController do
     context "when unauthenticated" do
       it "rejects requests with no guest information" do
         post :create, params: {event_id: @event.id, attendance: {rsvp_status: "Yes"}, attendee: {name: nil, email: nil}}
-        expect(response).to redirect_to event_path(@event)
+        expect(response).to have_http_status(:unprocessable_entity)
         expect(@event.attendances).to be_empty
       end
 

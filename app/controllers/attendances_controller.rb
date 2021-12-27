@@ -24,7 +24,7 @@ class AttendancesController < ApplicationController
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
     else
-      redirect_to @event, alert: @attendance.errors.map{|e| e.message }.join("\n")
+      render 'events/show', alert: "Couldn't save your RSVP: " + @attendance.errors.map{|e| e.full_message }.join(". "), status: :unprocessable_entity
     end
   end
 
@@ -87,7 +87,7 @@ class AttendancesController < ApplicationController
   end
 
   def set_event
-    @event = Event.friendly.find(params[:event_id])
+    @event = EventDecorator.decorate(Event.friendly.find(params[:event_id]))
   end
 
   # Once an RSVP is created, you can't change its attendee or its event.

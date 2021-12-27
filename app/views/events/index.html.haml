@@ -19,7 +19,7 @@
       = scope t('event.index.category.upcoming'), events_path(scope: :future), :future
       = scope t('event.index.category.past'), events_path(scope: :past), :past
 - if @events.any?
-  %table.table.table-sm
+  %table.table.table-sm.table-striped.table-responsive-sm
     %thead
       %tr
         %th= t('event.index.labels.title')

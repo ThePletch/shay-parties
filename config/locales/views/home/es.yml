@@ -3,13 +3,19 @@ es:
     index:
       welcome: Bienvenidos a Parties for All!
       purpose: Se puede organizar eventos con sus amigos aquí.
-      rsvp_prompt: Si está aquí para RSVP a un evento de un amigo, presiona al botón de abajo para encontrar el evento en la lista de eventos públicos.
+      rsvp_prompt:
+        full_text: "%{bolded_section}, presiona al botón de abajo para encontrar el evento en la lista de eventos públicos."
+        bolded_section: Si está aquí para RSVP a un evento de un amigo
       secret_info:
         Si el evento es secreto, tendrá que navegar directamente al enlace que consiguió del hospedador.
         Eventos secretos no aparecen en las listas hasta que usted RSVP.
       events_button: Navegar eventos públicos
       host_prompt:
-        logged_in: Si está aquí para hospedar a su propio evento, presiona al botón de abajo para organizar un evento nuevo, o presiona a "Organizar un Evento" debajo de "Hospedador" en la barra de navegación.
-        unauthenticated: Si está aquí para hospedar su propio evento, primero debe iniciar sesión. Presiona al botón de abajo para iniciar sesión, o presiona a 'Iniciar sesión' en la barra de navegación.
+        logged_in:
+          full_text: "%{bolded_section}, presiona al botón de abajo para organizar un evento nuevo, o presiona a \"Organizar un Evento\" debajo de \"Hospedador\" en la barra de navegación."
+          bolded_section: Si está aquí para hospedar a su propio evento
+        unauthenticated:
+          full_text: "%{bolded_section}, primero debe iniciar sesión. Presiona al botón de abajo para iniciar sesión, o presiona a 'Iniciar sesión' en la barra de navegación."
+          bolded_section: Si está aquí para hospedar su propio evento
       new_event_button: Organizar un evento
       log_in_button: Iniciar sesión

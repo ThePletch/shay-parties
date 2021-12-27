@@ -13,8 +13,11 @@ es:
       models:
         event:
           attributes:
+            start_time:
+              blank: Hora de inicio no puede estar en blanco.
             end_time:
-              ends_before_start: debe ser después de la hora de inicio.
+              blank: Hora final no puede estar en blanco.
+              ends_before_start: Hora final debe ser después de la hora de inicio.
   event:
     created: Evento creado. Para invitar gente a su evento, envíase el enlace para esta página junto con su invitación.
     updated: Evento actualizado exitosamente.
@@ -29,12 +32,10 @@ es:
         edit: "Editando a %{title}"
         new: Evento Nuevo
       show_event_link: Mira a Evento
-      errors_msg:
-        one: "Un errór prohibió que se guardara este evento:"
-        other: "%{count} errores prohibieron que se guardara este evento:"
+      errors_msg: No pudo guardar a este evento.
       secret_event_help:
         Eventos secretos no aparecen en la página de inicio a menos que el usuario haya respondido - se necesita enviar el enlace a las personas usted mismo para que lo encuentren.
-        Esto no impedirá que las personas a las que usted envíe el enlace se lo darlo a otras personas sin su permiso.
+        Esto no impedirá que las personas a las que usted envíe el enlace se darlo a otras personas sin su permiso.
         Se puede encontrar a sus eventos secretos en la "Hospedador -> Mis Eventos Hospedados" sección en la barra de navegación.
       header_photo_help:
         Fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px), por lo que las fotos anchas con una relación de aspecto ~4:1 aparecen mejor.

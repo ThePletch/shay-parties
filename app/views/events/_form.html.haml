@@ -1,32 +1,23 @@
-= form_for(event, local: true) do |form|
+= bootstrap_form_with(model: event, local: true) do |form|
   - if event.errors.any?
     #error_explanation
-      %h2= t('event.form.errors_msg', count: event.errors.count)
-      %ul
-        - event.errors.full_messages.each do |message|
-          %li= message
+      %h2= t('event.form.errors_msg')
   .form-group
-    = form.label :title
     = form.text_field :title, class: 'form-control'
   .form-group
     .form-check
-      = form.check_box :secret, class: 'form-check-input'
-      = form.label :secret, t('event.form.labels.secret')
+      = form.check_box :secret, class: 'form-check-input', label: t('event.form.labels.secret')
     %small.form-text.text-muted= t('event.form.secret_event_help')
   .form-group
-    = form.label :start_time
-    = form.text_field :start_time, class: 'form-control datetimepicker', value: event.start_time_str
+    = form.text_field :start_time, class: 'datetimepicker', value: event.start_time_str
   .form-group
-    = form.label :end_time
-    = form.text_field :end_time, class: 'form-control datetimepicker', value: event.end_time_str
+    = form.text_field :end_time, class: 'datetimepicker', value: event.end_time_str
   .form-group
-    = form.label :photo
     = form.file_field :photo
     %small.form-text.text-muted= t('event.form.header_photo_help')
   = form.hidden_field :address_id, id: 'existing_address_id'
   = render "addresses/form", parent_form: form
   .form-group
-    = form.label :description
     = form.text_area :description, class: 'form-control', rows: "6"
   .actions
-    = form.submit class: 'btn btn-primary'
+    = form.primary
