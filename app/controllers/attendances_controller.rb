@@ -24,7 +24,7 @@ class AttendancesController < ApplicationController
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
     else
-      render 'events/show', alert: "Couldn't save your RSVP: " + @attendance.errors.map{|e| e.full_message }.join(". ")
+      render 'events/show', alert: "Couldn't save your RSVP: " + @attendance.errors.map{|e| e.full_message }.join(". "), status: :unprocessable_entity
     end
   end
 
