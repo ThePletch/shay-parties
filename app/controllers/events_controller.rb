@@ -33,8 +33,6 @@ class EventsController < ApplicationController
 
     @attendance ||= @event.attendances.build
 
-    @event = EventDecorator.decorate(@event)
-
     # load page with comments displayed
     commontator_thread_show(@event)
   end
@@ -105,7 +103,7 @@ class EventsController < ApplicationController
   end
 
   def set_event
-    @event = Event.includes(*EventsController::PRELOAD).friendly.find(params[:id])
+    @event = EventDecorator.decorate(Event.includes(*EventsController::PRELOAD).friendly.find(params[:id]))
   end
 
   # ensures that the event being access is owned by the current user

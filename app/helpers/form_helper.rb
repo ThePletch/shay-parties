@@ -1,4 +1,4 @@
-module FormWrapHelper
+module FormHelper
   include ActionView::Helpers::FormHelper
 
   def optional_parent_wrap(parent_form, form_record, options = {}, &block)

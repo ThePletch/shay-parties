@@ -1,4 +1,20 @@
 es:
+  en:
+  activerecord:
+    models:
+      attendance: Asistencia
+    attributes:
+      attendance:
+        rsvp_status: RSVP
+      attendee:
+        name: Nombre
+        email: Email
+    errors:
+      models:
+        attendance:
+          attributes:
+            rsvp_status:
+              inclusion: No es un RSVP válido.
   attendance:
     created: RSVP exitoso.
     created_with_link_html: "RSVP exitoso. Marcar este enlace para cambiar su RSVP más tarde: %{link}"
@@ -8,8 +24,6 @@ es:
     rejection:
       unauthenticated: Se necesita estar conectado o autenticar como invitado para administrar su RSVP.
       unauthorized_removal: No se puede eliminar un RSVP a menos que está su RSVP o su evento.
-    validation:
-      invalid_status: No es un RSVP válido.
     status:
       'Yes': "Sí"
       'Maybe': Quizás

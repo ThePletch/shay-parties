@@ -1,15 +1,28 @@
 en:
+  activerecord:
+    models:
+      attendance: Attendance
+    attributes:
+      attendance:
+        rsvp_status: RSVP
+      attendee:
+        name: Name
+        email: Email
+    errors:
+      models:
+        attendance:
+          attributes:
+            rsvp_status:
+              inclusion: Not a valid RSVP.
   attendance:
     created: RSVP sucessful.
-    created_with_link: "RSVP successful. Bookmark this link to change your RSVP later: %{link}"
+    created_with_link_html: "RSVP successful. Bookmark this link to change your RSVP later: %{link}"
     destroyed: RSVP removed.
     destroyed_failed: Failed to remove RSVP.
     updated: RSVP updated.
     rejection:
       unauthenticated: You must be logged in or authenticate as a guest to manage your RSVP.
       unauthorized_removal: You can't remove an RSVP unless it's your RSVP or your event.
-    validation:
-      invalid_status: Not a valid RSVP.
     status:
       'Yes': "Yes"
       'Maybe': Maybe
@@ -24,10 +37,6 @@ en:
       prompt_guest: RSVP as a guest
       can_change_later: You'll be able to change your RSVP later.
       sign_in_alt: ...or sign in.
-      labels:
-        name: "NAME:"
-        email: "EMAIL:"
-        rsvp: "RSVP:"
       buttons:
         update: Update
         create: RSVP

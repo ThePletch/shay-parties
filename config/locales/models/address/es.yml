@@ -4,7 +4,7 @@ es:
       address: Dirección
     attributes:
       address:
-        street1: Calle
+        street: Calle
         street2: Calle 2
         city: Ciudad
         state: Estado

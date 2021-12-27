@@ -4,7 +4,7 @@ en:
       address: Address
     attributes:
       address:
-        street1: Street
+        street: Street
         street2: Street 2
         city: City
         state: State
