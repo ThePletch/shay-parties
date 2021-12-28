@@ -1,15 +1,15 @@
 - title @event.title
 
-.row
+= content_for :edge_to_edge do
   .hero
     .hero-image
       - if @event.photo.attached?
         = image_tag url_for(@event.landing_page_photo)
       - else
         = image_tag 'default_event_image.jpg'
-    .col
+    .mx-2
       .hero-title
-        %h1.title
+        %h1.title.display-4
           = @event.title
           - if @event.owned_by?(current_user)
             %small
@@ -22,7 +22,7 @@
 .row
   .col-lg
     .row
-      .col-sm-auto
+      .col-sm
         %em
           - # show a simplified format for events spanning a single day
           - if @event.start_datetime.to_date == @event.end_datetime.to_date
@@ -36,9 +36,9 @@
               %strong= @event.end_date
               = @event.end_time
       - if @event.address
-        .col-sm
+        .col-sm-auto
           .d-sm-none.mt-2= render 'addresses/show', address: @event.address
-          .d-none.d-sm-inline.text-right= render 'addresses/show', address: @event.address
+          .d-none.d-sm-inline.text-end= render 'addresses/show', address: @event.address
 
     .d-lg-none
       = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
