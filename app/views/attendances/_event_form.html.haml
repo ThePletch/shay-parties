@@ -7,8 +7,8 @@
     .row.my-2.mx-1
       %h5.col-lg-8.p-0
         %div= t('attendance.form.prompt_guest')
-        %small.font-italic.text-muted= t('attendance.form.can_change_later')
-      %h6.col-lg-4.p-0.text-right
+        %small.fst-italic.text-muted= t('attendance.form.can_change_later')
+      %h6.col-lg-4.p-0.text-end
         = link_to t('attendance.form.sign_in_alt'), new_user_session_path
 
     = fields_for(:attendee, form.object.attendee, builder: BootstrapForm::FormBuilder) do |attendee_form|
