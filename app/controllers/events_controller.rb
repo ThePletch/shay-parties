@@ -83,11 +83,13 @@ class EventsController < ApplicationController
       # users can see all their own events, so we short-circuit here for users
       # viewing their own events list to avoid any further filtering
       if @authenticated_user == host
-        return events
+        return events.includes(:attendances, :owner)
       end
     else
       events = Event.all
     end
+
+    events = events.includes(:attendances, :owner)
 
     user_scoped_events_list(events, @authenticated_user)
   end

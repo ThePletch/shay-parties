@@ -337,7 +337,7 @@ DEPENDENCIES
   acts_as_votable (~> 0.13.1)
   add_to_calendar (~> 0.2.5)
   aws-sdk-s3 (~> 1.100)
-  bootstrap (~> 5)
+  bootstrap (~> 5.1)
   bootstrap_form (~> 5)
   byebug
   capybara (~> 3.35)
