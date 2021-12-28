@@ -18,5 +18,5 @@ en:
         edit: Editing %{name}
         new: New Poll
     rejection:
-      unauthenticated: You need to %{sign_in_link} or RSVP as a guest to answer polls.
+      unauthenticated_html: You need to %{sign_in_link} or RSVP as a guest to answer polls.
       unauthenticated_sign_in_msg: sign in

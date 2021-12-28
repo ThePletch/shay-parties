@@ -18,5 +18,5 @@ es:
         edit: Editando a %{name}
         new: Encuesta Nueva
     rejection:
-      unauthenticated_html: Debe %{sign_in_link} o RSVP como usuario temporal para responder a una encuesta.
+      unauthenticated_html: Debe %{sign_in_link} o RSVP como cuenta temporal para responder a una encuesta.
       unauthenticated_sign_in_msg: iniciar sesión
