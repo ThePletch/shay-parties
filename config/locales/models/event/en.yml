@@ -51,17 +51,16 @@ en:
       for_user: "Events from %{name}"
       public: Public Events
       self: Your Events
+      hosted_by: "Hosted by %{name}"
       category:
         upcoming: Upcoming
         past: Past
       labels:
         title: Title
-        host: Host
         attendees: Attendees
-        date: Date
-        going_count: "Going: %{count}"
-        maybe_count: "Maybe: %{count}"
-        secret: (secret event)
+        going: "Going"
+        maybe: "Maybe"
+        secret: (secret)
       zero_state:
         message: It looks like there aren't any events here.
         click_to_make: Try clicking the button below to organize a new event.

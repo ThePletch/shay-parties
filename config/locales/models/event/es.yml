@@ -53,17 +53,16 @@ es:
       for_user: "Eventos de %{name}"
       public: Eventos Públicos
       self: Sus Eventos
+      hosted_by: "Hospedado por %{name}"
       category:
         upcoming: Próximo
         past: Pasado
       labels:
         title: Título
-        host: Hospedador
         attendees: Asistentes
-        date: Fecha
-        going_count: "Yendo: %{count}"
-        maybe_count: "Quizás: %{count}"
-        secret: (evento secreto)
+        going: Yendo
+        maybe: Quizás
+        secret: (secreto)
       zero_state:
         message: Parece que no hay eventos aquí.
         click_to_make: Intente presionar el botón de abajo para organizar un nuevo evento.

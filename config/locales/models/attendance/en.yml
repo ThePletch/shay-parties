@@ -15,7 +15,7 @@ en:
             rsvp_status:
               inclusion: Not a valid RSVP.
   attendance:
-    created: RSVP sucessful.
+    created: RSVP successful.
     created_with_link_html: "RSVP successful. Bookmark this link to change your RSVP later: %{link}"
     destroyed: RSVP removed.
     destroyed_failed: Failed to remove RSVP.

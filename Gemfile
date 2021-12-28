@@ -26,7 +26,7 @@ gem 'haml-rails', '~> 2.0.0'
 gem 'draper', '~> 4.0'
 
 # use bootstrap as css framework
-gem 'bootstrap', '~> 4.3'
+gem 'bootstrap', '~> 5'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '~> 4.4'
@@ -84,4 +84,4 @@ gem "add_to_calendar", "~> 0.2.5"
 
 gem "friendly_id", "~> 5.4"
 
-gem "bootstrap_form", "~> 4.5"
+gem "bootstrap_form", "~> 5"

@@ -8,10 +8,9 @@
     .form-check
       = form.check_box :secret, class: 'form-check-input', label: t('event.form.labels.secret')
     %small.form-text.text-muted= t('event.form.secret_event_help')
-  .form-group
-    = form.text_field :start_time, class: 'datetimepicker', value: event.start_time_str
-  .form-group
-    = form.text_field :end_time, class: 'datetimepicker', value: event.end_time_str
+  .row
+    = form.text_field :start_time, class: 'datetimepicker', wrapper_class: 'col-md', value: event.start_time_str
+    = form.text_field :end_time, class: 'datetimepicker', wrapper_class: 'col-md-6', value: event.end_time_str
   .form-group
     = form.file_field :photo
     %small.form-text.text-muted= t('event.form.header_photo_help')
