@@ -1,4 +1,4 @@
 - if event.attended_by?(attendee)
   .row
-    .m-2.col-sm.text-decoration-none= link_to t('event.add_to_gcal'), gcal_url(event)
-    .m-2.col-sm-auto.text-decoration-none= link_to t('event.download_ics'), ical_event_path(event)
+    .m-2.col-sm= link_to t('event.add_to_gcal'), gcal_url(event), class: 'text-decoration-none'
+    .m-2.col-sm-auto= link_to t('event.download_ics'), ical_event_path(event), class: 'text-decoration-none'
