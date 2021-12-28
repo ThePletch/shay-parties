@@ -6,8 +6,8 @@
     - elsif attendance.event.owned_by?(attendance.attendee)
         %small.text-muted= t('attendance.is_host')
     - if attendance.event.owned_by?(current_user)
-        .float-right
+        .float-end
             %em.small= attendance.attendee.email
-            = button_to "X", attendance_path(attendance), method: :delete, data: {confirm: t('attendance.dialog.remove_attendance', name: attendance.attendee.name)}, class: 'btn btn-sm btn-link text-danger ml-2 p-0', form_class: 'd-inline'
+            = button_to "X", attendance_path(attendance), method: :delete, data: {confirm: t('attendance.dialog.remove_attendance', name: attendance.attendee.name)}, class: 'btn btn-sm btn-link text-danger ms-2 p-0', form_class: 'd-inline'
     - else
-        %em.float-right.text-muted.small= t('attendance.email_hidden')
+        %em.float-end.text-muted.small= t('attendance.email_hidden')

@@ -19,34 +19,24 @@
       = scope t('event.index.category.upcoming'), events_path(scope: :future), :future
       = scope t('event.index.category.past'), events_path(scope: :past), :past
 - if @events.any?
-  %table.table.table-sm.table-striped.table-responsive-sm
-    %thead
-      %tr
-        %th= t('event.index.labels.title')
+  - @events.each do |event|
+    .row.bg-light.mb-2.py-2
+      .col.align-middle
+        .d-grid.text-center
+          = link_to event.title, event, class: 'h3 p-2 text-decoration-none'
+          - if event.secret
+            %small.fst-italic.float-end= t('event.index.labels.secret')
         - if @host.nil?
-          %th= t('event.index.labels.host')
-        %th= t('event.index.labels.attendees')
-        %th= t('event.index.labels.date')
-        %th
-    %tbody
-      - @events.each do |event|
-        %tr.event-row
-          %td
-            = link_to event.title, event
-            - if event.secret
-              %em= t('event.index.labels.secret')
-          - if @host.nil?
-            %td= event.owner.name
-          %td
-            %ul.list-unstyled
-              %li= t('event.index.labels.going_count', count: event.attendances.going.count)
-              %li= t('event.index.labels.maybe_count', count: event.attendances.maybe.count)
-          %td= EventDecorator.decorate(event).start_date
-          %td
-            - if event.owned_by?(current_user)
-              .btn-group
-                = link_to t('form.edit'), edit_event_path(event), class: 'btn btn-primary btn-small'
-                = link_to t('form.delete'), event, method: :delete, data: { confirm: t('form.confirm') }, class: 'btn btn-danger'
+          %small.fst-italic.mx-2= t('event.index.hosted_by', name: event.owner.name)
+        %small.d-block.float-sm-end.mx-2.fw-bold= EventDecorator.decorate(event).start_date
+      .col-auto
+        .d-grid.gap-1
+          .badge.bg-success{title: t('event.index.labels.going'), data: {'bs-toggle': 'tooltip'}}= event.attendances.pluck(:rsvp_status).count('Yes')
+          .badge.bg-warning{title: t('event.index.labels.maybe'), data: {'bs-toggle': 'tooltip'}}= event.attendances.pluck(:rsvp_status).count('Maybe')
+      - if event.owned_by?(current_user)
+        .d-grid.gap-1
+          = link_to t('form.edit'), edit_event_path(event), class: 'btn btn-primary btn-sm'
+          = link_to t('form.delete'), event, method: :delete, data: { confirm: t('form.confirm') }, class: 'btn btn-danger btn-sm'
 - else
   %p
     %strong= t('event.index.zero_state.message')

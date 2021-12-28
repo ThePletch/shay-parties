@@ -1,5 +1,5 @@
 - if mailing_list.persisted?
-  = button_to t('mailing_list.form.delete'), mailing_list_path(mailing_list), method: :delete, class: 'btn btn-danger float-right', data: {confirm: t('mailing_list.form.confirm_delete')}
+  = button_to t('mailing_list.form.delete'), mailing_list_path(mailing_list), method: :delete, class: 'btn btn-danger float-end', data: {confirm: t('mailing_list.form.confirm_delete')}
 = form_with(model: mailing_list, local: true) do |f|
   - if mailing_list.errors.any?
     #error_explanation

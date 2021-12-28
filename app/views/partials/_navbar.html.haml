@@ -1,25 +1,25 @@
 %nav.navbar.navbar-expand-md.navbar-light.bg-light{role: :navigation, 'aria-label': "main navigation"}
-  = link_to "Parties for All", root_path, class: "navbar-brand"
-  %button.navbar-toggler{type: 'button', data: {toggle: 'collapse', target: '#main-nav'}, aria_controls: 'main-nav', aria_expanded: false, aria_label: "Toggle navigation"}
-    %span.navbar-toggler-icon
-  .collapse.navbar-collapse#main-nav
-    %ul.navbar-nav.mr-auto
-      %li.nav-item= link_to t('navbar.home'), root_path, class: 'nav-link'
-      - if user_signed_in?
-        %li.nav-item.dropdown
-          %a.nav-link.dropdown-toggle#host-dropdown{href: '#', role: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}}= t('navbar.host.header')
-          .dropdown-menu{aria: {labelledBy: 'host-dropdown'}}
-            = link_to t('navbar.host.organize'), new_event_path, class: "dropdown-item"
-            = link_to t('navbar.host.my_events'), user_events_path(current_user), class: "dropdown-item"
-            = link_to t('navbar.host.mailing_lists'), mailing_lists_path, class: "dropdown-item"
-        %li.nav-item.dropdown
-          %a.nav-link.dropdown-toggle#attendee-dropdown{href: '#', role: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}}= t('navbar.attendee.header')
-          .dropdown-menu{aria: {labelledBy: 'attendee-dropdown'}}
-            = link_to t('navbar.attendee.public_events'), events_path, class: "dropdown-item"
-        %li.nav-item= link_to t('navbar.profile'), edit_user_registration_path, class: "nav-link"
-        %li.nav-item= button_to t('navbar.log_out'), destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
-      - else
-        %li.nav-item= link_to t('navbar.log_in'), new_user_session_path, class: "nav-link"
-    %ul.navbar-nav.pull-right
-      %li.nav-item
+  .container-fluid
+    = link_to "Parties for All", root_path, class: "navbar-brand"
+    %button.navbar-toggler{type: 'button', data: {'bs-toggle': 'collapse', 'bs-target': '#main-nav'}, aria_controls: 'main-nav', aria_expanded: false, aria_label: "Toggle navigation"}
+      %span.navbar-toggler-icon
+    .collapse.navbar-collapse#main-nav
+      %ul.navbar-nav.me-auto
+        %li.nav-item= link_to t('navbar.home'), root_path, class: 'nav-link'
+        - if user_signed_in?
+          %li.nav-item.dropdown
+            %a.nav-link.dropdown-toggle#host-dropdown{href: '#', role: 'button', data: {'bs-toggle': 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}}= t('navbar.host.header')
+            .dropdown-menu{aria: {labelledBy: 'host-dropdown'}}
+              = link_to t('navbar.host.organize'), new_event_path, class: "dropdown-item"
+              = link_to t('navbar.host.my_events'), user_events_path(current_user), class: "dropdown-item"
+              = link_to t('navbar.host.mailing_lists'), mailing_lists_path, class: "dropdown-item"
+          %li.nav-item.dropdown
+            %a.nav-link.dropdown-toggle#attendee-dropdown{href: '#', role: 'button', data: {'bs-toggle': 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}}= t('navbar.attendee.header')
+            .dropdown-menu{aria: {labelledBy: 'attendee-dropdown'}}
+              = link_to t('navbar.attendee.public_events'), events_path, class: "dropdown-item"
+          %li.nav-item= link_to t('navbar.profile'), edit_user_registration_path, class: "nav-link"
+          %li.nav-item= button_to t('navbar.log_out'), destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
+        - else
+          %li.nav-item= link_to t('navbar.log_in'), new_user_session_path, class: "nav-link"
+      .navbar-nav.d-flex
         .nav-link= t('navbar.byline.message', repo_link: link_to(t('navbar.byline.repo_link_msg'), "https://www.github.com/ThePletch/steve-parties"), personal_link: link_to(t('navbar.byline.personal_link_msg'), "https://steve-pletcher.com")).html_safe
