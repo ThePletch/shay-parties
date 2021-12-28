@@ -1,14 +1,14 @@
 %ul.nav.nav-tabs{role: 'tablist'}
   %li.nav-item
-    %a.nav-link.active#going-tab{href: '#going', role: 'tab', 'aria-controls' => 'going', 'aria-selected' => true, data: {toggle: 'tab'}}
+    %a.nav-link.active#going-tab{href: '#going', role: 'tab', 'aria-controls' => 'going', 'aria-selected' => true, data: {'bs-toggle': 'tab'}}
       %i.fa.fa-check{"aria-hidden" => true}
       %span= t('event.rsvp_list.headers.yes', count: event.attendances.going.count)
   %li.nav-item
-    %a.nav-link#maybe-tab{href: '#maybe', role: 'tab', 'aria-controls' => 'maybe', data: {toggle: 'tab'}}
+    %a.nav-link#maybe-tab{href: '#maybe', role: 'tab', 'aria-controls' => 'maybe', data: {'bs-toggle': 'tab'}}
       %i.fa.fa-question{"aria-hidden" => true}
       %span= t('event.rsvp_list.headers.maybe', count: event.attendances.maybe.count)
   %li.nav-item
-    %a.nav-link#not-going-tab{href: '#not-going', role: 'tab', 'aria-controls' => 'not-going', data: {toggle: 'tab'}}
+    %a.nav-link#not-going-tab{href: '#not-going', role: 'tab', 'aria-controls' => 'not-going', data: {'bs-toggle': 'tab'}}
       %i.fa.fa-cross{"aria-hidden" => true}
       %span= t('event.rsvp_list.headers.no', count: event.attendances.not_going.count)
 .tab-content
