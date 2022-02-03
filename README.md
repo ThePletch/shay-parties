@@ -8,20 +8,21 @@ It's **free of charge** and **ad-free**, and it **always will be**.
 
 Parties for All provides the following features in a lightweight, simple interface:
 
-* Event discovery at a user level, for both a 'default' user and any other users who want to share their own events.
+* Event discovery at a general level and for events specific to an individual host.
+* Support for secret/hidden events, blocked from displaying in the events index unless you've RSVPed to them already.
 * Event landing pages, including address management and scheduling.
 * Multiple systems for communicating with your guests before the event:
   * Polls, for any questions that need answering
-  * Comments (including comment scores/voting/avatars via Gravatar)
+  * Threaded comments (including avatars via Gravatar)
 * RSVP tracking
 * Mailing list management (no support for sending emails directly, but provides an easy-to-copy list of email addresses for sending the email yourself)
-
+  * Additionally, access to easily contact all users who have RSVPed.
 
 ## Why?
 
 The main thing keeping me on Facebook was its (admittedly quite good) events system. I looked for alternatives, but all of them were either for-profit startups targeting concerts or event managers with money to burn on advanced features or non-profit services designed for pretty niche use cases (e.g. managing a convention or conference). To make sure I could seamlessly pull myself away, I wrote an alternative.
 
-It's got everything you need for the basics of managing events with friends and loved ones, but intentionally doesn't have many features for people looking to make money off people showing up. I also wouldn't recommend it for events with more than a few dozen attendees - it's not built for interacting with the masses.
+It's got everything you need for the basics of managing events with friends and loved ones, but intentionally doesn't have any features for people looking to make money off people showing up. I also wouldn't recommend it for events with more than a few dozen attendees - it's not built for interacting with the masses (the comments section, for instance, designed under the assumption that discussions won't involve more than a few dozen comments)
 
 I develop this project as a hobby because I feel like this is a service that should exist without any restrictions. There are some associated costs, but they're minimal (and will be minimal unless this really takes off). I might have a donation option here in the future to defray those costs.
 
@@ -33,8 +34,8 @@ And finally, since this is a personal project being provided free of charge and 
 
 To contribute to Parties for All, just fork it and open a pull request with your proposed change. I'll respond within a day or two. I accept pull requests from anyone, and encourage people who are new to software development to contribute, even if it's something small like a copy change or a CSS cleanup. I do expect changes to the internal logic to have the following test coverage:
 
-* If you changed or added Javascript, either introduce or modify a feature spec to ensure the logic you introduced works.
-* If you changed any user-facing interactions, same as above - it needs a feature spec.
+* If you changed or added Javascript, either introduce or modify an integration test to ensure the logic you introduced works. I don't currently have scaffolding set up for JS unit tests, since the custom JS on the site is minimal. 
+* If you changed any user-facing interactions, same as above - it needs an integration test.
 * Any changes to the models or controllers need a corresponding model or controller unit test.
 * New or updated models need new or updated factories.
 
