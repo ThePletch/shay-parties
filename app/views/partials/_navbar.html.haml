@@ -1,6 +1,13 @@
 %nav.navbar.navbar-expand-md.navbar-light.bg-light{role: :navigation, 'aria-label': "main navigation"}
   .container-fluid
     = link_to "Parties for All", root_path, class: "navbar-brand"
+    .dropdown
+      %button.btn.dropdown-toggle{type: 'button', id: 'locale-dropdown', data: {'bs-toggle': 'dropdown'}}= current_locale_emoji
+      %ul.dropdown-menu{aria: {labelledby: 'locale-dropdown'}}
+        %li.dropdown-item
+          = link_to "🇺🇸 English (United States)", url_for(params.permit!.merge(locale: :en)), class: 'text-decoration-none'
+        %li.dropdown-item
+          = link_to "🇲🇽 Spanish (Latin America)", url_for(params.permit!.merge(locale: :es)), class: 'text-decoration-none'
     %button.navbar-toggler{type: 'button', data: {'bs-toggle': 'collapse', 'bs-target': '#main-nav'}, aria_controls: 'main-nav', aria_expanded: false, aria_label: "Toggle navigation"}
       %span.navbar-toggler-icon
     .collapse.navbar-collapse#main-nav
@@ -20,6 +27,6 @@
           %li.nav-item= link_to t('navbar.profile'), edit_user_registration_path, class: "nav-link"
           %li.nav-item= button_to t('navbar.log_out'), destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
         - else
-          %li.nav-item= link_to t('navbar.log_in'), new_user_session_path, class: "nav-link"
+          %li.nav-item= link_to t('navbar.log_in'), new_user_session_path(locale: I18n.locale), class: "nav-link"
       .navbar-nav.d-flex
-        .nav-link= t('navbar.byline.message', repo_link: link_to(t('navbar.byline.repo_link_msg'), "https://www.github.com/ThePletch/steve-parties"), personal_link: link_to(t('navbar.byline.personal_link_msg'), "https://steve-pletcher.com")).html_safe
+        .nav-link= t('navbar.byline.message', repo_link: link_to(t('navbar.byline.repo_link_msg'), "https://www.github.com/ThePletch/steve-parties", class: 'text-decoration-none'), personal_link: link_to(t('navbar.byline.personal_link_msg'), "https://steve-pletcher.com", class: 'text-decoration-none')).html_safe

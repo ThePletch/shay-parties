@@ -4,7 +4,7 @@ class EventsController < ApplicationController
   before_action :set_owned_event, only: [:edit, :update, :destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
-  PRELOAD = [:owner, {attendances: :attendee, commontator_thread: :comments, polls: :responses}]
+  PRELOAD = [:owner, :comments, {attendances: :attendee, polls: :responses}]
 
   def index
     if params[:user_id]
@@ -32,9 +32,6 @@ class EventsController < ApplicationController
     end
 
     @attendance ||= @event.attendances.build
-
-    # load page with comments displayed
-    commontator_thread_show(@event)
   end
 
   # get an ical event version of this event

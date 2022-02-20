@@ -58,4 +58,8 @@
       = link_to t('poll.add_prompt'), new_event_poll_path(@event), class: 'btn btn-primary btn-sm my-2'
 %hr
 
-= commontator_thread(@event)
+= render @event.root_comments, comments: @event.comments
+- if @authenticated_user
+  %a.btn.btn-sm.btn-primary.comment-button.mb-3{data: {id: 'new'}}= t('comment.actions.new')
+  .comment-form{data: {id: 'new'}}
+    = render 'comments/form', event: @event

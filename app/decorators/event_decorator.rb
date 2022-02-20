@@ -1,6 +1,8 @@
 class EventDecorator < Draper::Decorator
   decorates :event
 
+  decorates_association :comments
+
   delegate_all
 
   def start_timestamp
@@ -45,6 +47,10 @@ class EventDecorator < Draper::Decorator
     else
       false
     end
+  end
+
+  def root_comments
+    comments.select{|c| c.parent_id.nil? }
   end
 
   private

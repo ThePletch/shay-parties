@@ -1,4 +1,13 @@
 module ApplicationHelper
+  def current_locale_emoji
+    case I18n.locale
+    when :en
+      return "🇺🇸"
+    when :es
+      return "🇲🇽"
+    end
+  end
+
   # helper that generates a link that, when pressed, adds the specified rendered block
   # to the specified location on the page
   def link_to_add_fields(name = nil, f = nil, association = nil, options = nil, html_options = nil, &block)

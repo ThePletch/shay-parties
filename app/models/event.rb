@@ -16,6 +16,7 @@ class Event < ApplicationRecord
   # events can be commented on
   acts_as_commontable dependent: :destroy
 
+  has_many :comments, dependent: :destroy
   has_many :polls, dependent: :destroy
   belongs_to :address
 

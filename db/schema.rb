@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_26_194357) do
+ActiveRecord::Schema.define(version: 2022_02_03_195060) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,23 @@ ActiveRecord::Schema.define(version: 2021_12_26_194357) do
     t.index ["attendee_id"], name: "index_attendances_on_attendee_id"
     t.index ["event_id", "attendee_id", "attendee_type"], name: "index_attendances_on_event_id_and_attendee_id_and_attendee_type", unique: true
     t.index ["event_id"], name: "index_attendances_on_event_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.string "creator_type"
+    t.bigint "creator_id"
+    t.string "editor_type"
+    t.bigint "editor_id"
+    t.bigint "parent_id"
+    t.text "body"
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "event_id"
+    t.index ["creator_type", "creator_id"], name: "index_comments_on_creator"
+    t.index ["editor_type", "editor_id"], name: "index_comments_on_editor"
+    t.index ["event_id"], name: "index_comments_on_event_id"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
   end
 
   create_table "commontator_comments", force: :cascade do |t|
@@ -223,6 +240,7 @@ ActiveRecord::Schema.define(version: 2021_12_26_194357) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "commontator_comments", "commontator_comments", column: "parent_id", on_update: :restrict, on_delete: :cascade
   add_foreign_key "events", "addresses"
 end

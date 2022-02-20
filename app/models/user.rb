@@ -18,6 +18,8 @@ class User < ApplicationRecord
   # hence not calling this 'attended_events'
   has_many :rsvped_events, through: :attendances, class_name: "Event"
   has_many :attendances, as: :attendee, dependent: :destroy
+  has_many :comments, as: :creator, dependent: :destroy
+  has_many :edited_comments, as: :editor, class_name: "Comment"
   has_many :poll_responses, as: :respondent, dependent: :destroy
   has_many :polls, through: :managed_events
   has_many :answered_polls, through: :poll_responses

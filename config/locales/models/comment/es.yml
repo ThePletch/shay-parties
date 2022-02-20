@@ -1,0 +1,26 @@
+es:
+  comment:
+    updated: Comentario actualizado.
+    updated_failed: No se pudo actualizar el comentario.
+    destroyed: Comentario borrado.
+    destroyed_failed: No se pudo borrar el comentario.
+    undeleted: Comentario recuperado.
+    undeleted_failed: No se pudo recuperar el comentario.
+    created: Comentario creado.
+    created_failed: No se pudo crear el comentario.
+    rejection:
+      unauthenticated: Se necesita estar conectado o autenticar como invitado para publicar un comentario.
+    view:
+      deleted: "[borrado]"
+      deleted_by: Borrado por %{editor}
+      reply_designation: Respondiendo a %{parent_creator}
+    actions:
+      confirm_delete: ¿Está usted seguro que quiere borrar a este comentario?
+      delete: Borrar
+      edit: Editar
+      new: Publicar un comentario
+      undelete: Recuperar
+      reply: Responder
+    errors:
+      create: Un errór prohibió que se creara este comentario.
+      update: Un errór prohibió que se editara este comentario.
