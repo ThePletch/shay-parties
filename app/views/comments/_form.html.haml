@@ -1,0 +1,35 @@
+:ruby
+  comment ||= Comment.new
+  parent_comment ||= nil
+  if parent_comment
+    object = comment
+    path = reply_comment_path(parent_comment)
+    target_id = parent_comment.id
+    cancel_class = "cancel-reply"
+  elsif comment.new_record?
+    object = [event, comment]
+    target_id = "new"
+    cancel_class = "cancel-comment"
+  else
+    object = comment
+    target_id = comment.id
+    cancel_class = "cancel-edit"
+  end
+- if comment.errors.any?
+  .error-explanation
+    %h3= t "comment.errors.#{new_record ? 'create' : 'update'}"
+    %ul
+      - comment.errors.full_messages.each do |msg|
+        %li= msg
+.m-2
+  = form_with(model: object, url: path, remote: false) do |form|
+    = form.hidden_field :parent_id
+    = hidden_field_tag :guest_guid, params[:guest_guid]
+    - unless parent_comment.nil?
+      .replying
+        %em= t('comment.view.reply_designation', parent_creator: parent_comment.creator.name)
+    .field
+      = form.text_area :body, rows: '7', class: 'form-control'
+    .submit
+      = form.submit t('submit'), class: 'btn btn-primary'
+      %a.btn.btn-default{class: cancel_class, data: {id: target_id}}= t('cancel')

@@ -1,11 +1,17 @@
 Rails.application.routes.draw do
   scope "(:locale)" do
     devise_for :users, defaults: { locale: I18n.locale }
-    mount Commontator::Engine => '/comments_api'
 
     resources :events, shallow: true do
       member do
         get 'ical'
+      end
+
+      resources :comments, only: [:create, :update, :destroy] do
+        member do
+          put 'undelete'
+          post 'reply', to: 'comments#create_reply'
+        end
       end
 
       resources :attendances, only: [:create, :update, :destroy]

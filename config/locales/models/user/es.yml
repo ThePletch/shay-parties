@@ -1,0 +1,17 @@
+es:
+  user:
+    log_in: Iniciar
+    form:
+      log_in: Iniciar
+      or_sign_up: ...o registrar
+      forgot_password_prompt: ¿Olvidó su contraseña?
+  activerecord:
+    models:
+      user: Usuario
+    attributes:
+      user:
+        email: Email
+        name: Nombre
+        password: Contraseña
+        password_confirmation: Contraseña confirmación
+        remember_me: Recuerdame

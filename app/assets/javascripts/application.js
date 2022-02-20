@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require rails-ujs
-//= require commontator/application
 //= require jquery3
 //= require popper
 //= require bootstrap

@@ -1,0 +1,49 @@
+:ruby
+  # Views that use this partial must supply the following variables:
+  # comment - the comment to be rendered
+  # comments - nested comment tree created by event.comment_tree
+
+.card.comment.m-2{id: "comment-#{comment.id}"}
+  .card-body{class: (comment.deleted? && 'text-muted em')}
+    %strong.author= comment.creator.name
+    %small
+      %span.timestamp
+        = comment.created_timestamp
+      %span.timestamp
+        - if comment.deleted?
+          - deletion_title = comment.editor == comment.creator ? "" : t('comment.view.deleted_by', editor: comment.editor.try(:name))
+          %strong{title: deletion_title, data: {toggle: 'tooltip', placement: 'right'}}= t('comment.view.deleted')
+        - elsif comment.edited?
+          %span{title: comment.updated_timestamp, data: {toggle: 'tooltip', placement: 'right'}} ✏️
+    - unless comment.deleted?
+      %span.avatar.float-start.mt-2.me-3.mb-1
+        = image_tag(comment.creator.gravatar_url, alt: comment.creator.name, title: comment.creator.name, border: 1)
+    - if comment.deleted?
+      %span.actions
+        .float-end
+          .btn-group
+            - if comment.deletable_by?(@authenticated_user)
+              = link_to t("comment.actions.undelete"), undelete_comment_path(comment, guest_guid: params[:guest_guid]), method: :put, class: "undelete-button btn btn-sm btn-danger", remote: false
+    - else
+      .comment-body.body{id: "comment-#{comment.id}-body"}
+        = comment.rendered_body
+      - if comment.editable_by?(@authenticated_user)
+        .edit-form{id: "comment-#{comment.id}-edit"}
+          = render 'comments/form', comment: comment
+    .clearfix
+    - if @authenticated_user and !comment.deleted?
+      .reply-form{data: {id: comment.id}}
+        = render 'comments/form', parent_comment: comment
+      %span.actions
+        .float-end
+          .btn-group
+            - if comment.editable_by?(@authenticated_user)
+              %a.edit-button.btn.btn-sm.btn-primary{id: "comment-#{comment.id}-edit-button", data: {id: comment.id}}= t('comment.actions.edit')
+            - if comment.deletable_by?(@authenticated_user)
+              = link_to t("comment.actions.delete"), comment_path(comment, guest_guid: params[:guest_guid]), data: { confirm: t('comment.actions.confirm_delete') }, method: :delete, class: "btn btn-sm btn-danger delete-button", remote: false
+        .float-start
+          %a.btn.btn-sm.btn-primary.reply-button{data: {id: comment.id}}= t('comment.actions.reply')
+    .clearfix
+    .section.bottom
+    .children
+      = render children_from(comment, comments), comments: comments

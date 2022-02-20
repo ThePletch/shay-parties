@@ -1,6 +1,0 @@
-es:
-  time:
-    formats:
-      commontator: "%b %-d, %Y %l:%M %P"
-  commontator:
-    require_login: Debe iniciar sesión antes de poder publicar un comentario.

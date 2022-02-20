@@ -1,0 +1,2 @@
+- if I18n.locale != :en
+  = link_to t('still_translating'), url_for(params.permit!.merge(locale: :en)), class: 'text-decoration-none'

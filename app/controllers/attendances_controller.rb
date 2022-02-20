@@ -6,7 +6,6 @@ class AttendancesController < ApplicationController
   before_action :require_own_attendance_or_event, only: [:destroy]
 
   # POST /attendances
-  # POST /attendances.json
   def create
     attendee = @authenticated_user || Guest.new(attendee_params)
     @attendance = @event.attendances.build(attendee: attendee, rsvp_status: attendance_params[:rsvp_status])

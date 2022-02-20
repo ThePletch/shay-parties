@@ -43,9 +43,6 @@ gem 'carmen', '~> 1.1'
 
 # accounts and authentication
 gem 'devise', '~> 4.8'
-# comments
-gem 'commontator', '~> 6.3'
-gem 'acts_as_votable', '~> 0.13.1'
 # markdown for descriptions
 gem 'redcarpet', '~> 3.5.1'
 

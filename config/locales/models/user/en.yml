@@ -1,0 +1,16 @@
+en:
+  user:
+    log_in: Log in
+    form:
+      log_in: Log in
+      or_sign_up: ...or sign up
+      forgot_password_prompt: Forgot your password?
+  activerecord:
+    models:
+      user: User
+    attributes:
+      user:
+        email: Email
+        name: Name
+        password: Password
+        remember_me: Remember me
