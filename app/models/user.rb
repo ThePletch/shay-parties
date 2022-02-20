@@ -7,10 +7,6 @@ class User < ApplicationRecord
 
   friendly_id :name, use: :slugged
 
-  # users can leave comments
-  acts_as_commontator
-  acts_as_voter
-
   # events the user owns
   has_many :managed_events, class_name: "Event", dependent: :destroy
   has_many :addresses, -> { distinct }, through: :managed_events

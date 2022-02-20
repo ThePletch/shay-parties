@@ -1,5 +1,5 @@
 %li.list-group-item
-    %span.m-1= commontator_gravatar_image_tag(attendance.attendee, 1, s: 25, d: 'identicon')
+    %span.m-1= image_tag(attendance.attendee.gravatar_url, alt: attendance.attendee.name, title: attendance.attendee.name, border: 1)
     %span= attendance.attendee.name
     - if attendance.attendee.guest?
         %small.text-muted= t('attendance.is_guest_account')
