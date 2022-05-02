@@ -178,6 +178,7 @@ ActiveRecord::Schema.define(version: 2022_02_20_205809) do
     t.string "name"
     t.string "role", default: "user"
     t.string "slug"
+    t.boolean "allow_password_change", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["slug"], name: "index_users_on_slug", unique: true
