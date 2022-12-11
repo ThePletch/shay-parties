@@ -38,7 +38,7 @@ class CommentDecorator < Draper::Decorator
   end
 
   def rendered_body
-    ActionController::Base.helpers.sanitize markdown.render(comment.body || '')
+    ActionController::Base.helpers.sanitize Commonmarker.to_html(comment.body || '')
   end
 
   private
@@ -53,9 +53,5 @@ class CommentDecorator < Draper::Decorator
 
   def comment_time_format
     "%l:%M %P"
-  end
-
-  def markdown
-    @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML.new)
   end
 end
