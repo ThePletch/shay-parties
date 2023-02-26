@@ -35,7 +35,6 @@ jobs:
         # list of Docker images to use as base name for tags
         images: |
           ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}
-          partiesforall
         # generate Docker tags based on the following events/attributes
         tags: |
           type=ref,event=branch
