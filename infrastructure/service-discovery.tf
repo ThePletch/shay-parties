@@ -1,5 +1,5 @@
 resource "aws_service_discovery_public_dns_namespace" "main" {
-  name = "sd.${var.root_domain}"
+  name        = "sd.${var.root_domain}"
   description = "Service Discovery namespace for Parties for All"
 }
 
@@ -10,8 +10,8 @@ resource "aws_service_discovery_service" "main" {
     namespace_id = aws_service_discovery_public_dns_namespace.main.id
 
     dns_records {
-      ttl = 10
-      type = "A"
+      ttl  = 10
+      type = "SRV"
     }
 
     routing_policy = "MULTIVALUE"

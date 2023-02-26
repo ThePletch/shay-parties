@@ -1,10 +1,70 @@
+# TODO pull environment into workflow input
+name: Deploy
 on:
-  workflow_run:
-    workflows: [test]
-    types: [completed]
+  # workflow_run:
+  #   workflows: [Run tests]
+  #   types: [completed]
+  #   branches: [master]
+  push:
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    environment: deploy-test
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_ECR_ROLE }}
+        # not a secret, but you can only configure secrets with the Github Terraform provider,
+        # not environment variables.
+        aws-region: ${{ secrets.AWS_REGION }}
+    - name: Log in to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    - name: Build, tag, and push docker image to Amazon ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
+        IMAGE_TAG: ${{ github.sha }}
+        ENVIRONMENT: production
+      run: |
+        # It's fine if there's no image to pull so we mute errors here
+        docker pull $REGISTRY/$REPOSITORY:latest || true
+        docker build \
+          --build-arg ENVIRONMENT=$ENVIRONMENT \
+          --target server-shrinkwrapped \
+          -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \
+          .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+    - name: Trigger deploy of ECS service
+      env:
+        CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
+        SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
+      run: |
+        aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
+    # This step assumes that the database is accessible from the public internet.
+    - name: Run migrations
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
+        IMAGE_TAG: ${{ github.sha }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      run:
+        # todo use an artifact to send this across steps instead of re-pulling
+        docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        docker build \
+          --cache-from $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          --target db-migrater-shrinkwrapped \
+          -t db-migrater \
+          .
+        docker run --rm --env-file <(printenv | grep DATABASE_) db-migrater

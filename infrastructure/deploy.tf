@@ -1,9 +1,33 @@
+locals {
+  environment_name = "deploy-test"
+  plaintext_secrets = {
+    AWS_ECR_REPOSITORY = aws_ecr_repository.main.name
+    AWS_ECR_ROLE       = aws_iam_role.deploy.arn
+    AWS_ECS_CLUSTER    = aws_ecs_cluster.main.name
+    AWS_ECS_SERVICE    = aws_ecs_service.main.name
+    AWS_REGION         = data.aws_region.current.name
+    DATABASE_USERNAME  = var.database.username
+    DATABASE_PASSWORD  = var.database.password
+    DATABASE_HOST      = var.database.host
+    DATABASE_PORT      = var.database.port
+    DATABASE_NAME      = var.database.database
+  }
+}
+
 data "github_repository" "main" {
   full_name = "${var.github.organization}/${var.github.repository}"
 }
 
 # Pending work to modularize this to support multiple environments
-resource "github_repository_environment" "deploy-test" {
-  environment = "deploy-test"
-  repository = data.github_repository.main.name
+resource "github_repository_environment" "deploy_test" {
+  environment = local.environment_name
+  repository  = data.github_repository.main.name
+}
+
+resource "github_actions_environment_secret" "deploy_secrets" {
+  for_each        = local.plaintext_secrets
+  repository      = data.github_repository.main.name
+  environment     = github_repository_environment.deploy_test.environment
+  secret_name     = each.key
+  plaintext_value = each.value
 }

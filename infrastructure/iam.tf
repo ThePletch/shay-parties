@@ -1,9 +1,17 @@
-resource "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
+locals {
+  github_oidc_url = "https://token.actions.githubusercontent.com"
+}
 
-  client_id_list = ["sts.amazonaws.com"]
-  # per https://github.blog/changelog/2022-01-13-github-actions-update-on-oidc-based-deployments-to-aws/
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+# fetching the github OIDC thumbprint
+data "tls_certificate" "github" {
+  url = local.github_oidc_url
+}
+
+resource "aws_iam_openid_connect_provider" "github" {
+  url = local.github_oidc_url
+
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = data.tls_certificate.github.certificates.*.sha1_fingerprint
 }
 
 data "aws_iam_policy_document" "github_assume_role" {
@@ -11,20 +19,20 @@ data "aws_iam_policy_document" "github_assume_role" {
     actions = ["sts:AssumeRoleWithWebIdentity"]
 
     principals {
-      type = "Federated"
-      identifiers = aws_iam_openid_connect_provider.github.arn
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github.arn]
     }
 
     condition {
-      test = "StringEquals"
+      test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:aud"
-      values = ["sts.amazonaws.com"]
+      values   = ["sts.amazonaws.com"]
     }
 
     condition {
-      test = "StringEquals"
+      test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values = ["repo:${var.github.organization}/${var.github.repository}:ref:refs/heads/${var.github.auto_deploy_branch}"]
+      values   = ["repo:${var.github.organization}/${var.github.repository}:*"]
     }
   }
 }
@@ -43,18 +51,25 @@ data "aws_iam_policy_document" "ecs_deploy" {
     resources = [aws_ecr_repository.main.arn]
   }
 
+  # Token is scoped to permissions defined in the rest of this policy
+  statement {
+    actions   = ["ecr:GetAuthorizationToken"]
+    resources = ["*"]
+  }
+
   statement {
     actions = ["ecs:UpdateService"]
-    resources = [aws_ecs_service.main.arn]
+    # i hate that aws_ecs_service exposes the ARN but not under 'arn'
+    resources = [aws_ecs_service.main.id]
   }
 }
 
 resource "aws_iam_role" "deploy" {
-  name = "${var.name}-deploy"
+  name               = "${var.name}-deploy"
   assume_role_policy = data.aws_iam_policy_document.github_assume_role.json
-  
+
   inline_policy {
-    name = "deploy"
+    name   = "deploy"
     policy = data.aws_iam_policy_document.ecs_deploy.json
   }
 }
