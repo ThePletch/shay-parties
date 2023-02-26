@@ -45,6 +45,16 @@ resource "aws_ecs_service" "main" {
   }
 }
 
+resource "random_string" "secret_key_base" {
+  special = false
+  upper = false
+  length = 50
+
+  keepers = {
+    name = var.name
+  }
+}
+
 resource "aws_ecs_task_definition" "main" {
   family = "${var.name}-main"
 
@@ -65,6 +75,10 @@ resource "aws_ecs_task_definition" "main" {
         },
       ]
       environment = [
+        {
+          name  = "SECRET_KEY_BASE"
+          value = random_string.secret_key_base.result
+        },
         {
           name  = "DATABASE_USERNAME"
           value = var.database.username
