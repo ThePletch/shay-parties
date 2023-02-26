@@ -27,21 +27,32 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        # list of Docker images to use as base name for tags
+        images: |
+          ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}
+          partiesforall
+        # generate Docker tags based on the following events/attributes
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
         pull: true
         push: true
-        tags:
-          - ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ github.sha }}
-          - ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
-        build-args:
-          - ENVIRONMENT=production
-        cache-from:
-          - type=gha
-          - type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
-        cache-to:
-          - type=gha
+        tags: ${{ steps.meta.outputs.tags }}
+        build-args: |
+          ENVIRONMENT=production
+        cache-from: |
+          type=gha
+          type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        cache-to: |
+          type=gha
         target: server-shrinkwrapped
     # TODO split this into a separate dependent job
     - name: Trigger deploy of ECS service
@@ -62,7 +73,7 @@ jobs:
         DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
         DOCKER_BUILDKIT: 1
-      run:
+      run: |
         # todo use an artifact to send this across steps instead of re-pulling
         docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
         docker build \
@@ -70,4 +81,4 @@ jobs:
           --target db-migrater-shrinkwrapped \
           -t db-migrater \
           .
-        docker run --env-file <(printenv | grep DATABASE_) db-migrater
+        docker run --rm --env-file <(printenv | grep DATABASE_) db-migrater
