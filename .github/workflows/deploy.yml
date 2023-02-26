@@ -35,6 +35,7 @@ jobs:
         # list of Docker images to use as base name for tags
         images: |
           ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}
+          partiesforall-server
         # generate Docker tags based on the following events/attributes
         tags: |
           type=ref,event=branch
@@ -63,20 +64,6 @@ jobs:
         SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
       run: |
         aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
-    - name: Build migrater image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        pull: true
-        push: false
-        tags: |
-          db-migrater
-        build-args: |
-          ENVIRONMENT=production
-        cache-from: |
-          type=gha
-          type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
-        target: db-migrater-shrinkwrapped
     # This step assumes that the database is accessible from the public internet.
     - name: Run migrations
       env:
@@ -86,4 +73,4 @@ jobs:
         DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
       run: |
-        docker run --rm --env-file <(printenv | grep DATABASE_) db-migrater
+        docker run --rm --env-file <(printenv | grep DATABASE_) partiesforall-server "bundle exec rails db:migrate"

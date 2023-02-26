@@ -30,10 +30,6 @@ RUN bundle install
 FROM server AS server-shrinkwrapped
 COPY --from=bundle /usr/src/app/vendor/bundle ./vendor/bundle
 
-FROM server-shrinkwrapped AS db-migrater-shrinkwrapped
-CMD ["bundle", "exec", "rails", "db:migrate"]
-
-
 # ==== LOCAL DEVELOPMENT CONTAINER STAGES ====
 
 # Sidecar container that installs bundled gems
