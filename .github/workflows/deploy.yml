@@ -37,7 +37,7 @@ jobs:
         # It's fine if there's no image to pull so we mute errors here
         docker pull $REGISTRY/$REPOSITORY:latest || true
         docker build \
-          --cache-from $REGISTRY/$REPOSITORY:latest
+          --cache-from $REGISTRY/$REPOSITORY:latest \
           --build-arg ENVIRONMENT=$ENVIRONMENT \
           --target server-shrinkwrapped \
           -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \
