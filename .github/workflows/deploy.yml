@@ -34,12 +34,13 @@ jobs:
       with:
         # list of Docker images to use as base name for tags
         images: |
-          ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}
+          ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}g
         # generate Docker tags based on the following events/attributes
         tags: |
           type=ref,event=branch
           type=ref,event=pr
-          type=sha
+          type=sha,format=long
+          type=raw,value=latest
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
@@ -63,6 +64,20 @@ jobs:
       run: |
         aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
     # This step assumes that the database is accessible from the public internet.
+    - name: Build migrater image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        pull: true
+        push: false
+        tags: |
+          db-migrater
+        build-args: |
+          ENVIRONMENT=production
+        cache-from: |
+          type=gha
+          type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        target: db-migrater-shrinkwrapped
     - name: Run migrations
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -75,11 +90,4 @@ jobs:
         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
         DOCKER_BUILDKIT: 1
       run: |
-        # todo use an artifact to send this across steps instead of re-pulling
-        docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
-        docker build \
-          --cache-from $REGISTRY/$REPOSITORY:$IMAGE_TAG \
-          --target db-migrater-shrinkwrapped \
-          -t db-migrater \
-          .
         docker run --rm --env-file <(printenv | grep DATABASE_) db-migrater
