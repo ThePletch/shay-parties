@@ -41,13 +41,13 @@ jobs:
           type=ref,event=pr
           type=sha,format=long
           type=raw,value=latest
+    # TODO split out bundle install into separate step that caches in GHA cache,
+    # currently it's not cached at all due to multi-stage builds
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
         context: .
         pull: true
-        push: true
-        load: true
         tags: ${{ steps.meta.outputs.tags }}
         build-args: |
           ENVIRONMENT=production
@@ -56,6 +56,9 @@ jobs:
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
         cache-to: |
           type=gha
+        outputs: |
+          type=docker
+          type=registry
         target: server-shrinkwrapped
     # TODO split this into a separate dependent job
     - name: Trigger deploy of ECS service
