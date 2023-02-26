@@ -35,7 +35,6 @@ jobs:
         # list of Docker images to use as base name for tags
         images: |
           ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}
-          partiesforall-server
         # generate Docker tags based on the following events/attributes
         tags: |
           type=ref,event=branch
@@ -48,6 +47,7 @@ jobs:
         context: .
         pull: true
         push: true
+        load: true
         tags: ${{ steps.meta.outputs.tags }}
         build-args: |
           ENVIRONMENT=production
@@ -72,5 +72,6 @@ jobs:
         DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
         DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
       run: |
-        docker run --rm --env-file <(printenv | grep DATABASE_) partiesforall-server "bundle exec rails db:migrate"
+        docker run --rm --env-file <(printenv | grep DATABASE_) $ECR_IMAGE "bundle exec rails db:migrate"
