@@ -90,4 +90,4 @@ jobs:
         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
         ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
       run: |
-        docker run --rm --env-file <(printenv | grep DATABASE_) $ECR_IMAGE "bundle exec rails db:migrate"
+        docker run --rm --env-file <(printenv | grep DATABASE_) $ECR_IMAGE bundle exec rails db:migrate
