@@ -94,7 +94,7 @@ jobs:
         docker run \
           --rm \
           -e RAILS_ENV=production \
-          -E SECRET_KEY_BASE=$SECRET_KEY_BASE \
+          -e SECRET_KEY_BASE=$SECRET_KEY_BASE \
           --env-file <(printenv | grep DATABASE_) \
           $ECR_IMAGE \
           bundle exec rails db:migrate
