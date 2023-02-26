@@ -56,9 +56,22 @@ jobs:
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
         cache-to: |
           type=gha
-        outputs: |
-          type=docker
-          type=registry
+        outputs: type=docker
+        target: server-shrinkwrapped
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        pull: true
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        build-args: |
+          ENVIRONMENT=production
+        cache-from: |
+          type=gha
+          type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        cache-to: |
+          type=gha
         target: server-shrinkwrapped
     # TODO split this into a separate dependent job
     - name: Trigger deploy of ECS service
