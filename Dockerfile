@@ -7,17 +7,15 @@ RUN gem update bundler
 RUN bundle config set path 'vendor/bundle'
 
 # Stage that configures necessary components for installing/building dependencies
-FROM baseline AS build-deps
+FROM baseline AS server
 ARG ENVIRONMENT=development
 RUN apk add alpine-sdk build-base
 RUN bundle config set with ${ENVIRONMENT}
-COPY Gemfile Gemfile.lock ./
 
-FROM baseline AS server
 ARG PORT
 ENV PORT=${PORT}
 COPY . .
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", ${PORT}]
+CMD bundle exec rails server -b 0.0.0.0 -p ${PORT}
 
 # ==== DEPLOYABLE CONTAINER STAGES ====
 
@@ -25,16 +23,13 @@ CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", ${PORT}]
 # without including installation-only dependencies
 # For production deployments.
 
-FROM build-deps AS bundle
-RUN bundle install
-
 FROM server AS server-shrinkwrapped
-COPY --from=bundle /usr/src/app/vendor/bundle ./vendor/bundle
+RUN bundle install
 
 # ==== LOCAL DEVELOPMENT CONTAINER STAGES ====
 
 # Sidecar container that installs bundled gems
-FROM build-deps AS bundle-installer
+FROM server AS bundle-installer
 CMD ["bundle", "install"]
 
 # Sidecar container that runs pending migrations
