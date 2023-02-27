@@ -30,7 +30,7 @@ resource "aws_ecs_service" "main" {
   cluster         = aws_ecs_cluster.main.id
   name            = "${var.name}-main"
   task_definition = aws_ecs_task_definition.main.arn
-  desired_count   = 0
+  desired_count   = 1
 
   capacity_provider_strategy {
     base              = 1
@@ -59,8 +59,9 @@ resource "aws_ecs_task_definition" "main" {
   family = "${var.name}-main"
 
   cpu          = 512
-  memory       = 1024
+  memory       = 900
   network_mode = "bridge"
+  execution_role_arn = aws_iam_role.task_execution.arn
 
   container_definitions = jsonencode([
     {
@@ -100,6 +101,15 @@ resource "aws_ecs_task_definition" "main" {
           value = tostring(var.database.port)
         },
       ]
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group = "${var.name}-logs"
+          awslogs-region = "us-east-2"
+          awslogs-create-group = "true"
+          awslogs-stream-prefix = "parties"
+        }
+      }
     }
   ])
 }
