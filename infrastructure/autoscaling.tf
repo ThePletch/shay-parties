@@ -34,7 +34,7 @@ resource "aws_autoscaling_group" "ecs_runners" {
   name     = "${var.name}-ecs-runners"
   min_size = 0
   max_size = 2
-  desired_capacity = 2
+  desired_capacity = 1
 
   launch_configuration = aws_launch_configuration.main.name
   vpc_zone_identifier  = aws_subnet.public.*.id
