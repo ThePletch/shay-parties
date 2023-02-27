@@ -2,14 +2,6 @@ resource "aws_ecr_repository" "main" {
   name = "${var.name}-images"
 }
 
-resource "aws_ecs_capacity_provider" "asg" {
-  name = "${var.name}-asg"
-
-  auto_scaling_group_provider {
-    auto_scaling_group_arn = aws_autoscaling_group.ecs_runners.arn
-  }
-}
-
 resource "aws_ecs_cluster" "main" {
   name = "${var.name}-cluster"
 }
@@ -17,12 +9,12 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_ecs_cluster_capacity_providers" "main" {
   cluster_name = aws_ecs_cluster.main.name
 
-  capacity_providers = [aws_ecs_capacity_provider.asg.name]
+  capacity_providers = ["FARGATE"]
 
   default_capacity_provider_strategy {
     base              = 1
     weight            = 100
-    capacity_provider = aws_ecs_capacity_provider.asg.name
+    capacity_provider = "FARGATE"
   }
 }
 
@@ -32,16 +24,16 @@ resource "aws_ecs_service" "main" {
   task_definition = aws_ecs_task_definition.main.arn
   desired_count   = 1
 
-  capacity_provider_strategy {
-    base              = 1
-    capacity_provider = aws_ecs_capacity_provider.asg.name
-    weight            = 100
-  }
-
   service_registries {
     registry_arn   = aws_service_discovery_service.main.arn
     container_name = "rails"
-    container_port = 3000
+    container_port = 443
+  }
+
+  network_configuration {
+    subnets = aws_subnet.public.*.id
+    security_groups = [aws_security_group.http.id]
+    assign_public_ip = true
   }
 }
 
@@ -58,9 +50,13 @@ resource "random_string" "secret_key_base" {
 resource "aws_ecs_task_definition" "main" {
   family = "${var.name}-main"
 
-  cpu          = 512
-  memory       = 900
-  network_mode = "bridge"
+  # this is really low CPU! this is because this app is not doing anything complicated
+  # (and fargate is expensive)
+  # WATCH THIS SPACE if fargate adds support for burstable CPU:
+  # https://github.com/aws/containers-roadmap/issues/163
+  cpu          = 256
+  memory       = 2048
+  network_mode = "awsvpc"
   execution_role_arn = aws_iam_role.task_execution.arn
 
   container_definitions = jsonencode([
@@ -71,8 +67,8 @@ resource "aws_ecs_task_definition" "main" {
       portMappings = [
         {
           protocol      = "tcp"
-          hostPort      = 0
-          containerPort = 3000
+          hostPort      = 443
+          containerPort = 443
         },
       ]
       environment = [
