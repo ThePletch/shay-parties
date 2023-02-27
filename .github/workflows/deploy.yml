@@ -49,6 +49,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        push: true
         pull: true
         tags: ${{ steps.meta.outputs.tags }}
         build-args: |
@@ -59,7 +60,6 @@ jobs:
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
         cache-to: |
           type=gha
-        outputs: type=docker
         target: server-shrinkwrapped
     # TODO split this into a separate dependent job
     - name: Trigger deploy of ECS service
