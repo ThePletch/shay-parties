@@ -28,13 +28,13 @@ resource "aws_route" "public_igw" {
 }
 
 resource "aws_route_table_association" "public" {
-  for_each = toset(aws_subnet.public.*.id)
+  for_each       = toset(aws_subnet.public.*.id)
   subnet_id      = each.key
   route_table_id = aws_route_table.public.id
 }
 
 resource "aws_security_group" "http" {
-  name = "${var.name}-sg"
+  name   = "${var.name}-sg"
   vpc_id = aws_vpc.main.id
 
   ingress {

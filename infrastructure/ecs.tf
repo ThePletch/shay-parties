@@ -27,21 +27,24 @@ resource "aws_ecs_service" "main" {
   service_registries {
     registry_arn   = aws_service_discovery_service.main.arn
     container_name = "rails"
-    container_port = 443
-    port = 443
+    container_port = 3030
   }
 
   network_configuration {
-    subnets = aws_subnet.public.*.id
-    security_groups = [aws_security_group.http.id]
+    subnets          = aws_subnet.public.*.id
+    security_groups  = [aws_security_group.http.id]
     assign_public_ip = true
+  }
+
+  lifecycle {
+    ignore_changes = [capacity_provider_strategy]
   }
 }
 
 resource "random_string" "secret_key_base" {
   special = false
-  upper = false
-  length = 50
+  upper   = false
+  length  = 50
 
   keepers = {
     name = var.name
@@ -55,9 +58,9 @@ resource "aws_ecs_task_definition" "main" {
   # (and fargate is expensive)
   # WATCH THIS SPACE if fargate adds support for burstable CPU:
   # https://github.com/aws/containers-roadmap/issues/163
-  cpu          = 256
-  memory       = 2048
-  network_mode = "awsvpc"
+  cpu                = 256
+  memory             = 2048
+  network_mode       = "awsvpc"
   execution_role_arn = aws_iam_role.task_execution.arn
 
   container_definitions = jsonencode([
@@ -68,8 +71,8 @@ resource "aws_ecs_task_definition" "main" {
       portMappings = [
         {
           protocol      = "tcp"
-          hostPort      = 443
-          containerPort = 443
+          hostPort      = 3030
+          containerPort = 3030
         },
       ]
       environment = [
@@ -97,13 +100,17 @@ resource "aws_ecs_task_definition" "main" {
           name  = "DATABASE_PORT"
           value = tostring(var.database.port)
         },
+        {
+          name  = "RAILS_ENV"
+          value = "production"
+        }
       ]
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group = "${var.name}-logs"
-          awslogs-region = "us-east-2"
-          awslogs-create-group = "true"
+          awslogs-group         = "${var.name}-logs"
+          awslogs-region        = "us-east-2"
+          awslogs-create-group  = "true"
           awslogs-stream-prefix = "parties"
         }
       }

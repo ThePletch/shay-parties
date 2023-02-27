@@ -53,7 +53,7 @@ jobs:
         pull: true
         tags: ${{ steps.meta.outputs.tags }}
         build-args: |
-          PORT=443
+          PORT=3030
           ENVIRONMENT=production
         cache-from: |
           type=gha
