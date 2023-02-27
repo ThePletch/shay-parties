@@ -17,7 +17,7 @@ FROM baseline AS server
 ARG PORT
 ENV PORT=${PORT}
 COPY . .
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "$PORT"]
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", ${PORT}]
 
 # ==== DEPLOYABLE CONTAINER STAGES ====
 
