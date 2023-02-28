@@ -38,8 +38,8 @@ resource "aws_security_group" "http" {
   vpc_id = aws_vpc.main.id
 
   ingress {
-    from_port        = 443
-    to_port          = 443
+    from_port        = var.internal_port
+    to_port          = var.internal_port
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]

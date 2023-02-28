@@ -60,7 +60,7 @@ jobs:
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
         cache-to: |
           type=gha
-        target: server-shrinkwrapped
+        target: server
     # TODO split this into a separate dependent job
     - name: Trigger deploy of ECS service
       env:

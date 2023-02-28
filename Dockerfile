@@ -11,7 +11,8 @@ FROM baseline AS server
 ARG ENVIRONMENT=development
 RUN apk add alpine-sdk build-base
 RUN bundle config set with ${ENVIRONMENT}
-
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
 ARG PORT
 ENV PORT=${PORT}
 COPY . .
@@ -23,8 +24,7 @@ CMD bundle exec rails server -b 0.0.0.0 -p ${PORT}
 # without including installation-only dependencies
 # For production deployments.
 
-FROM server AS server-shrinkwrapped
-RUN bundle install
+# TODO LOL
 
 # ==== LOCAL DEVELOPMENT CONTAINER STAGES ====
 

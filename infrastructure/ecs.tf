@@ -24,12 +24,6 @@ resource "aws_ecs_service" "main" {
   task_definition = aws_ecs_task_definition.main.arn
   desired_count   = 1
 
-  service_registries {
-    registry_arn   = aws_service_discovery_service.main.arn
-    container_name = "rails"
-    container_port = 3030
-  }
-
   network_configuration {
     subnets          = aws_subnet.public.*.id
     security_groups  = [aws_security_group.http.id]
@@ -71,8 +65,8 @@ resource "aws_ecs_task_definition" "main" {
       portMappings = [
         {
           protocol      = "tcp"
-          hostPort      = 3030
-          containerPort = 3030
+          hostPort      = var.internal_port
+          containerPort = var.internal_port
         },
       ]
       environment = [
