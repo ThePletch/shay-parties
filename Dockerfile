@@ -27,7 +27,7 @@ CMD bundle exec rails server -b 0.0.0.0 -p ${PORT}
 # For production deployments.
 
 FROM server AS server-shrinkwrapped
-RUN bundle exec rails assets:precompile
+RUN --mount=type=secret,id=SECRET_KEY_BASE,required=true SECRET_KEY_BASE=$(cat /run/secrets/SECRET_KEY_BASE) bundle exec rails assets:precompile
 
 # ==== LOCAL DEVELOPMENT CONTAINER STAGES ====
 
