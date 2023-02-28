@@ -9,6 +9,7 @@ RUN bundle config set path 'vendor/bundle'
 # Stage that configures necessary components for installing/building dependencies
 FROM baseline AS server
 ARG ENVIRONMENT=development
+ENV RAILS_ENV=${ENVIRONMENT}
 RUN apk add alpine-sdk build-base
 RUN bundle config set with ${ENVIRONMENT}
 COPY Gemfile Gemfile.lock ./
