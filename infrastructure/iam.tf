@@ -87,6 +87,27 @@ data "aws_iam_policy_document" "ecs_deploy" {
   }
 }
 
+data "aws_s3_bucket" "activestorage" {
+  provider = aws.bucket
+  bucket   = var.activestorage.s3_bucket
+}
+
+data "aws_iam_policy_document" "service_actions" {
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:ListBucket",
+      "s3:DeleteObject"
+    ]
+
+    resources = [
+      data.aws_s3_bucket.activestorage.arn,
+      "${data.aws_s3_bucket.activestorage.arn}/*",
+    ]
+  }
+}
+
 resource "aws_iam_role" "deploy" {
   name               = "${var.name}-deploy"
   assume_role_policy = data.aws_iam_policy_document.github_assume_role.json
@@ -107,12 +128,18 @@ resource "aws_iam_role" "task_execution" {
   }
 }
 
-resource "aws_iam_role" "task" {
-  name               = "${var.name}-task"
-  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
-}
-
 resource "aws_iam_role_policy_attachment" "task_execution" {
   role       = aws_iam_role.task_execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role" "task" {
+  name               = "${var.name}-task"
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
+
+  inline_policy {
+    name   = "service"
+    policy = data.aws_iam_policy_document.service_actions.json
+  }
+
 }

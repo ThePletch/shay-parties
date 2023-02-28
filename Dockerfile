@@ -21,10 +21,12 @@ CMD bundle exec rails server -b 0.0.0.0 -p ${PORT}
 # ==== DEPLOYABLE CONTAINER STAGES ====
 
 # Build stages to wrap the server with an installed bundle
-# without including installation-only dependencies
+# and any necessary production-only resources
+# without including installation-only dependencies.
 # For production deployments.
 
-# TODO LOL
+FROM server AS server-shrinkwrapped
+RUN bundle exec rails assets:precompile
 
 # ==== LOCAL DEVELOPMENT CONTAINER STAGES ====
 

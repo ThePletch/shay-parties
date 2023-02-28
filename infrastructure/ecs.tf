@@ -56,6 +56,7 @@ resource "aws_ecs_task_definition" "main" {
   memory             = 2048
   network_mode       = "awsvpc"
   execution_role_arn = aws_iam_role.task_execution.arn
+  task_role_arn      = aws_iam_role.task.arn
 
   container_definitions = jsonencode([
     {
@@ -97,7 +98,11 @@ resource "aws_ecs_task_definition" "main" {
         {
           name  = "RAILS_ENV"
           value = "production"
-        }
+        },
+        {
+          name  = "ACTIVE_STORAGE_S3_BUCKET"
+          value = var.activestorage.s3_bucket
+        },
       ]
       logConfiguration = {
         logDriver = "awslogs",
