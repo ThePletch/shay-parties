@@ -43,7 +43,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     domain_name = "${local.service_discovery_service_name}.${var.root_domain}"
 
     custom_origin_config {
-      origin_protocol_policy = "http-only"
+      origin_protocol_policy = "match-viewer"
       http_port              = var.internal_port
       https_port             = var.internal_port
       origin_ssl_protocols   = ["TLSv1.2"]
