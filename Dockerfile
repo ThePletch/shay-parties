@@ -10,7 +10,7 @@ RUN bundle config set path 'vendor/bundle'
 FROM baseline AS server
 ARG ENVIRONMENT=development
 ENV RAILS_ENV=${ENVIRONMENT}
-RUN apk add alpine-sdk build-base
+RUN apk add alpine-sdk build-base imagemagick
 RUN bundle config set with ${ENVIRONMENT}
 COPY Gemfile Gemfile.lock ./
 RUN bundle install

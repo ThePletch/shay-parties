@@ -1,3 +1,24 @@
+locals {
+  application_env_vars = {
+    SECRET_KEY_BASE = random_string.secret_key_base.result
+    DATABASE_USERNAME = var.database.username
+    DATABASE_PASSWORD = var.database.password
+    DATABASE_HOST = var.database.host
+    DATABASE_NAME = var.database.database
+    DATABASE_PORT = tostring(var.database.port)
+    RACK_ENV = "production"
+    RAILS_ENV = "production"
+    # Eventually we'll want to move compiled assets into the
+    # same object storage we use for image hosting.
+    RAILS_SERVE_STATIC_FILES = "true"
+    RAILS_LOG_TO_STDOUT = "true"
+    ACTIVE_STORAGE_S3_BUCKET = var.activestorage.s3_bucket
+    PARTIES_FULL_DOMAIN = local.main_domain
+    PARTIES_BASE_DOMAIN = var.root_domain
+    SES_SMTP_USERNAME = var.smtp.username
+    SES_SMTP_PASSWORD = var.smtp.password
+  }
+}
 resource "aws_ecr_repository" "main" {
   name = "${var.name}-images"
 }
@@ -71,44 +92,10 @@ resource "aws_ecs_task_definition" "main" {
         },
       ]
       environment = [
-        {
-          name  = "SECRET_KEY_BASE"
-          value = random_string.secret_key_base.result
-        },
-        {
-          name  = "DATABASE_USERNAME"
-          value = var.database.username
-        },
-        {
-          name  = "DATABASE_PASSWORD"
-          value = var.database.password
-        },
-        {
-          name  = "DATABASE_HOST"
-          value = var.database.host
-        },
-        {
-          name  = "DATABASE_NAME"
-          value = var.database.database
-        },
-        {
-          name  = "DATABASE_PORT"
-          value = tostring(var.database.port)
-        },
-        {
-          name  = "RAILS_ENV"
-          value = "production"
-        },
-        {
-          # Eventually we'll want to move compiled assets into the
-          # same object storage we use for image hosting.
-          name  = "RAILS_SERVE_STATIC_FILES"
-          value = "true"
-        },
-        {
-          name  = "ACTIVE_STORAGE_S3_BUCKET"
-          value = var.activestorage.s3_bucket
-        },
+        for name, value in local.application_env_vars : {
+          name = name
+          value = value
+        }
       ]
       logConfiguration = {
         logDriver = "awslogs",

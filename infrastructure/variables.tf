@@ -29,6 +29,14 @@ variable "activestorage" {
   description = "Name of S3 bucket where ActiveStorage files are stored"
 }
 
+variable "smtp" {
+  type = object({
+    username = string
+    password = string
+  })
+  description = "Credentials for SMTP server to use for email. Assumes SES."
+}
+
 variable "internal_port" {
   type        = number
   default     = 3030
