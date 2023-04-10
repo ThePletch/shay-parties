@@ -36,6 +36,8 @@ resource "aws_cloudfront_distribution" "cdn" {
     cached_methods         = ["HEAD", "GET", "OPTIONS"]
     target_origin_id       = local.cdn_origin
     viewer_protocol_policy = "allow-all"
+    # Managed "forward all parameters" policy
+    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
   }
 
   origin {

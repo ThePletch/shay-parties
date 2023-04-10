@@ -22,7 +22,7 @@ resource "aws_ecs_service" "main" {
   cluster         = aws_ecs_cluster.main.id
   name            = "${var.name}-main"
   task_definition = aws_ecs_task_definition.main.arn
-  desired_count   = 0
+  desired_count   = 1
 
   network_configuration {
     subnets          = aws_subnet.public.*.id
@@ -104,7 +104,7 @@ resource "aws_ecs_task_definition" "main" {
           # same object storage we use for image hosting.
           name  = "RAILS_SERVE_STATIC_FILES"
           value = "true"
-        }
+        },
         {
           name  = "ACTIVE_STORAGE_S3_BUCKET"
           value = var.activestorage.s3_bucket

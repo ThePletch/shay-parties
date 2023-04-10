@@ -37,12 +37,13 @@ def get_eni_ip(event):
       if detail['name'] == 'networkInterfaceId'
     )['value']
   except StopIteration:
-    raise StandardError("No network interface ID listed for this ENI somehow.")
+    print(eni_attachment['details'])
+    raise RuntimeError("No network interface ID listed for this ENI somehow.")
 
   enis = client_ec2.describe_network_interfaces(NetworkInterfaceIds=[eni_id])['NetworkInterfaces']
 
   if len(enis) == 0:
-    raise StandardError("No ENIs matching returned ID found")
+    raise RuntimeError("No ENIs matching returned ID found")
 
   return enis[0]['Association']['PublicIp']
 
