@@ -1,4 +1,4 @@
-ruby '3.0.1'
+ruby '~> 3.1.3'
 
 source 'https://rubygems.org'
 
@@ -8,20 +8,14 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0'
+gem 'rails', '~> 6.1.7'
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.2.3'
+gem 'pg', '~> 1.4.5'
 # Use Puma as the app server
-gem 'puma', '~> 5.6.2'
+gem 'puma', '~> 6.0.0'
 # Use SCSS for stylesheets
 gem 'sassc', '~> 2.4'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 5.0'
 gem 'haml-rails', '~> 2.0.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
 
 gem 'draper', '~> 4.0'
 
@@ -33,6 +27,7 @@ gem 'jquery-rails', '~> 4.4'
 gem 'jquery-ui-rails', '~> 6.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
+gem 'ffi', '~> 1.15.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -44,7 +39,7 @@ gem 'carmen', '~> 1.1'
 # accounts and authentication
 gem 'devise', '~> 4.8'
 # markdown for descriptions
-gem 'redcarpet', '~> 3.5.1'
+gem 'commonmarker', '~> 1.0.0.pre3'
 
 gem 'aws-sdk-s3', '~> 1.100', require: false
 gem 'image_processing', '~> 1.2'

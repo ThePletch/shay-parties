@@ -66,7 +66,6 @@ ActiveRecord::Schema.define(version: 2022_02_20_205809) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "attendee_type", null: false
-    t.string "guid"
     t.index ["attendee_id"], name: "index_attendances_on_attendee_id"
     t.index ["event_id", "attendee_id", "attendee_type"], name: "index_attendances_on_event_id_and_attendee_id_and_attendee_type", unique: true
     t.index ["event_id"], name: "index_attendances_on_event_id"
@@ -96,7 +95,7 @@ ActiveRecord::Schema.define(version: 2022_02_20_205809) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
+    t.bigint "user_id"
     t.bigint "address_id"
     t.boolean "secret", default: false
     t.string "slug"
@@ -201,4 +200,5 @@ ActiveRecord::Schema.define(version: 2022_02_20_205809) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "events", "addresses"
+  add_foreign_key "events", "users"
 end

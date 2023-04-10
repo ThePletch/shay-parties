@@ -1,0 +1,89 @@
+# TODO pull environment into workflow input
+name: Deploy
+on:
+  workflow_run:
+    workflows: [Run tests]
+    types: [completed]
+    branches: [master]
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_ECR_ROLE }}
+        # not a secret, but you can only configure secrets with the Github Terraform provider,
+        # not environment variables.
+        aws-region: ${{ secrets.AWS_REGION }}
+    - name: Log in to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        # list of Docker images to use as base name for tags
+        images: |
+          ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}
+        # generate Docker tags based on the following events/attributes
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,format=long
+          type=raw,value=latest
+    # TODO split out bundle install into separate step that caches in GHA cache,
+    # currently it's not cached at all due to multi-stage builds
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        pull: true
+        tags: ${{ steps.meta.outputs.tags }}
+        build-args: |
+          PORT=3030
+          ENVIRONMENT=production
+        cache-from: |
+          type=gha
+          type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        cache-to: |
+          type=gha
+        secrets: |
+          SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}
+        target: server-shrinkwrapped
+    # TODO split this into a separate dependent job
+    - name: Trigger deploy of ECS service
+      env:
+        CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
+        SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
+      run: |
+        aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
+    # This step assumes that the database is accessible from the public internet.
+    - name: Run migrations
+      env:
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      run: |
+        docker run \
+          --rm \
+          -e RAILS_ENV=production \
+          -e SECRET_KEY_BASE=$SECRET_KEY_BASE \
+          --env-file <(printenv | grep DATABASE_) \
+          $ECR_IMAGE \
+          bundle exec rails db:migrate

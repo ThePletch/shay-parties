@@ -38,7 +38,7 @@ class EventDecorator < Draper::Decorator
   end
 
   def description
-    ActionController::Base.helpers.sanitize markdown.render(event.description || '')
+    ActionController::Base.helpers.sanitize Commonmarker.to_html(event.description || '')
   end
 
   def attended_by?(user)
@@ -65,9 +65,5 @@ class EventDecorator < Draper::Decorator
 
   def event_time_format
     "%l:%M %P"
-  end
-
-  def markdown
-    @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML.new)
   end
 end

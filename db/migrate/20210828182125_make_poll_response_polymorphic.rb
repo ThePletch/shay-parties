@@ -4,7 +4,9 @@ class MakePollResponsePolymorphic < ActiveRecord::Migration[6.0]
     # create new type column for polymorphic association
     add_column :poll_responses, :respondent_type, :string, null: true
     # backfill existing rows to specify that they point to users
-    PollResponse.where(respondent_type: nil).update_all(respondent_type: "User")
+    if PollResponse.any?
+      PollResponse.where(respondent_type: nil).update_all(respondent_type: "User")
+    end
     # switch the new column to be un-nullable
     change_column :poll_responses, :respondent_type, :string, null: false
   end

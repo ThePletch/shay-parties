@@ -1,8 +1,8 @@
 on: [push]
-
+name: Run tests
 env:
   RAILS_ENV: test
-  DATABASE_URL: postgres://postgres:asdf@localhost:5432/steve_parties_test
+  DATABASE_URL: postgres://postgres:asdf@localhost:5432/test
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,7 +10,7 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: steve_parties_test
+          POSTGRES_DB: test
           POSTGRES_PASSWORD: asdf
           POSTGRES_USER: postgres
         ports:
