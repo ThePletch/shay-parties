@@ -100,6 +100,12 @@ resource "aws_ecs_task_definition" "main" {
           value = "production"
         },
         {
+          # Eventually we'll want to move compiled assets into the
+          # same object storage we use for image hosting.
+          name  = "RAILS_SERVE_STATIC_FILES"
+          value = "true"
+        }
+        {
           name  = "ACTIVE_STORAGE_S3_BUCKET"
           value = var.activestorage.s3_bucket
         },
