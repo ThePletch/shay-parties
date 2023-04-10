@@ -1,5 +1,5 @@
 locals {
-  environment_name = "deploy-test"
+  environment_name = "production"
   plaintext_secrets = {
     AWS_ECR_REPOSITORY = aws_ecr_repository.main.name
     AWS_ECR_ROLE       = aws_iam_role.deploy.arn
@@ -20,7 +20,7 @@ data "github_repository" "main" {
 }
 
 # Pending work to modularize this to support multiple environments
-resource "github_repository_environment" "deploy_test" {
+resource "github_repository_environment" "deploy_env" {
   environment = local.environment_name
   repository  = data.github_repository.main.name
 }
@@ -28,7 +28,7 @@ resource "github_repository_environment" "deploy_test" {
 resource "github_actions_environment_secret" "deploy_secrets" {
   for_each        = local.plaintext_secrets
   repository      = data.github_repository.main.name
-  environment     = github_repository_environment.deploy_test.environment
+  environment     = github_repository_environment.deploy_env.environment
   secret_name     = each.key
   plaintext_value = each.value
 }

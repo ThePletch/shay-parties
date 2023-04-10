@@ -74,7 +74,7 @@ resource "aws_ecs_task_definition" "main" {
   # WATCH THIS SPACE if fargate adds support for burstable CPU:
   # https://github.com/aws/containers-roadmap/issues/163
   cpu                = 256
-  memory             = 2048
+  memory             = 512
   network_mode       = "awsvpc"
   execution_role_arn = aws_iam_role.task_execution.arn
   task_role_arn      = aws_iam_role.task.arn

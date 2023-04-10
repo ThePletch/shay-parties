@@ -1,16 +1,15 @@
 # TODO pull environment into workflow input
 name: Deploy
 on:
-  # workflow_run:
-  #   workflows: [Run tests]
-  #   types: [completed]
-  #   branches: [master]
-  push:
+  workflow_run:
+    workflows: [Run tests]
+    types: [completed]
+    branches: [master]
 jobs:
   deploy:
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    environment: deploy-test
+    environment: production
     permissions:
       id-token: write
       contents: read

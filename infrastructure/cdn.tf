@@ -20,13 +20,15 @@ module "certificate" {
   }
 
   domain_name    = local.main_domain
+  aliases = [var.root_domain, "www.${var.root_domain}"]
   hosted_zone_id = data.aws_route53_zone.root_domain.zone_id
 }
 
 resource "aws_cloudfront_distribution" "cdn" {
   enabled = true
 
-  aliases = [local.main_domain]
+  # temporary
+  aliases = [local.main_domain, "www.${var.root_domain}", var.root_domain]
 
   default_cache_behavior {
     # Managed "disable all caching" policy
