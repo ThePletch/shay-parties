@@ -17,7 +17,7 @@ RUN bundle install
 ARG PORT
 ENV PORT=${PORT}
 COPY . .
-CMD bundle exec rails server -b 0.0.0.0 -p ${PORT}
+CMD SECRET_KEY_BASE=$(cat /run/secrets/SECRET_KEY_BASE) bundle exec rails server -b 0.0.0.0 -p ${PORT}
 
 # ==== DEPLOYABLE CONTAINER STAGES ====
 
@@ -38,4 +38,4 @@ CMD ["bundle", "install"]
 # Sidecar container that runs pending migrations
 FROM server AS db-migrater
 
-CMD ["bundle", "exec", "rails", "db:migrate"]
+CMD SECRET_KEY_BASE=$(cat /run/secrets/SECRET_KEY_BASE) bundle exec rails db:migrate

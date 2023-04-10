@@ -12,7 +12,7 @@ x-default-service: &servicedefaults
   build: &builddefaults
     context: .
     ssh:
-      - default
+    - default
   environment: &envdefaults
     DATABASE_HOST: partiesforall-postgres
     DATABASE_USERNAME: dev
@@ -20,34 +20,42 @@ x-default-service: &servicedefaults
     DATABASE_PORT: 5432
     SSH_AUTH_SOCK: /ssh-agent/ssh-auth.sock
   volumes:
-    - &ssh-pass /run/host-services/:/ssh-agent # pass through ssh agent
-    - &cache-app-dir ./:/usr/src/app:cached
-    - &ssh-keys ~/.ssh/:/root/.ssh:cached # link ssh keys into container so that npm install works with private github repos
+  - &ssh-pass /run/host-services/:/ssh-agent # pass through ssh agent
+  - &cache-app-dir ./:/usr/src/app:cached
+  - &ssh-keys ~/.ssh/:/root/.ssh:cached # link ssh keys into container so that npm install works with private github repos
   restart: on-failure
+secrets:
+  SECRET_KEY_BASE:
+    environment: SECRET_KEY_BASE
 services:
   api:
     <<: *servicedefaults
     build:
       <<: *builddefaults
-      target: server
+      target: server-shrinkwrapped
+      secrets:
+      - SECRET_KEY_BASE
     environment:
       <<: *envdefaults
       PORT: 3000
       PIDFILE: /tmp/pid/rails.pid
+      RAILS_SERVE_STATIC_FILES: true
+    secrets:
+    - SECRET_KEY_BASE
     ports:
-      - "23000:3000"
+    - "23000:3000"
     container_name: partiesforall-app
     volumes:
-      - type: volume
-        source: vendor-bundle
-        target: /usr/src/app/vendor/bundle/
-        volume:
-          nocopy: true
-      - *ssh-pass
-      - *cache-app-dir
-      - *ssh-keys
+    - type: volume
+      source: vendor-bundle
+      target: /usr/src/app/vendor/bundle/
+      volume:
+        nocopy: true
+    - *ssh-pass
+    - *cache-app-dir
+    - *ssh-keys
     tmpfs:
-      - /tmp/pid
+    - /tmp/pid
     depends_on:
       postgres:
         condition: service_healthy
@@ -72,15 +80,17 @@ services:
       <<: *builddefaults
       dockerfile: Dockerfile
       target: db-migrater
+    secrets:
+    - SECRET_KEY_BASE
     volumes:
-      - *ssh-pass
-      - *cache-app-dir
-      - *ssh-keys
-      - type: volume
-        source: vendor-bundle
-        target: /usr/src/app/vendor/bundle/
-        volume:
-          nocopy: true
+    - *ssh-pass
+    - *cache-app-dir
+    - *ssh-keys
+    - type: volume
+      source: vendor-bundle
+      target: /usr/src/app/vendor/bundle/
+      volume:
+        nocopy: true
     depends_on:
       postgres:
         condition: service_healthy
@@ -90,15 +100,15 @@ services:
     container_name: partiesforall-postgres
     image: postgres:14-alpine
     environment:
-      - POSTGRES_USER=dev
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=development
-      - POSTGRES_HOST_AUTH_METHOD=trust
+    - POSTGRES_USER=dev
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_DB=development
+    - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
-      - "25432:5432"
+    - "25432:5432"
     restart: on-failure
     volumes:
-      - database-data:/var/lib/postgresql/data/:cached # persist data even if container shuts down
+    - database-data:/var/lib/postgresql/data/:cached # persist data even if container shuts down
     entrypoint: "docker-entrypoint.sh -i"
     healthcheck:
       # we have to hardcode the host and database because health checks are configured during build,
@@ -112,15 +122,15 @@ services:
     container_name: partiesforall-postgres-test
     image: postgres:14-alpine
     environment:
-      - POSTGRES_USER=dev
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=test
-      - POSTGRES_HOST_AUTH_METHOD=trust
+    - POSTGRES_USER=dev
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_DB=test
+    - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
-      - "25433:5432"
+    - "25433:5432"
     restart: on-failure
     volumes:
-      - database-test-data:/var/lib/postgresql/data/:cached # persist data even if container shuts down
+    - database-test-data:/var/lib/postgresql/data/:cached # persist data even if container shuts down
     entrypoint: "docker-entrypoint.sh -i"
     healthcheck:
       # we have to hardcode the host and database because health checks are configured during build,

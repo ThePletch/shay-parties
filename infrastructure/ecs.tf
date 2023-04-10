@@ -22,7 +22,7 @@ resource "aws_ecs_service" "main" {
   cluster         = aws_ecs_cluster.main.id
   name            = "${var.name}-main"
   task_definition = aws_ecs_task_definition.main.arn
-  desired_count   = 1
+  desired_count   = 0
 
   network_configuration {
     subnets          = aws_subnet.public.*.id

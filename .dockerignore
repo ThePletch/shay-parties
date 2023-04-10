@@ -2,6 +2,7 @@
 .git
 .github
 compose.yml
+Dockerfile
 infrastructure
 log
 tmp
