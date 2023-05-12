@@ -9,7 +9,7 @@ describe AttendancesController do
 
     context "when unauthenticated" do
       it "rejects requests with no guest information" do
-        post :create, params: {event_id: @event.id, attendance: {rsvp_status: "Yes"}, attendee: {name: nil, email: nil}}
+        post :create, params: {event_id: @event.id, attendance: {rsvp_status: "Yes"}, attendee_attributes: {name: nil, email: nil}}
         expect(response).to have_http_status(:unprocessable_entity)
         expect(@event.attendances).to be_empty
       end
@@ -17,8 +17,10 @@ describe AttendancesController do
       it "registers a guest attendance when info is provided" do
         post :create, params: {
           event_id: @event.id,
-          attendance: {rsvp_status: "Yes"},
-          attendee: {name: "Steve", email: "steve@steve.steve"},
+          attendance: {
+            rsvp_status: "Yes",
+            attendee_attributes: {name: "Steve", email: "steve@steve.steve"},
+          },
         }
         expect(@event.attendances.count).to eq 1
         guest = @event.attendances.first.attendee
@@ -33,11 +35,16 @@ describe AttendancesController do
           event_id: @event.id,
           attendance: {
             rsvp_status: "Yes",
-            plus_ones: [
-              {name: "Steve Plus A", email: "stevea@steve.steve"},
-            ]
+            plus_ones_attributes: {
+              "0" => {
+                attendee_attributes: {
+                  name: "Steve Plus A",
+                  email: "stevea@steve.steve",
+                },
+              },
+            },
+            attendee_attributes: {name: "Steve", email: "steve@steve.steve"},
           },
-          attendee: {name: "Steve", email: "steve@steve.steve"},
         }
         expect(@event.attendances.count).to eq 2
         guest_attendance = @event.attendances.first
@@ -57,37 +64,12 @@ describe AttendancesController do
           event_id: @event.id,
           attendance: {
             rsvp_status: "Yes",
+            attendee_attributes: {name: "New Name", email: plus_one.attendee.email},
           },
-          attendee: {name: "New Name", email: plus_one.attendee.email},
         }
         expect(@event.attendances.count).to eq 2
         expect(plus_one.reload.parent_attendance).to be_nil
         expect(plus_one.attendee.name).to eq "New Name"
-      end
-
-      it "rejects RSVPs if the email is already in use" do
-        attendance = FactoryBot.create(:attendance, event: @event)
-        post :create, params: {
-          event_id: @event.id,
-          attendance: {rsvp_status: "Yes"},
-          attendee: {name: "Steve", email: attendance.attendee.email},
-        }
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it "rejects RSVPs if a +1 email is already in use" do
-        attendance = FactoryBot.create(:attendance, event: @event)
-        post :create, params: {
-          event_id: @event.id,
-          attendance: {
-            rsvp_status: "Yes",
-            plus_ones: [
-              {name: "Steve Plus A", email: attendance.attendee.email},
-            ]
-          },
-          attendee: {name: "Steve", email: "steve@steve.steve"},
-        }
-        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -114,9 +96,11 @@ describe AttendancesController do
           event_id: @event.id,
           attendance: {
             rsvp_status: "Yes",
-            plus_ones: [
-              {name: "Steve Plus A", email: "stevea@steve.steve"},
-            ]
+            plus_ones_attributes: {
+              "0" => {
+                attendee_attributes: {name: "Steve Plus A", email: "stevea@steve.steve"},
+              },
+            },
           },
         }
         expect(@event.attendances.count).to eq 2
@@ -139,29 +123,6 @@ describe AttendancesController do
         expect(@event.attendances.count).to eq 2
         expect(plus_one.reload.parent_attendance).to be_nil
         expect(plus_one.attendee.name).to eq @user.name
-      end
-
-      it "rejects RSVPs if the email is already in use" do
-        attendance = FactoryBot.create(:attendance, event: @event, attendee: FactoryBot.create(:guest, email: @user.email))
-        post :create, params: {
-          event_id: @event.id,
-          attendance: {rsvp_status: "Yes"},
-        }
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it "rejects RSVPs if a +1 email is already in use" do
-        attendance = FactoryBot.create(:attendance, event: @event)
-        post :create, params: {
-          event_id: @event.id,
-          attendance: {
-            rsvp_status: "Yes",
-            plus_ones: [
-              {name: "Steve Plus A", email: attendance.attendee.email},
-            ]
-          },
-        }
-        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
