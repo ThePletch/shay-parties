@@ -58,8 +58,6 @@ class AttendancesController < ApplicationController
       result = upsert(@attendance, event)
     end
 
-    puts attendance_params
-
     if result
       if @attendance.persisted?
         redirect_to event_path(event, guest_guid: @attendance.attendee.try(:guid)), notice: t('attendance.updated')
@@ -74,11 +72,7 @@ class AttendancesController < ApplicationController
   private
 
   def upsert(attendance, event)
-    pars = attendance_params_for_upsert(attendance_params, event)
-    puts params
-    puts attendance_params
-    puts pars
-    attendance.update(pars)
+    attendance.update(attendance_params_for_upsert(attendance_params, event))
   end
 
   def attendance_params_for_upsert(params, event)
