@@ -44,6 +44,7 @@
   .col-lg.order-lg-2.order-sm-1
     = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
     = render 'events/calendar_links', attendee: @attendee, event: @event
+    %hr
     = render 'events/rsvps', event: @event
     - if @event.polls.any?
       %hr
