@@ -5,6 +5,7 @@ es:
   cancel: Cancelar
   form:
     edit: Editar
+    update: Actualizar
     show: Mirar
     delete: Borrar
     confirm: "¿Está usted seguro?"

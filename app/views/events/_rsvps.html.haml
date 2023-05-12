@@ -1,6 +1,7 @@
-%ul.nav.nav-tabs{role: 'tablist'}
+%h5.text-center Attendees
+%ul.nav.nav-pills.nav-fill{role: 'tablist'}
   %li.nav-item
-    %a.nav-link.active#going-tab{href: '#going', role: 'tab', 'aria-controls' => 'going', 'aria-selected' => true, data: {'bs-toggle': 'tab'}}
+    %a.nav-link#going-tab{href: '#going', role: 'tab', 'aria-controls' => 'going', data: {'bs-toggle': 'tab'}}
       %i.fa.fa-check{"aria-hidden" => true}
       %span= t('event.rsvp_list.headers.yes', count: event.attendances.going.count)
   %li.nav-item
@@ -13,14 +14,15 @@
       %span= t('event.rsvp_list.headers.no', count: event.attendances.not_going.count)
 .tab-content
   - {going: event.attendances.going, maybe: event.attendances.maybe, 'not-going': event.attendances.not_going}.each do |label, collection|
-    .tab-pane{id: label, class: ("show active" if label == :going), role: 'tabpanel', 'aria-labelledby' => "#{label}-tab"}
+    - attendances_ordered = rsvps_order(collection)
+    .tab-pane{id: label, role: 'tabpanel', 'aria-labelledby' => "#{label}-tab"}
       %ul.list-group
-        - if collection.empty?
+        - if attendances_ordered.empty?
           %li.list-group-item
             %small.text-muted= t('event.rsvp_list.empty_category')
         - elsif @event.owned_by?(current_user)
           %li.list-group-item
             %div.mb-2
               %strong= t('event.rsvp_list.host_email_collection_header')
-              = text_area_tag nil, collection.map(&:attendee).pluck(:email).join(",\n"), class: 'form-control'
-        = render partial: "attendances/attendance", collection: collection
+              = text_area_tag nil, attendances_ordered.map(&:attendee).pluck(:email).join(",\n"), class: 'form-control'
+        = render partial: "attendances/attendance", collection: attendances_ordered

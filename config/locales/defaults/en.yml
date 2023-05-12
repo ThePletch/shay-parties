@@ -5,6 +5,7 @@ en:
   cancel: Cancel
   form:
     edit: Edit
+    update: Update
     show: Show
     delete: Delete
     confirm: "Are you sure?"

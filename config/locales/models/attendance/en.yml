@@ -11,10 +11,18 @@ en:
     errors:
       models:
         attendance:
+          rejection: Couldn't save your RSVP
           attributes:
             rsvp_status:
               inclusion: Not a valid RSVP.
+            attendance_id:
+              parent_event_is_different: This RSVP is a +1, but isn't pointed at the same event. This is a bug.
+            attendee_id:
+              email_already_rsvped: An RSVP from your email address already exists.
+            attendee_type:
+              exclusion: Logged-in users cannot be +1s.
   attendance:
+    plus_one: "+1"
     created: RSVP successful.
     created_with_link_html: "RSVP successful. Bookmark this link to change your RSVP later: %{link}"
     destroyed: RSVP removed.
@@ -28,12 +36,15 @@ en:
       'Maybe': Maybe
       'No': "No"
       'No RSVP': No RSVP
-    is_guest_account: (Guest account)
+    is_guest_account: ""
+    is_plus_one: (Plus one)
     is_host: (Host)
+    is_verified: (Verified user)
     email_hidden: Email hidden from guests
     dialog:
       remove_attendance: "Remove the RSVP and poll answers for #{attendee_name}?"
     form:
+      add_plus_one: Add +1
       prompt_guest: RSVP as a guest
       can_change_later: You'll be able to change your RSVP later.
       sign_in_alt: ...or sign in.

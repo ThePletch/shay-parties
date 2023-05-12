@@ -1,16 +1,19 @@
 module ApplicationHelper
   def current_locale_emoji
-    case I18n.locale
+    locale_emoji(I18n.locale)
+  end
+  def locale_emoji(locale)
+    case locale
     when :en
-      return "🇺🇸"
+      return %w(🇺🇸).sample
     when :es
-      return "🇲🇽"
+      return %w(🇦🇷 🇬🇹 🇲🇽 🇻🇪 🇨🇱 🇵🇷).sample
     end
   end
 
   # helper that generates a link that, when pressed, adds the specified rendered block
   # to the specified location on the page
-  def link_to_add_fields(name = nil, f = nil, association = nil, options = nil, html_options = nil, &block)
+  def link_to_add_fields(name = nil, f = nil, association = nil, options = nil, html_options = nil, subform_options = {}, &block)
     # If a block is provided there is no name attribute and the arguments are
     # shifted with one position to the left. This re-assigns those values.
     f, association, options, html_options = name, f, association, options if block_given?
@@ -33,8 +36,9 @@ module ApplicationHelper
 
     # Render the form fields from a file with the association name provided
     new_object = f.object.class.reflect_on_association(association).klass.new
-    fields = f.fields_for(association, new_object, child_index: 'new_record') do |builder|
-      render(partial, locals.merge!( f: builder))
+    options[:child_index] = 'new_record'
+    fields = f.fields_for(association, new_object, options) do |builder|
+      render(partial, locals.merge!(f: builder))
     end
 
     # The rendered fields are sent with the link within the data-form-prepend attr

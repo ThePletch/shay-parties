@@ -18,13 +18,76 @@ describe AttendancesController do
         post :create, params: {
           event_id: @event.id,
           attendance: {rsvp_status: "Yes"},
-          attendee: {name: "Steve", email: "steve@steve.steve"}}
+          attendee: {name: "Steve", email: "steve@steve.steve"},
+        }
         expect(@event.attendances.count).to eq 1
         guest = @event.attendances.first.attendee
         expect(guest).to be_a Guest
         expect(guest.name).to eq "Steve"
         expect(guest.email).to eq "steve@steve.steve"
         expect(response).to redirect_to(event_path(@event, guest_guid: guest.guid))
+      end
+
+      it "registers a guest attendance with plus-ones" do
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {
+            rsvp_status: "Yes",
+            plus_ones: [
+              {name: "Steve Plus A", email: "stevea@steve.steve"},
+            ]
+          },
+          attendee: {name: "Steve", email: "steve@steve.steve"},
+        }
+        expect(@event.attendances.count).to eq 2
+        guest_attendance = @event.attendances.first
+        guest = guest_attendance.attendee
+        plus_ones = guest_attendance.plus_ones
+        expect(plus_ones.length).to eq 1
+        expect(plus_ones[0].attendee.name).to eq "Steve Plus A"
+        expect(plus_ones[0].parent_attendance.id).to eq guest_attendance.id
+        expect(plus_ones[0].event.id).to eq @event.id
+        expect(response).to redirect_to(event_path(@event, guest_guid: guest.guid))
+      end
+
+      it "overwrites a plus-one with the same email" do
+        existing_attendance = FactoryBot.create(:attendance, event: @event)
+        plus_one = FactoryBot.create(:guest_attendance, parent_attendance: existing_attendance, event: @event)
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {
+            rsvp_status: "Yes",
+          },
+          attendee: {name: "New Name", email: plus_one.attendee.email},
+        }
+        expect(@event.attendances.count).to eq 2
+        expect(plus_one.reload.parent_attendance).to be_nil
+        expect(plus_one.attendee.name).to eq "New Name"
+      end
+
+      it "rejects RSVPs if the email is already in use" do
+        attendance = FactoryBot.create(:attendance, event: @event)
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {rsvp_status: "Yes"},
+          attendee: {name: "Steve", email: attendance.attendee.email},
+        }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "rejects RSVPs if a +1 email is already in use" do
+        attendance = FactoryBot.create(:attendance, event: @event)
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {
+            rsvp_status: "Yes",
+            plus_ones: [
+              {name: "Steve Plus A", email: attendance.attendee.email},
+            ]
+          },
+          attendee: {name: "Steve", email: "steve@steve.steve"},
+        }
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -44,6 +107,61 @@ describe AttendancesController do
         expect(user).to be_a User
         expect(user).to eq @user
         expect(response).to redirect_to(event_path(@event))
+      end
+
+      it "registers an attendance with plus-ones" do
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {
+            rsvp_status: "Yes",
+            plus_ones: [
+              {name: "Steve Plus A", email: "stevea@steve.steve"},
+            ]
+          },
+        }
+        expect(@event.attendances.count).to eq 2
+        attendance = @event.attendances.first
+        plus_ones = attendance.plus_ones
+        expect(plus_ones.length).to eq 1
+        expect(plus_ones[0].attendee.name).to eq "Steve Plus A"
+        expect(plus_ones[0].parent_attendance.id).to eq attendance.id
+        expect(response).to redirect_to(event_path(@event))
+      end
+
+      it "overwrites a plus-one with the same email" do
+        existing_attendance = FactoryBot.create(:attendance, event: @event)
+        guest_user = FactoryBot.create(:guest, email: @user.email)
+        plus_one = FactoryBot.create(:guest_attendance, parent_attendance: existing_attendance, event: @event, attendee: guest_user)
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {rsvp_status: "Yes"},
+        }
+        expect(@event.attendances.count).to eq 2
+        expect(plus_one.reload.parent_attendance).to be_nil
+        expect(plus_one.attendee.name).to eq @user.name
+      end
+
+      it "rejects RSVPs if the email is already in use" do
+        attendance = FactoryBot.create(:attendance, event: @event, attendee: FactoryBot.create(:guest, email: @user.email))
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {rsvp_status: "Yes"},
+        }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "rejects RSVPs if a +1 email is already in use" do
+        attendance = FactoryBot.create(:attendance, event: @event)
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {
+            rsvp_status: "Yes",
+            plus_ones: [
+              {name: "Steve Plus A", email: attendance.attendee.email},
+            ]
+          },
+        }
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end

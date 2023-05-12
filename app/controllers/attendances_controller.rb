@@ -7,10 +7,27 @@ class AttendancesController < ApplicationController
 
   # POST /attendances
   def create
-    attendee = @authenticated_user || Guest.new(attendee_params)
-    @attendance = @event.attendances.build(attendee: attendee, rsvp_status: attendance_params[:rsvp_status])
+    attendee = @authenticated_user || Guest.new(attendance_params[:attendee_attributes])
 
-    if @attendance.save
+    # RSVPing can overwrite an existing plus-one, but not someone else's direct RSVP.
+    # chicanery is required to filter on a polymorphic association
+    existing_plus_one_attendance = @event.attendances
+                                         .includes(:guest)
+                                         .where(
+                                            guest: {email: attendee.email}
+                                          )
+                                         .where.not(attendance_id: nil)
+                                         .take
+    @attendance = existing_plus_one_attendance || @event.attendances.build(
+      attendee: attendee,
+      rsvp_status: attendance_params[:rsvp_status],
+    )
+
+    # in case this is an existing attendance, erase its plus-one status and update its name.
+    @attendance.parent_attendance = nil
+    @attendance.attendee.name = attendee.name
+
+    if upsert(@attendance, @event)
       if @attendance.attendee.guest?
         notice = t 'attendance.created_with_link_html', link: event_url(@event, guest_guid: @attendance.attendee.guid)
       else
@@ -19,7 +36,7 @@ class AttendancesController < ApplicationController
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
     else
-      render 'events/show', alert: "Couldn't save your RSVP: " + @attendance.errors.map{|e| e.full_message }.join(". "), status: :unprocessable_entity
+      render 'events/show', alert: t('activerecord.errors.models.attendance.rejection') + ": " + @attendance.errors.map{|e| e.full_message }.join(". "), status: :unprocessable_entity
     end
   end
 
@@ -29,7 +46,6 @@ class AttendancesController < ApplicationController
     else
       redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), {alert: t('destroyed_failed')}
     end
-
   end
 
 
@@ -39,12 +55,14 @@ class AttendancesController < ApplicationController
     if attendance_params[:rsvp_status] == "No RSVP"
       result = @attendance.destroy
     else
-      result = @attendance.update(attendance_params)
+      result = upsert(@attendance, event)
     end
+
+    puts attendance_params
 
     if result
       if @attendance.persisted?
-        redirect_to event_path(event, guest_guid: params[:guest_guid]), notice: t('attendance.updated')
+        redirect_to event_path(event, guest_guid: @attendance.attendee.try(:guid)), notice: t('attendance.updated')
       else
         redirect_to event_path(event), notice: t('attendance.destroyed')
       end
@@ -54,6 +72,29 @@ class AttendancesController < ApplicationController
   end
 
   private
+
+  def upsert(attendance, event)
+    pars = attendance_params_for_upsert(attendance_params, event)
+    puts params
+    puts attendance_params
+    puts pars
+    attendance.update(pars)
+  end
+
+  def attendance_params_for_upsert(params, event)
+    {
+      **params,
+      'event_id' => event.id,
+      'plus_ones_attributes' => (attendance_params['plus_ones_attributes'] || {}).transform_values do |plus_one|
+        {
+          **plus_one,
+          'attendee_type' => 'Guest',
+          'event_id' => event.id,
+          'rsvp_status' => params['rsvp_status'],
+        }
+      end,
+    }
+  end
 
   def require_user_or_guest_auth
     unless @authenticated_user
@@ -71,7 +112,16 @@ class AttendancesController < ApplicationController
   end
 
   def require_own_attendance_or_event
-    if not (@attendance.attendee == @authenticated_user or @attendance.event.owned_by?(current_user))
+    permissible_states = [
+      # this is your attendance
+      Proc.new{ @attendance.attendee == @authenticated_user },
+      # this is your plus-one
+      Proc.new{ @attendance.parent_attendance.try(:attendee) == @authenticated_user },
+      # you own this event
+      Proc.new{ @attendance.event.owned_by?(current_user) },
+    ]
+
+    if permissible_states.lazy.none?{|state| state.call }
       redirect_to event_path(@attendance.event, guest_guid: params[:guest_guid]), alert: t('attendance.rejection.unauthorized_removal')
     end
   end
@@ -82,10 +132,18 @@ class AttendancesController < ApplicationController
 
   # Once an RSVP is created, you can't change its attendee or its event.
   def attendance_params
-    params.require(:attendance).permit(:rsvp_status)
-  end
-
-  def attendee_params
-    params.require(:attendee).permit(:name, :email)
+    params.require(:attendance).permit(
+      :rsvp_status,
+      attendee_attributes: [
+        :id,
+        :name,
+        :email,
+      ],
+      plus_ones_attributes: [
+        :_destroy,
+        :id,
+        :event_id,
+        {attendee_attributes: [:id, :name, :email]},
+      ])
   end
 end

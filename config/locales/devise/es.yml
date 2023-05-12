@@ -40,6 +40,11 @@ es:
         inactive: 'inactiva'
         unconfirmed: 'sin confirmar'
         locked: 'bloqueada'
+      new: 'Registrar'
+      edit: "Editar %{name}"
+      minimum_password_length: "Mínimo de %{length} caracteres"
+      leave_password_blank: "dejar en blanco si no lo quiere cambiar"
+      new_to_login: "...o iniciar sesión"
     unlocks:
       send_instructions: 'Recibirá un correo electrónico con instrucciones sobre cómo desbloquear su cuenta en unos minutos.'
       unlocked: 'Su cuenta fue desbloqueada con éxito, usted ha sido ingresado al sistema.'
