@@ -24,24 +24,17 @@ x-default-service: &servicedefaults
   - &cache-app-dir ./:/usr/src/app:cached
   - &ssh-keys ~/.ssh/:/root/.ssh:cached # link ssh keys into container so that npm install works with private github repos
   restart: on-failure
-secrets:
-  SECRET_KEY_BASE:
-    environment: SECRET_KEY_BASE
 services:
   api:
     <<: *servicedefaults
     build:
       <<: *builddefaults
-      target: server-shrinkwrapped
-      secrets:
-      - SECRET_KEY_BASE
+      target: server
     environment:
       <<: *envdefaults
       PORT: 3000
       PIDFILE: /tmp/pid/rails.pid
       RAILS_SERVE_STATIC_FILES: true
-    secrets:
-    - SECRET_KEY_BASE
     ports:
     - "23000:3000"
     container_name: partiesforall-app
@@ -80,8 +73,6 @@ services:
       <<: *builddefaults
       dockerfile: Dockerfile
       target: db-migrater
-    secrets:
-    - SECRET_KEY_BASE
     volumes:
     - *ssh-pass
     - *cache-app-dir

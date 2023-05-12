@@ -29,6 +29,20 @@ describe Attendance do
     expect(rsvp.attendee).to be_a Guest
   end
 
+  it "allows creating plus ones" do
+    attendance = FactoryBot.create(:attendance)
+    plus_one = FactoryBot.build(:guest_attendance, parent_attendance: attendance, event: attendance.event)
+
+    expect(plus_one).to be_valid
+  end
+
+  it "rejects plus ones that are for a different event" do
+    attendance = FactoryBot.create(:attendance)
+    attendance_for_a_different_event = FactoryBot.build(:attendance, parent_attendance: attendance)
+
+    expect(attendance_for_a_different_event).not_to be_valid
+  end
+
   it "deletes poll responses for its event when destroyed" do
     user = FactoryBot.create(:user)
     rsvp = FactoryBot.create(:attendance, attendee: user)
