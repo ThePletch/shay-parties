@@ -2,6 +2,36 @@ require 'rails_helper'
 
 describe EventsController do
 
+  describe "GET attendee_index" do
+    it "redirects to the main index when not logged in" do
+      get :attendee_index
+      expect(response).to redirect_to events_path
+    end
+
+    context "logged in" do
+      before do
+        @user = FactoryBot.create(:user)
+        sign_in @user
+        @later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day)
+        FactoryBot.create(:attendance, event: @later_event, attendee: @user)
+        @later_event_unrsvped = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day)
+        @earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day)
+        FactoryBot.create(:attendance, event: @earlier_event, attendee: @user)
+        @earlier_event_unrsvped = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day)
+      end
+
+      it "shows future events the user has RSVPed to" do
+        get :attendee_index
+        expect(assigns(:events)).to match_array([@later_event])
+      end
+
+      it "shows past events the user has RSVPed to when past scope specified" do
+        get :attendee_index, params: {scope: :past}
+        expect(assigns(:events)).to match_array([@earlier_event])
+      end
+    end
+  end
+
   describe "GET index" do
     before do
       # we make both to test 'wrong user' cases more thoroughly

@@ -7,6 +7,10 @@ Rails.application.routes.draw do
         get 'ical'
       end
 
+      collection do
+        get 'rsvped', to: 'events#attendee_index'
+      end
+
       resources :comments, only: [:create, :update, :destroy] do
         member do
           put 'undelete'

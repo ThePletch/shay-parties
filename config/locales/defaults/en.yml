@@ -19,6 +19,7 @@ en:
     attendee:
       header: Attendee
       public_events: Public Events
+      rsvped_events: RSVPed Events
     profile: My Profile
     log_out: Log out
     log_in: Log in
