@@ -55,8 +55,6 @@ $(function() {
       const $element = $(element);
       const targetId = $element.data('dynamic-target-id');
       if (targetId && targetId.includes("_timestamp_")) {
-        console.log(targetId);
-        console.log(targetId.replace("_timestamp_", timestamp));
         $element.data('dynamic-target-id', targetId.replace("_timestamp_", timestamp));
       }
     });
