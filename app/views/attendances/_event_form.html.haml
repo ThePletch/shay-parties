@@ -1,5 +1,5 @@
-- form_object = attendance.persisted? ? [attendance] : [event, attendance]
-= bootstrap_form_for(form_object) do |form|
+- form_url = attendance.persisted? ? attendance_path(attendance) : event_attendances_path(attendance, event)
+= bootstrap_form_with(model: attendance, url: form_url) do |form|
   - if current_user.present? and not current_user.guest?
     = form.hidden_field :user_id, value: current_user.id
   - else
