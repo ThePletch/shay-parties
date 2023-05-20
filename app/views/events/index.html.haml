@@ -1,23 +1,9 @@
-- if @host
-  - title t('event.index.for_user', name: @host.name)
-- else
-  - title t('event.index.public')
-
+- title @index_title
 %h1.title
-  - if current_user && current_user == @host
-    = t('event.index.self')
-  - else
-    - if @host
-      = t('event.index.for_user', name: @host.name)
-    - else
-      = t('event.index.public')
+  = @index_title
   .btn-group{role: "group", "aria-label" => "event scopes"}
-    - if @host
-      = scope t('event.index.category.upcoming'), user_events_path(@host, scope: :future), :future
-      = scope t('event.index.category.past'), user_events_path(@host, scope: :past), :past
-    - else
-      = scope t('event.index.category.upcoming'), events_path(scope: :future), :future
-      = scope t('event.index.category.past'), events_path(scope: :past), :past
+    = scope t('event.index.category.upcoming'), url_for(scope: :future), :future
+    = scope t('event.index.category.past'), url_for(scope: :past), :past
 - if @events.any?
   - @events.each do |event|
     .row.bg-light.mb-2.py-2
