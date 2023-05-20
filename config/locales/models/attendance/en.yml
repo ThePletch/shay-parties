@@ -42,7 +42,7 @@ en:
     is_verified: (Verified user)
     email_hidden: Email hidden from guests
     dialog:
-      remove_attendance: "Remove the RSVP and poll answers for #{attendee_name}?"
+      remove_attendance: "Remove the RSVP and poll answers for %{name}?"
     form:
       add_plus_one: Add +1
       prompt_guest: RSVP as a guest

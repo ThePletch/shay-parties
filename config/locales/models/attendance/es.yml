@@ -42,7 +42,7 @@ es:
     is_verified: (Usuario verificado)
     email_hidden: Email ocultado de invitados
     dialog:
-      remove_attendance: "Quita el RSVP y respuestas de encuesta para #{attendee_name}?"
+      remove_attendance: "Quita el RSVP y respuestas de encuesta para %{name}?"
     form:
       add_plus_one: Agregar +1
       prompt_guest: RSVP como cuenta temporal
