@@ -1,0 +1,13 @@
+- row_id = plus_one.persisted? ? "plus_one_#{plus_one.id}" : "plus_one__timestamp_"
+= f.form_group layout: :inline, class: 'row', "id" => row_id, data: {persisted: (!plus_one.new_record?).to_s} do
+  = f.hidden_field :id, value: plus_one.id unless plus_one.new_record?
+  = f.hidden_field :event_id, value: event.id
+  = f.hidden_field :_destroy, class: 'destroy', value: 0
+  .input-group.mb-1
+    .input-group-text
+      %span.text-muted.me-2= "+1"
+    = f.fields_for :attendee, f.object.attendee || Guest.new do |f_attendee|
+      = f_attendee.hidden_field :id, value: f_attendee.object.try(:id) unless plus_one.new_record?
+      = f_attendee.text_field :name, value: f_attendee.object.try(:name), floating: true
+      = f_attendee.text_field :email, value: f_attendee.object.try(:email), floating: true
+    %button.btn.btn-danger.dynamic-list-delete{data: {dynamic_target_id: row_id}, onclick: "return false;"} X

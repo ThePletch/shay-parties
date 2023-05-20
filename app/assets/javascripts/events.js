@@ -20,8 +20,7 @@ $(function() {
   $("#prior_addresses").change(function(e) {
     var selectedAddress = $(this).children('option:selected');
     var idField = $("#existing_address_id");
-
-    if (selectedAddress.val() === null) {
+    if ([null, ""].includes(selectedAddress.val())) {
       idField.val(null);
 
       Object.keys(addressAttributeToFormFieldMap).forEach(function(key) {

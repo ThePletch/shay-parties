@@ -1,10 +1,7 @@
--# wrapping div ensures that js picks up all the fields when templating this out
-%div
+- row_id = mailing_list_email.persisted? ? "mailing_list_email_#{mailing_list_email.id}" : "mailing_list_email__timestamp_"
+= f.form_group layout: :inline, class: 'row', "id" => row_id, data: {persisted: (!mailing_list_email.new_record?).to_s} do
   = f.hidden_field :id, value: mailing_list_email.id unless mailing_list_email.new_record?
-  .row.no-gutters.align-items-center.my-3
-    .col
-      .input-group
-        .input-group-prepend
-          .input-group-text
-            = f.check_box :_destroy, { checked: true }, 0, 1
-        = f.text_field :email, class: 'form-control', placeholder: 'email@friendship.biz'
+  = f.hidden_field :_destroy, class: 'destroy', value: 0
+  .input-group.mb-1
+    = f.text_field :email, floating: true
+    %button.btn.btn-danger.dynamic-list-delete{data: {dynamic_target_id: row_id}, onclick: "return false;"} X

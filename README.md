@@ -1,4 +1,4 @@
-# [Parties for All](https://steve-events.herokuapp.com)
+# [Parties for All](https://partiesforall.events)
 
 ![Build status](https://github.com/ThePletch/steve-parties/actions/workflows/test.yml/badge.svg)
 
@@ -60,7 +60,8 @@ $ rails server
 
 Running the tests is as simple as `bundle exec rspec`.
 
+If you'd rather keep your local machine clean, you can use Docker Compose to manage your local environment by running `docker compose up`. The local development server will listen on [port 23000](http://localhost:23000).
 
 ### Running your own instance of Parties for All
 
-If you want to host your own instance for privacy reasons (or whatever other reasons), this app works with Heroku out of the box. Just point it at either this repo directly or your personal fork of it. You'll need to attach (at minimum) a Postgres database add-on. I'd recommend also attaching a logging add-on of some kind.
+If you want to host your own instance for privacy reasons (or whatever other reasons), take a look at the infrastructure folder in the repository. You can spin up your own copy of that infrastructure with Terraform on your personal AWS account. Work to make setup more automated and require less manual input is underway.

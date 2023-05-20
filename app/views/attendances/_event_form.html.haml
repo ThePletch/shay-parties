@@ -1,17 +1,27 @@
 - form_object = attendance.persisted? ? [attendance] : [event, attendance]
 = bootstrap_form_for(form_object) do |form|
-  - if current_user
+  - if current_user.present? and not current_user.guest?
     = form.hidden_field :user_id, value: current_user.id
   - else
     = hidden_field_tag :guest_guid, params[:guest_guid]
-    .row.my-2.mx-1
+    .row.mt-2.mx-1
       %h5.col-lg-8.p-0
         %div= t('attendance.form.prompt_guest')
         %small.fst-italic.text-muted= t('attendance.form.can_change_later')
       %h6.col-lg-4.p-0.text-end
         = link_to t('attendance.form.sign_in_alt'), new_user_session_path, class: 'text-decoration-none'
-
-    = fields_for(:attendee, form.object.attendee, builder: BootstrapForm::FormBuilder) do |attendee_form|
-      = attendee_form.text_field :name, prepend: t('activerecord.attributes.attendee.name') + ":", skip_label: true, wrapper_class: 'my-2'
-      = attendee_form.email_field :email, prepend: t('activerecord.attributes.attendee.email') + ":", prepend_class: 'aeiou', skip_label: true, wrapper_class: 'my-2'
-  = form.select :rsvp_status, options_for_select(attendance_types_localized, selected: attendance.rsvp_status), prepend: t('activerecord.attributes.attendance.rsvp_status') + ":", append: form.primary('RSVP'), skip_label: true, wrapper_class: 'my-2'
+    = form.fields_for(:attendee, form.object.attendee || Guest.new, builder: BootstrapForm::FormBuilder) do |attendee_form|
+      = attendee_form.form_group layout: :inline do
+        .input-group
+          = attendee_form.text_field :name, floating: true
+          = attendee_form.email_field :email, floating: true
+  = form.select(:rsvp_status, options_for_select(attendance_types_localized, selected: attendance.rsvp_status), floating: true)
+  #plus-ones
+    = form.fields_for(:plus_ones, attendance.plus_ones.where.not(id: nil), layout: :inline) do |plus_one_form|
+      = render partial: 'attendances/plus_one_form', locals: {f: plus_one_form, plus_one: plus_one_form.object, event: event}
+  .d-grid.mb-2
+    - # Keep the layout/style options for this fields_for in sync with the plus-ones fields_for above.
+    - # This ensures that the style for the dynamic +1s and the existing +1s is consistent.
+    = link_to_add_fields(t('attendance.form.add_plus_one'), form, :plus_ones, {partial: 'attendances/plus_one_form', target: "#plus-ones", locals: { plus_one: form.object.plus_ones.build, event: event }, layout: :inline}, class: 'btn btn-success', id: "add-plus-one")
+  .d-grid
+    = form.primary('RSVP')

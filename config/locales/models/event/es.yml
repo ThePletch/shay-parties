@@ -54,6 +54,9 @@ es:
       public: Eventos Públicos
       self: Sus Eventos
       hosted_by: "Hospedado por %{name}"
+      attending:
+        title: Eventos con su RSVP
+        auth_required: Se necesita estar autenticado para ver su historia de RSVP.
       category:
         upcoming: Próximo
         past: Pasado

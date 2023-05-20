@@ -7,7 +7,7 @@
         %li.dropdown-item
           = link_to "🇺🇸 English (United States)", url_for(params.permit!.merge(locale: :en)), class: 'text-decoration-none'
         %li.dropdown-item
-          = link_to "🇲🇽 Spanish (Latin America)", url_for(params.permit!.merge(locale: :es)), class: 'text-decoration-none'
+          = link_to "#{locale_emoji(:es)} Español (Latinoamerica)", url_for(params.permit!.merge(locale: :es)), class: 'text-decoration-none'
     %button.navbar-toggler{type: 'button', data: {'bs-toggle': 'collapse', 'bs-target': '#main-nav'}, aria_controls: 'main-nav', aria_expanded: false, aria_label: "Toggle navigation"}
       %span.navbar-toggler-icon
     .collapse.navbar-collapse#main-nav
@@ -24,6 +24,7 @@
             %a.nav-link.dropdown-toggle#attendee-dropdown{href: '#', role: 'button', data: {'bs-toggle': 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'}}= t('navbar.attendee.header')
             .dropdown-menu{aria: {labelledBy: 'attendee-dropdown'}}
               = link_to t('navbar.attendee.public_events'), events_path, class: "dropdown-item"
+              = link_to t('navbar.attendee.rsvped_events'), rsvped_events_path, class: 'dropdown-item'
           %li.nav-item= link_to t('navbar.profile'), edit_user_registration_path, class: "nav-link"
           %li.nav-item= button_to t('navbar.log_out'), destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
         - else

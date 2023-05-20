@@ -20,7 +20,7 @@
           - else
             = t('event.show.hosted_by_other', name: @event.owner.name)
 .row
-  .col-lg
+  .col-lg.order-lg-1.order-sm-2
     .row
       .col-sm
         %em
@@ -39,16 +39,12 @@
         .col-sm-auto
           .d-sm-none.mt-2= render 'addresses/show', address: @event.address
           .d-none.d-sm-inline.text-end= render 'addresses/show', address: @event.address
-
-    .d-lg-none
-      = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
-      = render 'events/calendar_links', attendee: @attendee, event: @event
-    %hr.d-none.d-lg-block
+    %hr
     .content= @event.description
-  .col-lg
-    .d-none.d-lg-block
-      = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
-      = render 'events/calendar_links', attendee: @attendee, event: @event
+  .col-lg.order-lg-2.order-sm-1
+    = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
+    = render 'events/calendar_links', attendee: @attendee, event: @event
+    %hr
     = render 'events/rsvps', event: @event
     - if @event.polls.any?
       %hr

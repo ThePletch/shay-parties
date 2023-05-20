@@ -11,7 +11,7 @@ es:
         zip_code: Código Postal
   address:
     form:
-      use_prior: "Usar una dirección previo:"
+      use_prior: "Usar una dirección previo"
       address_placeholder: "[crear una dirección nueva]"
       street2_unit_number_explain: "# de Unidad, etc."
       state_placeholder: "[sin estado]"

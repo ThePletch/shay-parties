@@ -1,5 +1,9 @@
 es:
   activerecord:
+    attributes:
+      guest:
+        name: Nombre
+        email: Email
     errors:
       models:
         guest:

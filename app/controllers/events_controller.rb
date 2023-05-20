@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :ical, :index]
+  before_action :authenticate_user!, except: [:show, :ical, :index, :attendee_index]
   before_action :set_event, only: [:show, :ical]
   before_action :set_owned_event, only: [:edit, :update, :destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
@@ -9,26 +9,35 @@ class EventsController < ApplicationController
   def index
     if params[:user_id]
       @host = User.friendly.find(params[:user_id])
-    end
-
-    @events = get_events_list_for(@host)
-
-    @current_scope = params[:scope] || "future"
-
-    case @current_scope
-    when "past"
-      @events = @events.where("end_time < ?", Time.current)
+      if current_user && current_user == @host
+        @index_title = t('event.index.self')
+      else
+        @index_title = t('event.index.for_user', name: @host.name)
+      end
     else
-      @events = @events.where("end_time > ?", Time.current)
+      @index_title = t('event.index.public')
     end
 
-    @events = @events.order(end_time: :desc)
+    @events, @current_scope = time_scoped_events_list(get_events_list_for(@host), params[:scope])
+  end
+
+  def attendee_index
+    if @authenticated_user.nil?
+      redirect_to events_url, notice: t('event.index.attending.auth_required')
+      return
+    end
+
+    @index_title = t('event.index.attending.title')
+
+    @events, @current_scope = time_scoped_events_list(@authenticated_user.rsvped_events, params[:scope])
+
+    render :index
   end
 
   def show
     if @authenticated_user
       @attendee = @authenticated_user
-      @attendance = @event.attendances.find_by(attendee: @authenticated_user)
+      @attendance = @event.attendances.includes(:plus_ones).find_by(attendee: @authenticated_user)
     end
 
     @attendance ||= @event.attendances.build
@@ -89,6 +98,15 @@ class EventsController < ApplicationController
     events = events.includes(:attendances, :owner)
 
     user_scoped_events_list(events, @authenticated_user)
+  end
+
+  def time_scoped_events_list(events, target_scope)
+    case target_scope
+    when "past"
+      return [events.where("end_time <= ?", Time.current).order(end_time: :desc), "past"]
+    else
+      return [events.where("end_time > ?", Time.current).order(end_time: :desc), "future"]
+    end
   end
 
   # Hides all secret events except ones the user has already RSVPed to.

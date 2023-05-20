@@ -1,5 +1,4 @@
 es:
-  en:
   activerecord:
     models:
       attendance: Asistencia
@@ -12,10 +11,18 @@ es:
     errors:
       models:
         attendance:
+          rejection: No pudo guardar su RSVP
           attributes:
             rsvp_status:
               inclusion: No es un RSVP válido.
+            attendance_id:
+              parent_event_is_different: Este RSVP es un +1, pero no está apuntado a lo mismo evento. Esta es una problema tecnico.
+            attendee_id:
+              email_already_rsvped: Ya existe un RSVP de su dirección de email.
+            attendee_type:
+              exclusion: Usuarios autenticados no pueden ser +1s.
   attendance:
+    plus_one: "+1"
     created: RSVP exitoso.
     created_with_link_html: "RSVP exitoso. Marcar este enlace para cambiar su RSVP más tarde: %{link}"
     destroyed: RSVP eliminado.
@@ -29,12 +36,15 @@ es:
       'Maybe': Quizás
       'No': "No"
       'No RSVP': No RSVP
-    is_guest_account: (Cuenta temporal)
+    is_guest_account: ""
+    is_plus_one: (Plus)
     is_host: (Hospedador)
+    is_verified: (Usuario verificado)
     email_hidden: Email ocultado de invitados
     dialog:
-      remove_attendance: "Quita el RSVP y respuestas de encuesta para #{attendee_name}?"
+      remove_attendance: "Quita el RSVP y respuestas de encuesta para %{name}?"
     form:
+      add_plus_one: Agregar +1
       prompt_guest: RSVP como cuenta temporal
       can_change_later: Se podrá cambiar a su RSVP más tarde.
       sign_in_alt: ...o iniciar sesión.

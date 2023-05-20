@@ -3,22 +3,20 @@
 %h3= t('activerecord.models.address')
 = optional_parent_wrap(parent_form, address || Address.new) do |form|
   - if @prior_addresses.any?
-    .row.m-2
-      = label_tag(nil, t('address.form.use_prior'), class: 'mx-2 col-form-label col-form-label-sm')
-      = select_tag('prior_addresses', options_for_select(@prior_addresses.map{|a| [a.to_s, a.id, a.attributes] }), include_blank: t('address.form.address_placeholder'), class: 'form-control form-control-sm col')
+    .input-group.mb-2
+      %span.input-group-text= t('address.form.use_prior')
+      = select_tag('prior_addresses', options_for_select(@prior_addresses.map{|a| [a.to_s, a.id, a.attributes] }), include_blank: t('address.form.address_placeholder'), class: 'form-select form-select-sm')
+    %hr
+    
+  = form.text_field :street, floating: true
 
-  .form-group
-    = form.text_field :street, class: 'form-control'
+  = form.text_field :street2, class: 'form-control', label: t('address.form.street2_unit_number_explain'), floating: true
 
-  .form-group
-    = form.text_field :street2, class: 'form-control', label: t('address.form.street2_unit_number_explain')
-
-  .form-group
-    .row
-      .col-md-4
-        = form.text_field :city, class: 'form-control'
-      .col-md-4
-        - states = Carmen::Country.coded('USA').subregions.typed('state').map{|state| [state.name, state.code] }
-        = form.select :state, [[t('address.form.state_placeholder'), nil]] + states, {}, class: 'form-control'
-      .col-md-4
-        = form.text_field :zip_code, class: 'form-control'
+  .row
+    .col-md
+      = form.text_field :city, floating: true
+    .col-md
+      - states = Carmen::Country.coded('USA').subregions.typed('state').map{|state| [state.name, state.code] }
+      = form.select :state, [[t('address.form.state_placeholder'), nil]] + states,floating: true
+    .col-md
+      = form.text_field :zip_code, floating: true
