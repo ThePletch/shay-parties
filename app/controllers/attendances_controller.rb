@@ -36,7 +36,7 @@ class AttendancesController < ApplicationController
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
     else
-      render 'events/show', alert: t('activerecord.errors.models.attendance.rejection') + ": " + @attendance.errors.map{|e| e.full_message }.join(". "), status: :unprocessable_entity
+      render 'events/show', alert: t('activerecord.errors.models.attendance.rejection') + ": " + @attendance.errors.map(&:full_message).join(". "), status: :unprocessable_entity
     end
   end
 
@@ -65,7 +65,7 @@ class AttendancesController < ApplicationController
         redirect_to event_path(event), notice: t('attendance.destroyed')
       end
     else
-      redirect_to event_path(event, guest_guid: params[:guest_guid]), alert: @attendance.errors.values.flatten.join("\n")
+      redirect_to event_path(event, guest_guid: params[:guest_guid]), alert: @attendance.errors.map(&:full_message).join("\n")
     end
   end
 
