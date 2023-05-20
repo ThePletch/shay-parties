@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_30_150837) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_04_30_150837) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,7 +19,7 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -32,7 +31,7 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.text "metadata"
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -53,8 +52,8 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.decimal "longitude", precision: 15, scale: 10
     t.text "verification_info"
     t.text "original_attributes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "attendances", force: :cascade do |t|
@@ -63,8 +62,8 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.string "invitation_token"
     t.string "invitation_key"
     t.string "rsvp_status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "attendee_type", null: false
     t.bigint "attendance_id"
     t.index ["attendance_id"], name: "index_attendances_on_attendance_id"
@@ -80,9 +79,9 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.bigint "editor_id"
     t.bigint "parent_id"
     t.text "body"
-    t.datetime "deleted_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "event_id"
     t.index ["creator_type", "creator_id"], name: "index_comments_on_creator"
     t.index ["editor_type", "editor_id"], name: "index_comments_on_editor"
@@ -92,11 +91,11 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
 
   create_table "events", force: :cascade do |t|
     t.string "title"
-    t.datetime "start_time"
-    t.datetime "end_time"
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
     t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_id"
     t.bigint "address_id"
     t.boolean "secret", default: false
@@ -111,7 +110,7 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
     t.string "scope"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
@@ -121,8 +120,8 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.string "guid"
     t.string "name"
     t.string "email"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "mailing_list_emails", force: :cascade do |t|
@@ -135,8 +134,8 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
 
   create_table "mailing_lists", force: :cascade do |t|
     t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "name"
     t.index ["user_id"], name: "index_mailing_lists_on_user_id"
   end
@@ -146,8 +145,8 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.bigint "respondent_id"
     t.string "choice"
     t.boolean "example_response", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "respondent_type"
     t.index ["poll_id"], name: "index_poll_responses_on_poll_id"
     t.index ["respondent_id"], name: "index_poll_responses_on_respondent_id"
@@ -157,8 +156,8 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.string "question"
     t.bigint "event_id"
     t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["event_id"], name: "index_polls_on_event_id"
     t.index ["user_id"], name: "index_polls_on_user_id"
   end
@@ -167,15 +166,15 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "name"
     t.string "role", default: "user"
     t.string "slug"
@@ -192,8 +191,8 @@ ActiveRecord::Schema.define(version: 2023_04_30_150837) do
     t.boolean "vote_flag"
     t.string "vote_scope"
     t.integer "vote_weight"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope"
     t.index ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope"
   end
