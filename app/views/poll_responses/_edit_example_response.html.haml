@@ -1,13 +1,8 @@
--# wrapping div ensures that js picks up all the fields when templating this out
-%div
+- row_id = poll_response.persisted? ? "poll_response_#{poll_response.id}" : "poll_response__timestamp_"
+= f.form_group layout: :inline, class: 'row', "id" => row_id, data: {persisted: (!poll_response.new_record?).to_s} do
   = f.hidden_field :id, value: poll_response.id unless poll_response.new_record?
+  = f.hidden_field :_destroy, class: 'destroy', value: 0
   = f.hidden_field :example_response, value: 1
-  .row.no-gutters.align-items-center.my-3
-    .col-auto
-      = f.label :choice, class: 'side-label'
-    .col
-      .input-group
-        .input-group-prepend
-          .input-group-text
-            = f.check_box :_destroy, { checked: true }, 0, 1
-        = f.text_field :choice, class: 'form-control'
+  .input-group.m-2
+    = f.text_field :choice, floating: true
+    %button.btn.btn-danger.dynamic-list-delete{data: {dynamic_target_id: row_id}, onclick: "return false;"} X

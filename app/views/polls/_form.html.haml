@@ -1,4 +1,4 @@
-= form_with(model: form_object, local: true) do |f|
+= bootstrap_form_for(form_object) do |f|
   - if poll.errors.any?
     #error_explanation
       %h2= t('poll.form.errors_msg', count: poll.errors.count)
@@ -6,14 +6,13 @@
         - poll.errors.full_messages.each do |message|
           %li= message
   .form-group
-    = f.label :question
-    = f.text_field :question, class: 'form-control'
+    = f.text_field :question, floating: true
 
   #example-responses
-    = f.fields_for(:responses, poll.responses.example) do |r|
+    = f.fields_for(:responses, poll.responses.example, layout: :inline) do |r|
       = render partial: 'poll_responses/edit_example_response', locals: {f: r, poll_response: r.object}
-  = link_to_add_fields t('poll.form.add_option'), f, :responses, {partial: 'poll_responses/edit_example_response', target: "#example-responses", locals: { poll_response: f.object.responses.build }}, class: 'btn btn-success', id: "add-response"
+  = link_to_add_fields t('poll.form.add_option'), f, :responses, {partial: 'poll_responses/edit_example_response', target: "#example-responses", locals: { poll_response: f.object.responses.build }, layout: :inline}, class: 'btn btn-success', id: "add-response"
   .actions
     = f.submit class: 'btn btn-primary'
 - if poll.persisted?
-  = button_to t('poll.form.destroy'), poll_path(poll), method: :delete, class: 'btn btn-danger', confirm: t('poll.form.confirm_destroy')
+  = button_to t('poll.form.destroy'), poll_path(poll), method: :delete, class: 'btn btn-danger', data: {confirm: t('poll.form.confirm_destroy')}

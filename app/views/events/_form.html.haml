@@ -1,22 +1,20 @@
-= bootstrap_form_with(model: event, local: true) do |form|
+= bootstrap_form_for(event) do |form|
   - if event.errors.any?
     #error_explanation
       %h2= t('event.form.errors_msg')
+  = form.form_group help: t('event.form.secret_event_help') do
+    = form.text_field :title, floating: true
+    = form.check_box :secret, label: t('event.form.labels.secret'), class: 'btn-check', label_class: 'btn btn-outline-dark'
+  = form.form_group(class: 'row') do
+    .col-md
+      = form.text_field :start_time, class: 'datetimepicker', value: event.start_time_str, floating: true
+    .col-md
+      = form.text_field :end_time, class: 'datetimepicker', value: event.end_time_str, floating: true
   .form-group
-    = form.text_field :title, class: 'form-control'
-  .form-group
-    .form-check
-      = form.check_box :secret, class: 'form-check-input', label: t('event.form.labels.secret')
-    %small.form-text.text-muted= t('event.form.secret_event_help')
-  .row
-    = form.text_field :start_time, class: 'datetimepicker', wrapper_class: 'col-md', value: event.start_time_str
-    = form.text_field :end_time, class: 'datetimepicker', wrapper_class: 'col-md-6', value: event.end_time_str
-  .form-group
-    = form.file_field :photo
-    %small.form-text.text-muted= t('event.form.header_photo_help')
+    = form.file_field :photo, help: t('event.form.header_photo_help')
   = form.hidden_field :address_id, id: 'existing_address_id'
   = render "addresses/form", parent_form: form
   .form-group
-    = form.text_area :description, class: 'form-control', rows: "6"
+    = form.text_area :description, class: 'form-control', style: "height: 10em;", floating: true
   .actions
     = form.primary

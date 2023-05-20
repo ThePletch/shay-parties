@@ -5,7 +5,7 @@ en:
       log_in: Log in
       or_sign_up: ...or sign up
       forgot_password_prompt: Forgot your password?
-      currrent_password_detail: we need your current password to confirm your changes
+      currrent_password_detail: We need your current password to confirm your changes.
   activerecord:
     models:
       user: User
