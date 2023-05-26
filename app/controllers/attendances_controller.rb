@@ -102,7 +102,7 @@ class AttendancesController < ApplicationController
   end
 
   def set_attendance
-    @attendance = Attendance.includes(:event, :attendee).find(params[:id])
+    @attendance = Attendance.includes(:event).preload(:attendee).find(params[:id])
   end
 
   def require_own_attendance_or_event
