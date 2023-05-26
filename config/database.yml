@@ -68,4 +68,6 @@ test:
 #
 production:
   <<: *default
+  adapter: cockroachdb
   database: <%= ENV['DATABASE_NAME'] %>
+  sslmode: require

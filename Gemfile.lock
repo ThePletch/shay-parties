@@ -58,6 +58,10 @@ GEM
     activerecord (7.0.4.3)
       activemodel (= 7.0.4.3)
       activesupport (= 7.0.4.3)
+    activerecord-cockroachdb-adapter (7.0.1)
+      activerecord (~> 7.0.3)
+      pg (~> 1.2)
+      rgeo-activerecord (~> 7.0.0)
     activestorage (7.0.4.3)
       actionpack (= 7.0.4.3)
       activejob (= 7.0.4.3)
@@ -221,7 +225,7 @@ GEM
     nokogiri (1.15.1-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
-    pg (1.4.6)
+    pg (1.5.3)
     poltergeist (1.18.1)
       capybara (>= 2.1, < 4)
       cliver (~> 0.3.1)
@@ -275,6 +279,10 @@ GEM
     responders (3.1.0)
       actionpack (>= 5.2)
       railties (>= 5.2)
+    rgeo (3.0.0)
+    rgeo-activerecord (7.0.1)
+      activerecord (>= 5.0)
+      rgeo (>= 1.0.0)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -342,6 +350,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activerecord-cockroachdb-adapter (~> 7.0, >= 7.0.1)
   add_to_calendar (~> 0.2.5)
   aws-sdk-s3 (~> 1.100)
   bootstrap (~> 5.1)
@@ -363,7 +372,7 @@ DEPENDENCIES
   jquery-rails (~> 4.4)
   jquery-ui-rails (~> 6.0)
   listen
-  pg (~> 1.4.5)
+  pg (~> 1.5.3)
   poltergeist (~> 1.18)
   puma (~> 6.0.0)
   rails (~> 7.0)

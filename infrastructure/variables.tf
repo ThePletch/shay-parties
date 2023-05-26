@@ -8,11 +8,12 @@ variable "github" {
 
 variable "database" {
   type = object({
-    host     = string
-    port     = optional(number, 5432)
-    username = string
-    password = string
-    database = string
+    host         = string
+    cluster_name = string
+    port         = optional(number, 5432)
+    username     = string
+    password     = string
+    database     = string
   })
   sensitive = true
 }
