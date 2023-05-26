@@ -306,10 +306,6 @@ GEM
       sprockets-rails
       tilt
     sexp_processor (4.17.0)
-    spring (2.1.1)
-    spring-watcher-listen (2.0.1)
-      listen (>= 2.7, < 4.0)
-      spring (>= 1.2, < 3.0)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -340,6 +336,7 @@ GEM
     zeitwerk (2.6.8)
 
 PLATFORMS
+  aarch64-linux
   aarch64-linux-musl
   arm64-darwin-21
   x86_64-linux
@@ -352,7 +349,7 @@ DEPENDENCIES
   byebug
   capybara (~> 3.35)
   carmen (~> 1.1)
-  commonmarker (~> 1.0.0.pre3)
+  commonmarker (~> 1.0.0.pre9)
   database_cleaner (~> 2.0)
   devise (~> 4.8)
   draper (~> 4.0)
@@ -365,6 +362,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails (~> 4.4)
   jquery-ui-rails (~> 6.0)
+  listen
   pg (~> 1.4.5)
   poltergeist (~> 1.18)
   puma (~> 6.0.0)
@@ -373,13 +371,11 @@ DEPENDENCIES
   rb-readline
   rspec-rails (~> 5.0)
   sassc (~> 2.4)
-  spring (~> 2.1)
-  spring-watcher-listen (~> 2.0.0)
   tzinfo-data
   web-console (>= 3.3.0)
 
 RUBY VERSION
-   ruby 3.1.3p185
+   ruby 3.2.2p53
 
 BUNDLED WITH
-   2.3.26
+   2.4.13

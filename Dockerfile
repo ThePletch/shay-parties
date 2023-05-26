@@ -1,8 +1,8 @@
-FROM ruby:3.1-alpine AS baseline
+FROM ruby:3.2-bullseye AS baseline
 
 WORKDIR /usr/src/app
 
-RUN apk update && apk upgrade && apk add bash gcompat nodejs openssh postgresql-dev
+RUN apt update -y && apt upgrade -y && apt install nodejs postgresql -y
 RUN gem update bundler
 RUN bundle config set path 'vendor/bundle'
 
@@ -10,8 +10,9 @@ RUN bundle config set path 'vendor/bundle'
 FROM baseline AS server
 ARG ENVIRONMENT=development
 ENV RAILS_ENV=${ENVIRONMENT}
-RUN apk add alpine-sdk build-base imagemagick
+RUN apt install build-essential imagemagick libffi-dev -y
 RUN bundle config set with ${ENVIRONMENT}
+RUN bundle config build.ffi --enable-system-libffi
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 ARG PORT

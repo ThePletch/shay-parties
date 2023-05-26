@@ -5,7 +5,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  friendly_id :name, use: :slugged
+  friendly_id :name, use: :history
 
   # events the user owns
   has_many :managed_events, class_name: "Event", dependent: :destroy

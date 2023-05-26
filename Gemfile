@@ -1,4 +1,4 @@
-ruby '~> 3.1.3'
+ruby '~> 3.2'
 
 source 'https://rubygems.org'
 
@@ -39,7 +39,7 @@ gem 'carmen', '~> 1.1'
 # accounts and authentication
 gem 'devise', '~> 4.8'
 # markdown for descriptions
-gem 'commonmarker', '~> 1.0.0.pre3'
+gem 'commonmarker', '~> 1.0.0.pre9'
 
 gem 'aws-sdk-s3', '~> 1.100', require: false
 gem 'image_processing', '~> 1.2'
@@ -51,11 +51,9 @@ group :development, :test do
 end
 
 group :development do
+  gem 'listen'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring', '~> 2.1'
-  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 group :test do
