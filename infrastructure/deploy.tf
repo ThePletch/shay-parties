@@ -10,7 +10,7 @@ locals {
     DATABASE_PASSWORD  = var.database.password
     DATABASE_HOST      = var.database.host
     DATABASE_PORT      = var.database.port
-    DATABASE_NAME      = var.database.database
+    DATABASE_NAME      = "${var.database.cluster_name}.${var.database.database}"
     SECRET_KEY_BASE    = random_string.secret_key_base.result
   }
 }
