@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   scope "(:locale)" do
-    devise_for :users, defaults: { locale: I18n.locale }
+    devise_for :users,
+      controllers: {
+        registrations: 'users/registrations',
+      },
+      defaults: {
+        locale: I18n.locale,
+      }
 
     resources :events, shallow: true do
       member do

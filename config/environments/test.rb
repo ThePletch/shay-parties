@@ -34,6 +34,9 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  # Blow up on N+1 queries in tests.
+  config.active_record.strict_loading_by_default = true
+
   config.active_storage.service = :test
 
   # Print deprecation notices to the stderr.

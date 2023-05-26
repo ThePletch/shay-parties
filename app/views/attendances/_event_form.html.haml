@@ -17,7 +17,7 @@
           = attendee_form.email_field :email, floating: true
   = form.select(:rsvp_status, options_for_select(attendance_types_localized, selected: attendance.rsvp_status), floating: true)
   #plus-ones
-    = form.fields_for(:plus_ones, attendance.plus_ones.where.not(id: nil), layout: :inline) do |plus_one_form|
+    = form.fields_for(:plus_ones, attendance.plus_ones.select(&:persisted?), layout: :inline) do |plus_one_form|
       = render partial: 'attendances/plus_one_form', locals: {f: plus_one_form, plus_one: plus_one_form.object, event: event}
   .d-grid.mb-2
     - # Keep the layout/style options for this fields_for in sync with the plus-ones fields_for above.
