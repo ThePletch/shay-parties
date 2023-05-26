@@ -73,11 +73,11 @@ class CommentsController < ApplicationController
 
   def set_manageable_comment
     begin
-      @comment = @authenticated_user.comments.find(params[:id])
+      @comment = @authenticated_user.comments.includes(:event, :editor).find(params[:id])
     rescue ActiveRecord::RecordNotFound
       # if the user didn't make the comment, they can still edit/delete it
       # if they're the owner of the event the comment was posted on.
-      target_comment = Comment.find(params[:id])
+      target_comment = Comment.includes(:event, :editor).find(params[:id])
       if !@authenticated_user.guest? and target_comment.event.owned_by?(@authenticated_user)
         @comment = target_comment
       else
@@ -87,7 +87,7 @@ class CommentsController < ApplicationController
   end
 
   def set_parent
-    @parent_comment = Comment.find(params[:id])
+    @parent_comment = Comment.includes(:creator, :event).find(params[:id])
   end
 
   def comment_params

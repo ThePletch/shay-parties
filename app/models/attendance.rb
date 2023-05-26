@@ -1,4 +1,4 @@
-class Attendance < ActiveRecord::Base
+class Attendance < ApplicationRecord
   RSVP_TYPES = %w(Yes Maybe No)
 
   after_destroy :clean_up_guest_on_destroy

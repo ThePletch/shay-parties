@@ -4,7 +4,15 @@ class EventsController < ApplicationController
   before_action :set_owned_event, only: [:edit, :update, :destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
-  PRELOAD = [:owner, :comments, {attendances: :attendee, polls: :responses}]
+  PRELOAD = [
+    :address,
+    :owner,
+    {
+      attendances: :attendee,
+      comments: [:creator, :editor],
+      polls: :responses,
+    },
+  ]
 
   def index
     if params[:user_id]
@@ -37,10 +45,10 @@ class EventsController < ApplicationController
   def show
     if @authenticated_user
       @attendee = @authenticated_user
-      @attendance = @event.attendances.includes(:plus_ones).find_by(attendee: @authenticated_user)
+      @attendance = @event.attendances.includes(:attendee, plus_ones: :attendee).find_by(attendee: @authenticated_user)
     end
 
-    @attendance ||= @event.attendances.build
+    @attendance ||= @event.attendances.includes(:attendee).build
   end
 
   # get an ical event version of this event

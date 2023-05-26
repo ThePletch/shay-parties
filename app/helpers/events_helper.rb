@@ -1,6 +1,6 @@
 module EventsHelper
   def rsvps_order(attendances)
-    attendances.sort_by do |attendance|
+    attendances.includes(:attendee, parent_attendance: :attendee).sort_by do |attendance|
       [
         (attendance.parent_attendance.try(:attendee).try(:name) || attendance.attendee.name).downcase,
         attendance.attendance_id.present? ? '1' : '0',
