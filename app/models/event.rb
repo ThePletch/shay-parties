@@ -6,7 +6,7 @@ class Event < ApplicationRecord
 
   TIMESTAMP_FORMAT = '%m/%d/%Y %l:%M %P'
 
-  friendly_id :title, use: :slugged
+  friendly_id :title, use: :history
 
   has_many :attendances, dependent: :destroy
 

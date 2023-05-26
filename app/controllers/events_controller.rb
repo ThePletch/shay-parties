@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :ical, :index, :attendee_index]
   before_action :set_event, only: [:show, :ical]
+  before_action :redirect_from_old_slug, only: [:show]
   before_action :set_owned_event, only: [:edit, :update, :destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
@@ -121,6 +122,12 @@ class EventsController < ApplicationController
 
   def set_event
     @event = EventDecorator.decorate(Event.includes(*EventsController::PRELOAD).friendly.find(params[:id]))
+  end
+
+  def redirect_from_old_slug
+    if request.url != url_for(@event)
+      redirect_to url_for(@event)
+    end
   end
 
   # ensures that the event being access is owned by the current user
