@@ -4,7 +4,7 @@ locals {
     DATABASE_USERNAME = var.database.username
     DATABASE_PASSWORD = var.database.password
     DATABASE_HOST = var.database.host
-    DATABASE_NAME = var.database.database
+    DATABASE_NAME = "${var.database.cluster_name}.${var.database.database}"
     DATABASE_PORT = tostring(var.database.port)
     RACK_ENV = "production"
     RAILS_ENV = "production"
