@@ -13,7 +13,7 @@ gem 'rails', '~> 7.0'
 gem 'pg', '~> 1.5.3'
 gem 'activerecord-cockroachdb-adapter', '~> 7.0', '>= 7.0.1'
 # Use Puma as the app server
-gem 'puma', '~> 6.0.0'
+gem 'puma', '~> 6.0'
 # Use SCSS for stylesheets
 gem 'sassc', '~> 2.4'
 gem 'haml-rails', '~> 2.0'
@@ -58,7 +58,7 @@ group :development do
 end
 
 group :test do
-  gem 'rspec-rails', '~> 5.0'
+  gem 'rspec-rails', '~> 6.0'
   gem 'rails-controller-testing', '~> 1.0'
   gem 'factory_bot_rails', '~> 6.2'
   gem 'capybara', '~> 3.35'
