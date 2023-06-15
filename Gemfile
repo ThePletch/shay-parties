@@ -16,7 +16,7 @@ gem 'activerecord-cockroachdb-adapter', '~> 7.0', '>= 7.0.1'
 gem 'puma', '~> 6.0.0'
 # Use SCSS for stylesheets
 gem 'sassc', '~> 2.4'
-gem 'haml-rails', '~> 2.0.0'
+gem 'haml-rails', '~> 2.0'
 
 gem 'draper', '~> 4.0'
 
@@ -60,7 +60,7 @@ end
 group :test do
   gem 'rspec-rails', '~> 5.0'
   gem 'rails-controller-testing', '~> 1.0'
-  gem 'factory_bot_rails', '~> 4.8'
+  gem 'factory_bot_rails', '~> 6.2'
   gem 'capybara', '~> 3.35'
   gem 'poltergeist', '~> 1.18'
   gem 'database_cleaner', '~> 2.0'
@@ -71,7 +71,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "icalendar", "~> 2.7"
 
-gem "add_to_calendar", "~> 0.2.5"
+gem "add_to_calendar", "~> 0.3.0"
 
 gem "friendly_id", "~> 5.4"
 
