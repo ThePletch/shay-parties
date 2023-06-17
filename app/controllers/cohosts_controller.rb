@@ -13,7 +13,7 @@ class CohostsController < ApplicationController
 
   def destroy
     @cohost = Cohost.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless current_user.managed_events.exists?(id: @cohost.event.id)
+    raise ActiveRecord::RecordNotFound unless current_user.managed_events.exists?(id: @cohost.event_id)
 
     if @cohost.destroy
       redirect_to @cohost.event, notice: t('cohost.destroyed')

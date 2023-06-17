@@ -32,7 +32,7 @@ class Event < ApplicationRecord
   scope :attended_by, ->(user) { joins(:attendances).where(attendances: {attendee_id: user.id, attendee_type: "User"}) }
 
   def hosted_by?(user)
-    owned_by?(user) or cohosts.exists?(user_id: user.id)
+    user and (owned_by?(user) or cohosts.exists?(user_id: user.id))
   end
 
   def landing_page_photo

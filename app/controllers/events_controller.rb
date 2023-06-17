@@ -134,10 +134,10 @@ class EventsController < ApplicationController
   end
 
   def set_hosted_event
-    @event = current_user.managed_events.includes(*EventsController::PRELOAD).friendly.find_by(id: params[:id])
-
-    # host endpoints can also be accessed by cohosts
-    unless @event.present?
+    begin
+      @event = current_user.managed_events.includes(*EventsController::PRELOAD).friendly.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      # host endpoints can also be accessed by cohosts
       @event = current_user.cohosted_events.includes(*EventsController::PRELOAD).friendly.find(params[:id])
     end
   end
