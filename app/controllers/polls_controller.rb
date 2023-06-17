@@ -41,10 +41,17 @@ class PollsController < ApplicationController
   end
 
   def set_event
-    @event = current_user.managed_events.friendly.find(params[:event_id])
+    begin
+      @event = current_user.managed_events.friendly.find(params[:event_id])
+    rescue ActiveRecord::RecordNotFound
+      @event = current_user.cohosted_events.friendly.find(params[:event_id])
+    end
   end
 
   def set_poll
-    @poll = current_user.polls.find(params[:id])
+    @poll = current_user.polls.find_by(id: params[:id])
+    unless @poll
+      @poll = Poll.where(event_id: current_user.cohosts.pluck(:event_id)).find(id: params[:id])
+    end
   end
 end

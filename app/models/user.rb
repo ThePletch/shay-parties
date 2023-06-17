@@ -13,6 +13,8 @@ class User < ApplicationRecord
   # events the user has rsvped to - some of these may be 'no' rsvps,
   # hence not calling this 'attended_events'
   has_many :attendances, as: :attendee, dependent: :destroy
+  has_many :cohosts, dependent: :destroy
+  has_many :cohosted_events, source: :event, through: :cohosts, class_name: "Event"
   has_many :rsvped_events, source: :event, through: :attendances, class_name: "Event"
   has_many :comments, as: :creator, dependent: :destroy
   has_many :edited_comments, as: :editor, class_name: "Comment"

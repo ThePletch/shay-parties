@@ -13,6 +13,8 @@ Rails.application.routes.draw do
         get 'ical'
       end
 
+      resources :cohosts, only: [:create, :destroy]
+
       collection do
         get 'rsvped', to: 'events#attendee_index'
       end

@@ -15,6 +15,8 @@ class Event < ApplicationRecord
 
   has_many :comments, dependent: :destroy
   has_many :polls, dependent: :destroy
+  has_many :cohosts, dependent: :destroy
+  has_many :cohost_users, through: :cohosts, source: :user
   belongs_to :address
 
   accepts_nested_attributes_for :address, update_only: true
@@ -28,6 +30,10 @@ class Event < ApplicationRecord
   scope :secret, -> { where(secret: true) }
   scope :not_secret, -> { where(secret: false) }
   scope :attended_by, ->(user) { joins(:attendances).where(attendances: {attendee_id: user.id, attendee_type: "User"}) }
+
+  def hosted_by?(user)
+    user and (owned_by?(user) or cohosts.exists?(user_id: user.id))
+  end
 
   def landing_page_photo
     photo.variant(resize: '1900', crop: "1900x500+0+#{header_photo_crop_y_offset}")

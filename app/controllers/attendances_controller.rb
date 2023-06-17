@@ -112,7 +112,7 @@ class AttendancesController < ApplicationController
       # this is your plus-one
       Proc.new{ @attendance.parent_attendance.try(:attendee) == @authenticated_user },
       # you own this event
-      Proc.new{ @attendance.event.owned_by?(current_user) },
+      Proc.new{ @attendance.event.hosted_by?(current_user) },
     ]
 
     if permissible_states.lazy.none?{|state| state.call }

@@ -1,7 +1,8 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :ical, :index, :attendee_index]
   before_action :set_event, only: [:show, :ical]
-  before_action :set_owned_event, only: [:edit, :update, :destroy]
+  before_action :set_hosted_event, only: [:edit, :update]
+  before_action :set_owned_event, only: [:destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
 
   PRELOAD = [
@@ -112,9 +113,9 @@ class EventsController < ApplicationController
   def time_scoped_events_list(events, target_scope)
     case target_scope
     when "past"
-      return [events.where("end_time <= ?", Time.current).order(end_time: :desc), "past"]
+      return [EventDecorator.decorate_collection(events.where("end_time <= ?", Time.current).order(end_time: :desc)), "past"]
     else
-      return [events.where("end_time > ?", Time.current).order(end_time: :desc), "future"]
+      return [EventDecorator.decorate_collection(events.where("end_time > ?", Time.current).order(end_time: :desc)), "future"]
     end
   end
 
@@ -130,6 +131,15 @@ class EventsController < ApplicationController
 
   def set_event
     @event = EventDecorator.decorate(Event.includes(*EventsController::PRELOAD).friendly.find(params[:id]))
+  end
+
+  def set_hosted_event
+    begin
+      @event = current_user.managed_events.includes(*EventsController::PRELOAD).friendly.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      # host endpoints can also be accessed by cohosts
+      @event = current_user.cohosted_events.includes(*EventsController::PRELOAD).friendly.find(params[:id])
+    end
   end
 
   # ensures that the event being access is owned by the current user

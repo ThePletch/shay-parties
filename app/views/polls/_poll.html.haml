@@ -1,7 +1,7 @@
 .my-2
   %h4
     = poll.question
-    - if poll.owned_by?(current_user)
+    - if poll.event.hosted_by?(current_user)
       %small= link_to t('form.edit'), edit_poll_path(poll), class: 'text-muted'
   - if respondent.nil?
     %em.text-muted= t('poll.rejection.unauthenticated_html', sign_in_link: link_to(t('poll.rejection.unauthenticated_sign_in_msg'), new_user_session_path))

@@ -78,7 +78,7 @@ class CommentsController < ApplicationController
       # if the user didn't make the comment, they can still edit/delete it
       # if they're the owner of the event the comment was posted on.
       target_comment = Comment.includes(:event, :editor).find(params[:id])
-      if !@authenticated_user.guest? and target_comment.event.owned_by?(@authenticated_user)
+      if !@authenticated_user.guest? and target_comment.event.hosted_by?(@authenticated_user)
         @comment = target_comment
       else
         raise

@@ -39,10 +39,17 @@ es:
     is_guest_account: ""
     is_plus_one: (Plus)
     is_host: (Hospedador)
+    is_cohost: (Cohospedador)
     is_verified: (Usuario verificado)
     email_hidden: Email ocultado de invitados
+    tooltip:
+      promote_cohost: Ascender a cohospedador
+      demote_cohost: Quita estado de cohospedador
     dialog:
-      remove_attendance: "Quita el RSVP y respuestas de encuesta para %{name}?"
+      promote_cohost: Asciende %{name} a cohospedador? Él/ella podrá editar este evento
+        y los RSVPs, pero no eliminar el evento o nombrar cohospedadores nuevos.
+      demote_cohost: Quita el estado de cohospedador de %{name}?
+      remove_attendance: Quita el RSVP y respuestas de encuesta para %{name}?
     form:
       add_plus_one: Agregar +1
       prompt_guest: RSVP como cuenta temporal

@@ -10,11 +10,18 @@
       %small.text-muted= t('attendance.is_guest_account')
   - elsif attendance.event.owned_by?(attendance.attendee)
     %small.text-muted= t('attendance.is_host')
+  - elsif attendance.event.hosted_by?(attendance.attendee)
+    %small.text-muted= t('attendance.is_cohost')
   - else
     %small.text-muted= t('attendance.is_verified')
-  - if attendance.event.owned_by?(current_user)
+  - if attendance.event.hosted_by?(current_user)
     .float-end
       %em.small= attendance.attendee.email
+      - if attendance.event.owned_by?(current_user) and attendance.attendee != current_user and not attendance.attendee.guest?
+        - if attendance.event.hosted_by?(attendance.attendee)
+          = button_to "⬇️", cohost_path(attendance.attendee.cohosts.find_by(event_id: attendance.event.id)), method: :delete, data: {confirm: t('attendance.dialog.demote_cohost', name: attendance.attendee.name)}, class: 'btn btn-sm', title: t('attendance.tooltip.demote_cohost'), form_class: 'd-inline'
+        - else
+          = button_to "⬆️", event_cohosts_path(attendance.event, user_id: attendance.attendee.id), method: :post, data: {confirm: t('attendance.dialog.promote_cohost', name: attendance.attendee.name)}, class: 'btn', title: t('attendance.tooltip.promote_cohost'), form_class: 'd-inline'
       = button_to "X", attendance_path(attendance), method: :delete, data: {confirm: t('attendance.dialog.remove_attendance', name: attendance.attendee.name)}, class: 'btn btn-sm btn-link text-danger text-decoration-none ms-2 p-0', form_class: 'd-inline'
   - else
     %em.float-end.text-muted.small= t('attendance.email_hidden')

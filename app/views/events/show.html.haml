@@ -11,14 +11,17 @@
       .hero-title
         %h1.title.display-4
           = @event.title
-          - if @event.owned_by?(current_user)
+          - if @event.hosted_by?(current_user)
             %small
               = link_to t('form.edit'), edit_event_path(@event), class: 'text-muted'
         %em.text-muted.mb-2
-          - if @event.owned_by?(current_user)
-            = t('event.show.hosted_by_you')
-          - else
-            = t('event.show.hosted_by_other', name: @event.owner.name)
+          = t('event.show.hosted_by_other', name: @event.hosts_list_str)
+        - if @event.owned_by?(current_user) and @event.cohosts.any?
+          %ul.mb-0
+            - @event.cohosts.each do |cohost|
+              %li
+                = button_to "⬇️ Demote #{cohost.user.name}", cohost_path(cohost), method: :delete, data: {confirm: t('attendance.dialog.demote_cohost', name: cohost.user.name)}, class: 'btn btn-sm', title: t('attendance.tooltip.demote_cohost'), form_class: 'd-inline'
+
 .row
   .col-lg.order-lg-1.order-sm-2
     .row
@@ -50,7 +53,7 @@
       %hr
       - @event.polls.each do |poll|
         = render 'polls/poll', poll: poll, respondent: @attendee
-    - if @event.owned_by?(current_user)
+    - if @event.hosted_by?(current_user)
       = link_to t('poll.add_prompt'), new_event_poll_path(@event), class: 'btn btn-primary btn-sm my-2'
 %hr
 

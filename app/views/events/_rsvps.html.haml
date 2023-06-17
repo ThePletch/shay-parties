@@ -20,7 +20,7 @@
         - if attendances_ordered.empty?
           %li.list-group-item
             %small.text-muted= t('event.rsvp_list.empty_category')
-        - elsif @event.owned_by?(current_user)
+        - elsif @event.hosted_by?(current_user)
           %li.list-group-item
             %div.mb-2
               %strong= t('event.rsvp_list.host_email_collection_header')

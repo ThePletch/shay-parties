@@ -1,0 +1,6 @@
+en:
+  cohost:
+    created: Cohost added.
+    failed: Failed to add cohost.
+    destroyed: Cohost removed.
+    failed_destroy: Failed to remove cohost.

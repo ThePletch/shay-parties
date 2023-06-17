@@ -16,7 +16,7 @@ class Comment < ApplicationRecord
   end
 
   def deletable_by?(user)
-    creator == user or event.owned_by?(user)
+    creator == user or event.hosted_by?(user)
   end
 
   def editable_by?(user)
