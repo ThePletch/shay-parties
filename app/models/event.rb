@@ -30,7 +30,17 @@ class Event < ApplicationRecord
   scope :attended_by, ->(user) { joins(:attendances).where(attendances: {attendee_id: user.id, attendee_type: "User"}) }
 
   def landing_page_photo
-    photo.variant(resize: '1900', gravity: 'North', crop: '1900x500+0+0')
+    photo.variant(resize: '1900', crop: "1900x500+0+#{header_photo_crop_y_offset}")
+  end
+
+  def header_photo_crop_y_offset
+    if photo.metadata['width']
+      width_scale = 1900.0 / photo.metadata['width']
+    else
+      puts photo.metadata
+      width_scale = 1
+    end
+    photo_crop_y_offset * width_scale
   end
 
   def parse_time(timestamp)
