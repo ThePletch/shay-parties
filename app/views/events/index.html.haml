@@ -13,16 +13,17 @@
           - if event.secret
             %small.fst-italic.float-end= t('event.index.labels.secret')
         - if @host.nil?
-          %small.fst-italic.mx-2= t('event.index.hosted_by', name: event.owner.name)
+          %small.fst-italic.mx-2= t('event.index.hosted_by', name: event.hosts_list_str)
         %small.d-block.float-sm-end.mx-2.fw-bold= EventDecorator.decorate(event).start_date
       .col-auto
         .d-grid.gap-1
           .badge.bg-success{title: t('event.index.labels.going'), data: {'bs-toggle': 'tooltip'}}= event.attendances.pluck(:rsvp_status).count('Yes')
           .badge.bg-warning{title: t('event.index.labels.maybe'), data: {'bs-toggle': 'tooltip'}}= event.attendances.pluck(:rsvp_status).count('Maybe')
-      - if event.owned_by?(current_user)
+      - if event.hosted_by?(current_user)
         .d-grid.gap-1
           = link_to t('form.edit'), edit_event_path(event), class: 'btn btn-primary btn-sm'
-          = link_to t('form.delete'), event, method: :delete, data: { confirm: t('form.confirm') }, class: 'btn btn-danger btn-sm'
+          - if event.owned_by?(current_user)
+            = link_to t('form.delete'), event, method: :delete, data: { confirm: t('form.confirm') }, class: 'btn btn-danger btn-sm'
 - else
   %p
     %strong= t('event.index.zero_state.message')

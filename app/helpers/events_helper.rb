@@ -12,7 +12,7 @@ module EventsHelper
   def rsvp_color_class(attendance)
     if attendance.attendance_id.present?
       'ms-5 list-group-item-info'
-    elsif attendance.event.owned_by?(attendance.attendee)
+    elsif attendance.event.hosted_by?(attendance.attendee)
       'list-group-item-primary'
     else
       ''

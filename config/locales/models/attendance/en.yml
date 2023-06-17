@@ -39,10 +39,17 @@ en:
     is_guest_account: ""
     is_plus_one: (Plus one)
     is_host: (Host)
+    is_cohost: (Cohost)
     is_verified: (Verified user)
     email_hidden: Email hidden from guests
+    tooltip:
+      promote_cohost: Promote to cohost
+      demote_cohost: Remove cohost status
     dialog:
-      remove_attendance: "Remove the RSVP and poll answers for %{name}?"
+      promote_cohost: Promote %{name} to cohost? They'll be able to edit
+        this event and its RSVPs, but not delete the event or appoint new cohosts.
+      demote_cohost: Remove %{name}'s cohost status?
+      remove_attendance: Remove the RSVP and poll answers for %{name}?
     form:
       add_plus_one: Add +1
       prompt_guest: RSVP as a guest

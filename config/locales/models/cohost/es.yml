@@ -1,0 +1,6 @@
+es:
+  cohost:
+    created: Cohospedador agregado.
+    failed: No se pudo agregar cohospedador.
+    destroyed: Cohospedador eliminado.
+    failed_destroy: No se pudo eliminar cohospedador.

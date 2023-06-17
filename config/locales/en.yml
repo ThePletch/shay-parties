@@ -19,4 +19,9 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 ---
-en: {}
+en:
+  support:
+    array:
+      words_connector: ", "
+      last_word_connector: ", and "
+      two_words_connector: " and "

@@ -53,6 +53,10 @@ class EventDecorator < Draper::Decorator
     comments.select{|c| c.parent_id.nil? }
   end
 
+  def hosts_list_str
+    [owner.name, *cohost_users.map(&:name)].to_sentence(locale: I18n.locale)
+  end
+
   private
 
   def event_datetime_format
