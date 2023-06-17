@@ -22,6 +22,7 @@ en:
     destroyed: Event was successfully deleted.
     add_to_gcal: 📅 Add to Google Calendar
     download_ics: 📅 Download as a file (.ics)
+    title_placeholder: My Fun Event
     form:
       title:
         edit: "Edit %{title}"
@@ -33,11 +34,10 @@ en:
       errors_msg: Couldn't save this event.
       secret_event_help:
         Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it.
-        This won't stop people you send the link to from giving it to others without your permission.
+        This won't stop people who receive the link from giving it to others without your permission.
         You can find your secret events in the "Host > My Hosted Events" section in the navigation bar.
-      header_photo_help:
-        Photos are scaled and cropped to full-screen width (1900px by 500px), so wide photos with a ~4:1 aspect ratio appear best.
-        If you don't provide a photo, a default header photo will be used.
+      header_photo_help: Photos are scaled and cropped to full-screen width (1900px by 500px).
+      header_photo_crop_prompt:  Click and drag the header image above to change how your header image will be cropped.
       labels:
         secret: Make this event secret
     rsvp_list:

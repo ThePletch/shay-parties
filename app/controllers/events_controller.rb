@@ -10,6 +10,7 @@ class EventsController < ApplicationController
     {
       attendances: :attendee,
       comments: [:creator, :editor],
+      photo_attachment: :blob,
       polls: :responses,
     },
   ]
@@ -141,12 +142,22 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:title, :secret, :start_time, :end_time, :description, :photo, :address_id, address_attributes: [
-      :street,
-      :street2,
-      :city,
-      :state,
-      :zip_code
-    ])
+    params.require(:event).permit(
+      :title,
+      :secret,
+      :start_time,
+      :end_time,
+      :description,
+      :photo,
+      :photo_crop_y_offset,
+      :address_id,
+      address_attributes: [
+        :street,
+        :street2,
+        :city,
+        :state,
+        :zip_code
+      ],
+    )
   end
 end

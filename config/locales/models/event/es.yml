@@ -24,6 +24,7 @@ es:
     destroyed: Evento eliminado exitosamente.
     add_to_gcal: 📅 Añadir a Google Calendar
     download_ics: 📅 Descargar como una ficha (.ics)
+    title_placeholder: Mi Evento Divertido
     form:
       title:
         edit: "Editar a %{title}"
@@ -37,9 +38,8 @@ es:
         Eventos secretos no aparecen en la página de inicio a menos que el usuario haya respondido - se necesita enviar el enlace a las personas usted mismo para que lo encuentren.
         Esto no impedirá que las personas a las que usted envíe el enlace se darlo a otras personas sin su permiso.
         Se puede encontrar a sus eventos secretos en la "Hospedador -> Mis Eventos Hospedados" sección en la barra de navegación.
-      header_photo_help:
-        Fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px), por lo que las fotos anchas con una relación de aspecto ~4:1 aparecen mejor.
-        Si no proporciona una foto, se utilizará un foto de encabezado predeterminado.
+      header_photo_help: Fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px).
+      header_photo_crop_prompt: Haga clic y arrastre la imagen de arriba para cambiar cómo se recortará su foto.
       labels:
         secret: Haz que este evento sea secreto
     rsvp_list:

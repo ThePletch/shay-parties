@@ -38,6 +38,13 @@
     bottom: 5vh;
 }
 
+#photo-preview {
+    object-fit: cover;
+    max-height: Min(500px, 26vw);
+    width: 100%;
+    object-position: top;
+}
+
 .poll-response-bar {
     position: absolute;
     top: 0;
