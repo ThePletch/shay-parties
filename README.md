@@ -1,6 +1,6 @@
 # [Parties for All](https://partiesforall.events)
 
-![Build status](https://github.com/ThePletch/steve-parties/actions/workflows/test.yml/badge.svg)
+![Build status](https://github.com/ThePletch/shay-parties/actions/workflows/test.yml/badge.svg)
 
 Parties for All is a free, open-source web-based event and RSVP manager written in Ruby on Rails.
 

@@ -21,10 +21,10 @@ es:
       public_events: Eventos Públicos
       rsvped_events: Eventos con RSVP
     profile: Mi Perfil
-    log_out: Cerrar sessión
-    log_in: Iniciar sessión
+    log_out: Cerrar sesión
+    log_in: Iniciar sesión
     byline:
       message: Un %{repo_link} por %{personal_link}
       repo_link_msg: servicio libre
-      personal_link_msg: Steve Pletcher
+      personal_link_msg: Shay Pletcher
 

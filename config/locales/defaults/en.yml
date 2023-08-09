@@ -26,5 +26,5 @@ en:
     byline:
       message: A %{repo_link} by %{personal_link}
       repo_link_msg: free service
-      personal_link_msg: Steve Pletcher
+      personal_link_msg: Shay Pletcher
 
