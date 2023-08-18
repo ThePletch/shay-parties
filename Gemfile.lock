@@ -226,7 +226,7 @@ GEM
       websocket-driver (>= 0.2.0)
     popper_js (2.11.7)
     public_suffix (5.0.1)
-    puma (6.3.0)
+    puma (6.3.1)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.7)
@@ -366,7 +366,7 @@ DEPENDENCIES
   listen
   pg (~> 1.5.3)
   poltergeist (~> 1.18)
-  puma (~> 6.0)
+  puma (~> 6.3)
   rails (~> 7.0)
   rails-controller-testing (~> 1.0)
   rb-readline
