@@ -97,3 +97,6 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
+
+# force https to avoid insecure image loads/uploads
+Rails.application.routes.default_url_options[:protocol] = 'https'
