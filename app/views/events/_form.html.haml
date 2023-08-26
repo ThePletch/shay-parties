@@ -1,7 +1,7 @@
 .hero
   .hero-image
     %small.form-text#crop-instruction Click and drag to adjust the cropping of your image.
-    %img#photo-preview{src: event.photo.attached? ? url_for(event.photo) : image_url('default_event_image.jpg'), data: {initial_y_offset: event.photo_crop_y_offset}}
+    %img#photo-preview{src: event.photo.attached? ? url_for(event.photo) : image_path('default_event_image.jpg'), data: {initial_y_offset: event.photo_crop_y_offset}}
   .mx-2
     .hero-title
       %h1.title.display-4#title-preview{data: {default: t('event.title_placeholder')}}
