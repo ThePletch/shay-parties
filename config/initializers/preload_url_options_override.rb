@@ -1,4 +1,5 @@
 ActiveSupport.on_load(:action_controller) do
-  ActionController::Base.prepend(CoreExtensions::UrlOptionsOverride)
-  ActionDispatch::Routing::UrlFor.prepend(CoreExtensions::UrlOptionsOverride)
+  if Rails.application.config.force_https_in_direct_uploads_url
+    Rails.application.routes.named_routes.get(:rails_direct_uploads).defaults[:protocol] = 'https'
+  end
 end
