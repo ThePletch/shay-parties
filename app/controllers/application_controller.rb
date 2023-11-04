@@ -38,10 +38,6 @@ class ApplicationController < ActionController::Base
     @authenticated_user = user_or_guest
   end
 
-  def default_url_options
-    { locale: I18n.locale }
-  end
-
   def permit_additional_user_params
     devise_parameter_sanitizer.permit(:account_update, keys: [:name])
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name])

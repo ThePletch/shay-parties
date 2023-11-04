@@ -42,6 +42,9 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = false
 
+  # Force route helpers to use HTTPS instead of HTTP by default.
+  config.force_https_in_route_helpers = true
+
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = :debug
