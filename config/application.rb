@@ -14,5 +14,7 @@ module ShayParties
     config.time_zone = "Eastern Time (US & Canada)"
     config.active_record.default_timezone = :local
     config.active_record.legacy_connection_handling = false
+    config.force_https_in_route_helpers = false
+    config.autoload_paths << Rails.root.join('lib')
   end
 end
