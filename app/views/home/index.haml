@@ -3,8 +3,6 @@
 %p= t('.purpose')
 .row.align-items-end
     .col-md.my-2
-        %p= rails_direct_uploads_url
-    .col-md.my-2
         %p= t('.rsvp_prompt.full_text', bolded_section: content_tag(:strong, t('.rsvp_prompt.bolded_section'))).html_safe
         %p.mb-3= t('.secret_info')
 
