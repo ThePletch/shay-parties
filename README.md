@@ -65,4 +65,3 @@ If you'd rather keep your local machine clean, you can use Docker Compose to man
 ### Running your own instance of Parties for All
 
 If you want to host your own instance for privacy reasons (or whatever other reasons), take a look at the infrastructure folder in the repository. You can spin up your own copy of that infrastructure with Terraform on your personal AWS account. Work to make setup more automated and require less manual input is underway.
-
