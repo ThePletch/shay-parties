@@ -6,6 +6,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_WITH: test
     services:
       postgres:
         image: postgres:latest
