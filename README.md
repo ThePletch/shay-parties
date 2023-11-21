@@ -51,16 +51,36 @@ Currently, I keep track of what features I want to add or upgrade in the Project
 
 ### Local Setup
 
-This app doesn't do anything particularly unusual, as Rails apps go. It runs its database on PostgreSQL, uses Puma for its server, and Bundler for its dependencies. To run locally, you can just run the following commands from the repo's root directory, once you've cloned it:
+This app doesn't do anything particularly unusual, as Rails apps go. It runs its database on PostgreSQL, uses Puma for its server, and Bundler for its dependencies.
+
+#### Run with Docker Compose (preferred)
+
+Running `docker compose up` will spin up a server and all dependencies. The local development server will listen on [port 23000](http://localhost:23000). Sidecar containers will also run on boot handle installing your bundle and running any pending migrations. If you change your dependency versions or add a new migration, you'll need to run the sidecars again to get things up to date:
+
 ```bash
-$ bundle install
-$ rails db:setup
-$ rails server
+docker compose run bundle-installer && docker compose run db-migrater
 ```
 
-Running the tests is as simple as `bundle exec rspec`.
+If you just want to run the test suite, you can spin up a shell (with dependencies) for testing by running the `docker-shell` executable in the `bin` directory:
 
-If you'd rather keep your local machine clean, you can use Docker Compose to manage your local environment by running `docker compose up`. The local development server will listen on [port 23000](http://localhost:23000).
+```bash
+./bin/dockershell
+```
+
+
+#### Run directly
+
+To run locally without using Docker, you can just run the following commands from the repo's root directory, once you've cloned it:
+
+```bash
+bundle install
+rails db:setup
+rails server
+```
+
+The above commands assume you have Ruby and Bundler installed and have a Postgres server running on your machine.
+
+Running the tests is as simple as `bundle exec rspec`.
 
 ### Running your own instance of Parties for All
 

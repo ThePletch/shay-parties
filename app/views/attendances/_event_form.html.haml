@@ -1,3 +1,4 @@
+- event ||= attendance.event
 - form_url = attendance.persisted? ? attendance_path(attendance) : event_attendances_path(attendance, event)
 = bootstrap_form_with(model: attendance, url: form_url) do |form|
   - if current_user.present? and not current_user.guest?

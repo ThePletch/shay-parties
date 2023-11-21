@@ -8,16 +8,31 @@ volumes:
   database-test-data:
   vendor-bundle:
 
+x-db-consumer-env: &db-consumer-env
+  DATABASE_HOST: partiesforall-postgres
+  DATABASE_USERNAME: dev
+  DATABASE_PASSWORD: password
+  DATABASE_PORT: 5432
+
+x-db-host-env: &postgres-env
+  POSTGRES_USER: dev
+  POSTGRES_PASSWORD: password
+  POSTGRES_DB: development
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+x-bundle-readonly-volume: &v-bundle-read
+  type: volume
+  source: vendor-bundle
+  target: /usr/src/app/vendor/bundle/
+  volume:
+    nocopy: true
+
 x-default-service: &servicedefaults
   build: &builddefaults
     context: .
     ssh:
     - default
-  environment: &envdefaults
-    DATABASE_HOST: partiesforall-postgres
-    DATABASE_USERNAME: dev
-    DATABASE_PASSWORD: password
-    DATABASE_PORT: 5432
+  environment: &ssh-env
     SSH_AUTH_SOCK: /ssh-agent/ssh-auth.sock
   volumes:
   - &ssh-pass /run/host-services/:/ssh-agent # pass through ssh agent
@@ -31,19 +46,15 @@ services:
       <<: *builddefaults
       target: server
     environment:
-      <<: *envdefaults
-      PORT: 3000
+      <<: [*ssh-env, *db-consumer-env]
+      PORT: ${RAILS_PORT:-3000}
       PIDFILE: /tmp/pid/rails.pid
       RAILS_SERVE_STATIC_FILES: true
     ports:
-    - "23000:3000"
+    - "23000:${RAILS_PORT:-3000}"
     container_name: partiesforall-app
     volumes:
-    - type: volume
-      source: vendor-bundle
-      target: /usr/src/app/vendor/bundle/
-      volume:
-        nocopy: true
+    - *v-bundle-read
     - *ssh-pass
     - *cache-app-dir
     - *ssh-keys
@@ -56,6 +67,32 @@ services:
         condition: service_completed_successfully
       db-migrater:
         condition: service_completed_successfully
+
+  # Shell only - must be run via `docker compose run`
+  api-test-shell:
+    <<: *servicedefaults
+    profiles:
+    - test
+    build:
+      <<: *builddefaults
+      target: server
+    environment:
+      <<: [*ssh-env, *db-consumer-env]
+      DATABASE_HOST: partiesforall-postgres-test
+      RAILS_ENV: test
+    container_name: partiesforall-shell
+    volumes:
+    - *v-bundle-read
+    - *ssh-pass
+    - *cache-app-dir
+    - *ssh-keys
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      bundle-installer:
+        condition: service_completed_successfully
+      db-migrater-test:
+        condition: service_completed_successfully
   bundle-installer:
     <<: *servicedefaults
     build:
@@ -66,6 +103,7 @@ services:
       - *ssh-pass
       - *cache-app-dir
       - *ssh-keys
+      # only container with write access to the bundle directory
       - vendor-bundle:/usr/src/app/vendor/bundle/
   db-migrater:
     <<: *servicedefaults
@@ -73,35 +111,51 @@ services:
       <<: *builddefaults
       dockerfile: Dockerfile
       target: db-migrater
+    environment:
+      <<: [*ssh-env, *db-consumer-env]
     volumes:
     - *ssh-pass
     - *cache-app-dir
     - *ssh-keys
-    - type: volume
-      source: vendor-bundle
-      target: /usr/src/app/vendor/bundle/
-      volume:
-        nocopy: true
+    - *v-bundle-read
     depends_on:
       postgres:
         condition: service_healthy
       bundle-installer:
         condition: service_completed_successfully
-  postgres:
+  db-migrater-test:
+    <<: *servicedefaults
+    profiles:
+    - test
+    build:
+      <<: *builddefaults
+      dockerfile: Dockerfile
+      target: db-migrater
+    environment:
+      <<: [*ssh-env, *db-consumer-env]
+      DATABASE_HOST: partiesforall-postgres-test
+      RAILS_ENV: test
+    volumes:
+    - *ssh-pass
+    - *cache-app-dir
+    - *ssh-keys
+    - *v-bundle-read
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      bundle-installer:
+        condition: service_completed_successfully
+  postgres: &postgres-container
     container_name: partiesforall-postgres
     image: postgres:14-alpine
-    environment:
-    - POSTGRES_USER=dev
-    - POSTGRES_PASSWORD=password
-    - POSTGRES_DB=development
-    - POSTGRES_HOST_AUTH_METHOD=trust
+    environment: *postgres-env
     ports:
     - "25432:5432"
     restart: on-failure
     volumes:
     - database-data:/var/lib/postgresql/data/:cached # persist data even if container shuts down
     entrypoint: "docker-entrypoint.sh -i"
-    healthcheck:
+    healthcheck: &postgres-healthcheck
       # we have to hardcode the host and database because health checks are configured during build,
       # and docker-compose env vars aren't available in the build
       test: "pg_isready -h localhost -U dev -d development"
@@ -110,24 +164,19 @@ services:
       retries: 3
       start_period: 60s
   postgres-test:
+    <<: *postgres-container
+    profiles:
+    - test
     container_name: partiesforall-postgres-test
-    image: postgres:14-alpine
     environment:
-    - POSTGRES_USER=dev
-    - POSTGRES_PASSWORD=password
-    - POSTGRES_DB=test
-    - POSTGRES_HOST_AUTH_METHOD=trust
+      <<: *postgres-env
+      POSTGRES_DB: test
     ports:
     - "25433:5432"
-    restart: on-failure
     volumes:
     - database-test-data:/var/lib/postgresql/data/:cached # persist data even if container shuts down
-    entrypoint: "docker-entrypoint.sh -i"
     healthcheck:
+      <<: *postgres-healthcheck
       # we have to hardcode the host and database because health checks are configured during build,
       # and docker-compose env vars aren't available in the build
       test: "pg_isready -h localhost -U dev -d test"
-      interval: 5s
-      timeout: 4s
-      retries: 3
-      start_period: 60s

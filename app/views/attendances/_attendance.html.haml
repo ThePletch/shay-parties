@@ -1,20 +1,20 @@
 - attendance = attendance.decorate
 
 %li.list-group-item{class: rsvp_color_class(attendance)}
-  %span.m-1= image_tag(attendance.attendee.gravatar_url(size: 25), alt: attendance.attendee.name, title: attendance.attendee.name, border: 1)
+  %span.m-1= image_tag(attendance.attendee.gravatar_url(size: 25), class: 'avatar', alt: attendance.attendee.name, title: attendance.attendee.name, border: 1)
   %span= attendance.attendee.name
   - if attendance.attendee.guest?
     - if attendance.attendance_id.present?
-      %small.text-muted= t('attendance.is_plus_one')
+      %small.text-muted.is-plus-one= t('attendance.is_plus_one')
     - else
-      %small.text-muted= t('attendance.is_guest_account')
+      %small.text-muted.is-guest= t('attendance.is_guest_account')
   - elsif attendance.event.owned_by?(attendance.attendee)
-    %small.text-muted= t('attendance.is_host')
+    %small.text-muted.is-host= t('attendance.is_host')
   - else
-    %small.text-muted= t('attendance.is_verified')
+    %small.text-muted.is-verified= t('attendance.is_verified')
   - if attendance.event.owned_by?(current_user)
     .float-end
-      %em.small= attendance.attendee.email
-      = button_to "X", attendance_path(attendance), method: :delete, data: {confirm: t('attendance.dialog.remove_attendance', name: attendance.attendee.name)}, class: 'btn btn-sm btn-link text-danger text-decoration-none ms-2 p-0', form_class: 'd-inline'
+      %em.small.attendee-email= attendance.attendee.email
+      = button_to "X", attendance_path(attendance), method: :delete, data: {confirm: t('attendance.dialog.remove_attendance', name: attendance.attendee.name)}, class: 'btn btn-sm btn-link text-danger text-decoration-none ms-2 p-0 remove-attendance', form_class: 'd-inline'
   - else
     %em.float-end.text-muted.small= t('attendance.email_hidden')

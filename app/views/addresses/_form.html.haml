@@ -17,6 +17,6 @@
       = form.text_field :city, floating: true
     .col-md
       - states = Carmen::Country.coded('USA').subregions.typed('state').map{|state| [state.name, state.code] }
-      = form.select :state, [[t('address.form.state_placeholder'), nil]] + states,floating: true
+      = form.select :state, [[t('address.form.state_placeholder'), nil]] + states, floating: true
     .col-md
       = form.text_field :zip_code, floating: true
