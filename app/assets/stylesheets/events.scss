@@ -57,12 +57,21 @@
     position: relative;
 }
 
-#event_secret + label::before {
+.emojified-warning {
+    span, em, strong {
+        &::before, &::after {
+            content: '⚠️';
+            margin: 1em;
+        }
+    }
+}
+
+.marked-checkbox + label::before {
     content: '☐';
     margin-right: 0.5em;
 }
 
-#event_secret:checked + label::before {
+.marked-checkbox:checked + label::before {
     content: '☑';
     margin-right: 0.5em;
 }

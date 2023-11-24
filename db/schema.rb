@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_17_155030) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_24_194655) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -101,6 +101,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_17_155030) do
     t.boolean "secret", default: false
     t.string "slug"
     t.integer "photo_crop_y_offset", default: 0, null: false
+    t.boolean "requires_testing", default: false, null: false
     t.index ["address_id"], name: "index_events_on_address_id"
     t.index ["slug"], name: "index_events_on_slug", unique: true
     t.index ["user_id"], name: "index_events_on_user_id"

@@ -88,6 +88,15 @@ $(function () {
   });
   setTitlePreview($('#event_title').val());
 
+  function setTestingWarningVisible(visible) {
+    $('#requires-testing').toggle(visible);
+  }
+
+  $('#event_requires_testing').on('change', (e) => {
+    setTestingWarningVisible(e.target.checked);
+  });
+  setTestingWarningVisible(document.getElementById('event_requires_testing').checked);
+
   const adjuster = new CropAdjuster($("#photo-preview"));
 
   function loadImagePreview(input, firstLoad = false) {

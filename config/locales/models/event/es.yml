@@ -34,10 +34,14 @@ es:
         new: Evento Nuevo
       show_event_link: Mira a Evento
       errors_msg: Hubo un errór con su evento.
+      preview_label: Este es un avance de cómo aparecerá el título de su evento.
       secret_event_help:
         Eventos secretos no aparecen en la página de inicio a menos que el usuario haya respondido - se necesita enviar el enlace a las personas usted mismo para que lo encuentren.
         Esto no impedirá que las personas a las que usted envíe el enlace se darlo a otras personas sin su permiso.
         Se puede encontrar a sus eventos secretos en la "Hospedador -> Mis Eventos Hospedados" sección en la barra de navegación.
+      testing_help:
+        Eventos que requieren pruebas de COVID-19 tendrá un aviso que informará a los invitados sobre el requisito de la
+        prueba. Asegúrese de explicar cómo enviarle evidencia de una prueba negativa en la descripción del evento.
       header_photo_help: Fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px).
       header_photo_crop_prompt: Haga clic y arrastre la imagen de arriba para cambiar cómo se recortará su foto.
       labels:
@@ -80,6 +84,9 @@ es:
         self: Organiza un evento nuevo
         other: Organiza su propio evento
     show:
-      time_separator: ...hace
+      time_separator: hace
       hosted_by_other: Hospedado por %{name}
       hosted_by_you: Hospedado por usted
+      requires_testing:
+        Se debe mostrar una foto de una prueba rápida de COVID negativa
+        de las últimas 24 horas parar poder entrar a este evento.

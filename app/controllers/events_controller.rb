@@ -144,9 +144,10 @@ class EventsController < ApplicationController
   def event_params
     params.require(:event).permit(
       :title,
-      :secret,
       :start_time,
       :end_time,
+      :secret,
+      :requires_testing,
       :description,
       :photo,
       :photo_crop_y_offset,

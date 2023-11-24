@@ -32,13 +32,18 @@ en:
         new: New Event
       show_event_link: See Event
       errors_msg: There was an error with your event.
+      preview_label: This is a preview of how your event's title will appear.
       secret_event_help:
         Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it.
         This won't stop people who receive the link from giving it to others without your permission.
         You can find your secret events in the "Host > My Hosted Events" section in the navigation bar.
+      testing_help:
+        Events that require testing for COVID-19 will have a banner informing guests of the testing requirement.
+        Be sure to explain how to send you evidence of a negative test in your event description.
       header_photo_help: Photos are scaled and cropped to full-screen width (1900px by 500px).
       header_photo_crop_prompt:  Click and drag the header image above to change how your header image will be cropped.
       labels:
+        covid_testing: Require COVID testing
         secret: Make this event secret
     rsvp_list:
       headers:
@@ -78,6 +83,9 @@ en:
         self: Organize new event
         other: Organize your own event
     show:
-      time_separator: ...until
+      time_separator: until
       hosted_by_other: Hosted by %{name}
       hosted_by_you: Hosted by you
+      requires_testing:
+        You must show a photo of a negative rapid COVID test
+        from the past 24 hours to be allowed entry to this event.
