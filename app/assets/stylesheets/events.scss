@@ -56,3 +56,13 @@
 .poll-response-label {
     position: relative;
 }
+
+#event_secret + label::before {
+    content: '☐';
+    margin-right: 0.5em;
+}
+
+#event_secret:checked + label::before {
+    content: '☑';
+    margin-right: 0.5em;
+}
