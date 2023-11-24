@@ -30,10 +30,10 @@
     .col-md-6
       = form.form_group do
         = form.check_box :secret, label: t('event.form.labels.secret'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
-        .badge.rounded-pill.text-bg-primary#secret-explanation{data: {'bs-title' => t('event.form.secret_event_help'), 'bs-toggle' => 'tooltip', 'bs-placement' => 'auto'} } ?
+        = render "shared/info_tooltip", message: t('event.form.secret_event_help')
 
         = form.check_box :requires_testing, label: t('event.form.labels.covid_testing'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
-        .badge.rounded-pill.text-bg-primary{data: {'bs-title' => t('event.form.testing_help'), 'bs-toggle' => 'tooltip', 'bs-placement' => 'auto'} } ?
+        = render "shared/info_tooltip", message: t('event.form.testing_help')
   .form-group
     = form.hidden_field :photo_crop_y_offset
     = form.file_field :photo, direct_upload: true, help: t('event.form.header_photo_help')
