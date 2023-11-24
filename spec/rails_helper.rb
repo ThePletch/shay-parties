@@ -20,6 +20,7 @@ end
 
 Capybara.javascript_driver = :poltergeist
 Capybara.default_max_wait_time = 3
+Capybara.default_selector = :css
 
 # Add additional requires below this line. Rails is not loaded until this point!
 

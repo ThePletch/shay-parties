@@ -45,6 +45,17 @@ gem 'commonmarker', '~> 1.0.0.pre9'
 gem 'aws-sdk-s3', '~> 1.100', require: false
 gem 'image_processing', '~> 1.2'
 
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem "icalendar", "~> 2.7"
+
+gem "add_to_calendar", "~> 0.3.0"
+
+gem "friendly_id", "~> 5.4"
+
+gem "bootstrap_form", "~> 5"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rb-readline'
@@ -65,14 +76,3 @@ group :test do
   gem 'poltergeist', '~> 1.18'
   gem 'database_cleaner', '~> 2.0'
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-gem "icalendar", "~> 2.7"
-
-gem "add_to_calendar", "~> 0.3.0"
-
-gem "friendly_id", "~> 5.4"
-
-gem "bootstrap_form", "~> 5"

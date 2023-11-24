@@ -7,7 +7,7 @@
       %h1.title.display-4#title-preview{data: {default: t('event.title_placeholder')}}
       %em.text-muted.mb-2
         = t('event.show.hosted_by_you')
-= bootstrap_form_for(event) do |form|
+= bootstrap_form_for(event, url: event.persisted? ? event_path(event) : events_path) do |form|
   - if event.errors.any?
     #error_explanation
       %h2= t('event.form.errors_msg')
