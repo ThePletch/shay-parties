@@ -19,6 +19,9 @@
             = t('event.show.hosted_by_you')
           - else
             = t('event.show.hosted_by_other', name: @event.owner.name)
+- if @event.requires_testing
+  .alert.alert-danger.text-center.emojified-warning
+    %strong= t('event.show.requires_testing')
 .row
   .col-lg.order-lg-1.order-sm-2
     .row
@@ -32,7 +35,7 @@
             %strong= @event.start_date
             = @event.start_time
             %p
-              = t('event.show.time_separator')
+              = "…#{t('event.show.time_separator')}"
               %strong= @event.end_date
               = @event.end_time
       - if @event.address
