@@ -30,7 +30,7 @@
     .col-md-6
       = form.form_group do
         = form.check_box :secret, label: t('event.form.labels.secret'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
-        .badge.rounded-pill.text-bg-primary{data: {'bs-title' => t('event.form.secret_event_help'), 'bs-toggle' => 'tooltip', 'bs-placement' => 'auto'} } ?
+        .badge.rounded-pill.text-bg-primary#secret-explanation{data: {'bs-title' => t('event.form.secret_event_help'), 'bs-toggle' => 'tooltip', 'bs-placement' => 'auto'} } ?
 
         = form.check_box :requires_testing, label: t('event.form.labels.covid_testing'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
         .badge.rounded-pill.text-bg-primary{data: {'bs-title' => t('event.form.testing_help'), 'bs-toggle' => 'tooltip', 'bs-placement' => 'auto'} } ?

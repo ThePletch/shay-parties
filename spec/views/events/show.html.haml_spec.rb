@@ -46,4 +46,14 @@ RSpec.describe "events/show" do
 
     expect(rendered).not_to match /Add to Google Calendar/
   end
+
+  it "warns about COVID requirements if enabled" do
+    event = FactoryBot.create(:event, requires_testing: true)
+    assign(:event, EventDecorator.decorate(event))
+    assign(:attendance, event.attendances.build)
+
+    render
+
+    expect(rendered).to have_text("negative rapid COVID test")
+  end
 end

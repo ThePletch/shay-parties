@@ -22,7 +22,7 @@ RSpec.describe "events/_form" do
     expect(rendered).to have_selector('#error_explanation')
   end
 
-  it "asks if the event should be secret with proper explanation text" do
+  it "asks if the event should be secret" do
     event = FactoryBot.create(:event)
 
     render(
@@ -31,6 +31,16 @@ RSpec.describe "events/_form" do
     )
 
     expect(rendered).to have_text('Make this event secret')
-    expect(rendered).to have_text("Secret events don't appear on the home page unless someone has RSVPed")
+  end
+
+  it "asks if the event should require COVID testing" do
+    event = FactoryBot.create(:event)
+
+    render(
+      'events/form',
+      event: event
+    )
+
+    expect(rendered).to have_text('Require COVID testing')
   end
 end
