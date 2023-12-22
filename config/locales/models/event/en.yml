@@ -42,6 +42,8 @@ en:
         Be sure to explain how to send you evidence of a negative test in your event description.
       header_photo_help: Photos are scaled and cropped to full-screen width (1900px by 500px).
       header_photo_crop_prompt:  Click and drag the header image above to change how your header image will be cropped.
+      description_uses_markdown_html: You can format the event description with %{link} to make text bold, add links, or organize things into bullet points.
+      description_uses_markdown_name: Markdown
       labels:
         covid_testing: Require COVID testing
         secret: Make this event secret
