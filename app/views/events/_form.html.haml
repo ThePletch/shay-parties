@@ -41,6 +41,6 @@
   = form.hidden_field :address_id, id: 'existing_address_id'
   = render "addresses/form", parent_form: form
   .form-group
-    = form.text_area :description, class: 'form-control', style: "height: 10em;", floating: true
+    = form.text_area :description, class: 'form-control', style: "height: 10em;", floating: true, help: t('event.form.description_uses_markdown_html', link: link_to(t('event.form.description_uses_markdown_name'), 'https://www.markdownguide.org/basic-syntax/'))
   .actions
     = form.primary
