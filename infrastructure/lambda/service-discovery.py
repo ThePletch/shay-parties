@@ -40,12 +40,18 @@ def get_eni_ip(event):
     print(event)
     raise RuntimeError("No network interface ID listed for this ENI somehow.")
 
-  enis = client_ec2.describe_network_interfaces(NetworkInterfaceIds=[eni_id])['NetworkInterfaces']
+  try:
+    enis = client_ec2.describe_network_interfaces(NetworkInterfaceIds=[eni_id])['NetworkInterfaces']
 
-  if len(enis) == 0:
-    raise RuntimeError("No ENIs matching returned ID found")
+    if len(enis) == 0:
+      raise RuntimeError("No ENIs matching returned ID found")
 
-  return enis[0]['Association']['PublicIp']
+    return enis[0]['Association']['PublicIp']
+  except botocore.exceptions.ClientError:
+    print("Error looking up network interfaces. Responsible event:")
+    print(event)
+    raise
+
 
 def update_record_set(task_arn, ip, action):
   record_sets = client_route53.change_resource_record_sets(

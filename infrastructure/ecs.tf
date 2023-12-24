@@ -27,15 +27,17 @@ resource "aws_ecs_cluster" "main" {
   name = "${var.name}-cluster"
 }
 
+// default to spot instances for savings - use regular fargate if
+// you care a lot about uptime
 resource "aws_ecs_cluster_capacity_providers" "main" {
   cluster_name = aws_ecs_cluster.main.name
 
-  capacity_providers = ["FARGATE"]
+  capacity_providers = ["FARGATE_SPOT"]
 
   default_capacity_provider_strategy {
     base              = 1
     weight            = 100
-    capacity_provider = "FARGATE"
+    capacity_provider = "FARGATE_SPOT"
   }
 }
 
@@ -51,9 +53,9 @@ resource "aws_ecs_service" "main" {
     assign_public_ip = true
   }
 
-  lifecycle {
-    ignore_changes = [capacity_provider_strategy]
-  }
+  # lifecycle {
+  #   ignore_changes = [capacity_provider_strategy]
+  # }
 }
 
 resource "random_string" "secret_key_base" {
