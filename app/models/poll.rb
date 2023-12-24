@@ -4,6 +4,8 @@ class Poll < ApplicationRecord
   belongs_to :event
   has_many :responses, class_name: "PollResponse", dependent: :destroy
 
+  validates :question, presence: true
+
   accepts_nested_attributes_for :responses, allow_destroy: true
 
   def responses_and_counts

@@ -159,6 +159,16 @@ class EventsController < ApplicationController
         :state,
         :zip_code
       ],
+      polls_attributes: [
+        :id,
+        :_destroy,
+        :question,
+        {
+          responses_attributes: [
+            [:_destroy, :id, :example_response, :choice]
+          ]
+        }
+      ]
     )
   end
 end

@@ -2,7 +2,7 @@
   .card-header.text-center.text-bg-secondary= t('event.form.preview_label')
   .hero
     .hero-image
-      %small.form-text#crop-instruction Click and drag to adjust the cropping of your image.
+      %small.form-text#crop-instruction= t('event.form.header_photo_crop_prompt')
       %img#photo-preview{src: event.photo.attached? ? url_for(event.photo) : image_path('default_event_image.jpg'), data: {initial_y_offset: event.photo_crop_y_offset}}
     .mx-2
       .hero-title
@@ -42,5 +42,11 @@
   = render "addresses/form", parent_form: form
   .form-group
     = form.text_area :description, class: 'form-control', style: "height: 10em;", floating: true, help: t('event.form.description_uses_markdown_html', link: link_to(t('event.form.description_uses_markdown_name'), 'https://www.markdownguide.org/basic-syntax/'))
+  .form-group.mb-2
+    %h3 Polls
+    #polls
+      = form.fields_for(:polls, layout: :inline) do |f|
+        = render partial: "polls/form", locals: {f: f}
+    = link_to_add_fields t('event.form.add_poll'), form, :polls, {partial: 'polls/form', target: "#polls", locals: { poll: form.object.polls.build }, layout: :inline, child_index: 'added_poll'}, class: 'btn btn-success', id: "add-poll"
   .actions
     = form.primary

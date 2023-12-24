@@ -2,6 +2,7 @@ module ApplicationHelper
   def current_locale_emoji
     locale_emoji(I18n.locale)
   end
+
   def locale_emoji(locale)
     case locale
     when :en
@@ -36,7 +37,7 @@ module ApplicationHelper
 
     # Render the form fields from a file with the association name provided
     new_object = f.object.class.reflect_on_association(association).klass.new
-    options[:child_index] = 'new_record'
+    options[:child_index] ||= 'new_record'
     fields = f.fields_for(association, new_object, options) do |builder|
       render(partial, locals.merge!(f: builder))
     end
@@ -44,6 +45,7 @@ module ApplicationHelper
     # The rendered fields are sent with the link within the data-form-prepend attr
     html_options['data-form-prepend'] = raw CGI::escapeHTML( fields )
     html_options['data-association-name'] = association
+    html_options['data-prepend-child-index'] = options[:child_index]
     html_options['data-target'] = target
 
     content_tag(:span, name, html_options, &block)

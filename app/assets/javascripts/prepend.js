@@ -21,16 +21,15 @@ $(function() {
       if (!$targetRow.data('persisted')) {
         $targetRow.remove();
       } else {
-        if ($targetRow.data('remove') === 'true') {
-          $targetRow.data('remove', false);
-          $targetRow.find('input[type!="hidden"]').attr('disabled', false);
-          $targetRow.find('input.destroy').val(0);
+        const currentlyMarkedForRemoval = $targetRow.data('remove') === 'true';
+        $targetRow.data('remove', !currentlyMarkedForRemoval);
+        $targetRow.find('input[type!="hidden"]').attr('disabled', !currentlyMarkedForRemoval);
+        $targetRow.find('input.destroy').val(Number(!currentlyMarkedForRemoval));
+
+        if (currentlyMarkedForRemoval) {
           $targetRow.find('input').removeClass('text-decoration-line-through');
           setToDeleteButton($target);
         } else {
-          $targetRow.find('input[type!="hidden"]').attr('disabled', true);
-          $targetRow.data('remove', 'true');
-          $targetRow.find('input.destroy').val(1);
           $targetRow.find('input').addClass('text-decoration-line-through');
           setToRestoreButton($target);
         }
@@ -38,27 +37,39 @@ $(function() {
     });
   }
 
-  bindDynamicListDeleteHook();
-  $('[data-form-prepend]').on('click', function(e) {
-    const obj = $($(this).attr('data-form-prepend'));
-    const timestamp = (new Date()).getTime();
-    obj.find('input,input[type="hidden"],select,textarea').each(function(_, element) {
-      $(element).attr('name', function() {
-        return $(element).attr('name').replace('new_record', timestamp);
+  function replacePlaceholdersWithTimestamp(element, recordPlaceholder, timestamp) {
+    Object.entries({
+      [recordPlaceholder]: ['name', 'id', 'for', 'data-form-prepend'],
+      '_timestamp_': ['id', 'class', 'data-dynamic-target-id', 'data-target'],
+    }).forEach(function([placeholder, attrs]) {
+      attrs.forEach(function(attr) {
+        $(element).attr(attr, function() {
+          const currentAttr = $(element).attr(attr);
+          if (currentAttr != null) {
+            return currentAttr.replaceAll(placeholder, timestamp);
+          }
+        });
       });
     });
-    // dynamic timestamp selector fill-in
-    if (obj.attr('id').includes("_timestamp_")) {
-      obj.attr('id', obj.attr('id').replace("_timestamp_", timestamp));
-    }
-    obj.find("*").each((_, element) => {
-      const $element = $(element);
-      const targetId = $element.data('dynamic-target-id');
-      if (targetId && targetId.includes("_timestamp_")) {
-        $element.data('dynamic-target-id', targetId.replace("_timestamp_", timestamp));
-      }
+  }
+
+  function bindDynamicListAddHook() {
+    // avoid problems from binding a copy of this callback multiple times
+    $('[data-form-prepend]').off('click');
+    $('[data-form-prepend]').on('click', function(e) {
+      const obj = $($(this).data('form-prepend'));
+      const childIndexPlaceholder = $(this).data('prepend-child-index');
+      const timestamp = (new Date()).getTime();
+      obj.find('*').each(function(_, element) {
+        replacePlaceholdersWithTimestamp(element, childIndexPlaceholder, timestamp);
+      });
+      replacePlaceholdersWithTimestamp(obj, childIndexPlaceholder, timestamp);
+      $($(this).attr('data-target')).append(obj);
+      bindDynamicListAddHook();
+      bindDynamicListDeleteHook();
     });
-    $($(this).attr('data-target')).append(obj);
-    bindDynamicListDeleteHook();
-  });
+  }
+
+  bindDynamicListAddHook();
+  bindDynamicListDeleteHook();
 });
