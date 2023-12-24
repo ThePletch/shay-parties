@@ -1,6 +1,7 @@
 import os
 
 import boto3
+from botocore.exceptions import ClientError
 
 client_ec2 = boto3.client('ec2')
 client_route53 = boto3.client('route53')
@@ -17,13 +18,15 @@ client_route53 = boto3.client('route53')
 # ROOT_DOMAIN: Root domain name of target hosted zone. Don't feel like looking this up automatically.
 # TARGET_SUBDOMAIN: Subdomain to create records under.
 
+ENI_STATUSES_WE_DONT_CARE_ABOUT = ['PRECREATED', 'DELETED']
+
 def get_eni_ip(event):
   try:
     eni_attachment = next(
       attachment
       for attachment
       in event['detail']['attachments']
-      if attachment['type'] == 'eni' and attachment['status'] != 'PRECREATED'
+      if attachment['type'] == 'eni' and attachment['status'] not in ENI_STATUSES_WE_DONT_CARE_ABOUT
     )
   except StopIteration:
     print("No non-precreated ENI attached to this task. Nothing to do.")
@@ -47,7 +50,7 @@ def get_eni_ip(event):
       raise RuntimeError("No ENIs matching returned ID found")
 
     return enis[0]['Association']['PublicIp']
-  except botocore.exceptions.ClientError:
+  except ClientError:
     print("Error looking up network interfaces. Responsible event:")
     print(event)
     raise
