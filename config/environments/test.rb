@@ -1,3 +1,5 @@
+require "core_extensions/console_methods"
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -41,4 +43,8 @@ Rails.application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  module Rails::ConsoleMethods
+    include CoreExtensions::ConsoleMethods
+  end
 end
