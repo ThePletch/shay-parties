@@ -35,9 +35,9 @@ resource "aws_cloudfront_distribution" "cdn" {
     cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
     # this is a read-write site, all methods allowed
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods         = ["HEAD", "GET", "OPTIONS"]
+    cached_methods         = ["HEAD", "GET"]
     target_origin_id       = local.cdn_origin
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
     # Managed "forward all parameters" policy
     origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
   }
@@ -49,7 +49,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     custom_origin_config {
       origin_protocol_policy = "http-only"
       http_port              = var.internal_port
-      https_port             = var.internal_port
+      https_port             = 443
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }

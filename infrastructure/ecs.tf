@@ -18,6 +18,7 @@ locals {
     SES_SMTP_USERNAME = var.smtp.username
     SES_SMTP_PASSWORD = var.smtp.password
   }
+  capacity_provider = "FARGATE_SPOT"
 }
 resource "aws_ecr_repository" "main" {
   name = "${var.name}-images"
@@ -27,15 +28,17 @@ resource "aws_ecs_cluster" "main" {
   name = "${var.name}-cluster"
 }
 
+// default to spot instances for savings - use regular fargate if
+// you care a lot about uptime
 resource "aws_ecs_cluster_capacity_providers" "main" {
   cluster_name = aws_ecs_cluster.main.name
 
-  capacity_providers = ["FARGATE"]
+  capacity_providers = [local.capacity_provider]
 
   default_capacity_provider_strategy {
     base              = 1
     weight            = 100
-    capacity_provider = "FARGATE"
+    capacity_provider = local.capacity_provider
   }
 }
 
@@ -51,8 +54,10 @@ resource "aws_ecs_service" "main" {
     assign_public_ip = true
   }
 
-  lifecycle {
-    ignore_changes = [capacity_provider_strategy]
+  capacity_provider_strategy {
+    base = 1
+    capacity_provider = local.capacity_provider
+    weight = 100
   }
 }
 
