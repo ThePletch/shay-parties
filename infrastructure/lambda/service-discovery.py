@@ -23,10 +23,10 @@ def get_eni_ip(event):
       attachment
       for attachment
       in event['detail']['attachments']
-      if attachment['type'] == 'eni'
+      if attachment['type'] == 'eni' and attachment['status'] != 'PRECREATED'
     )
   except StopIteration:
-    print("No ENI attached to this task. Nothing to do.")
+    print("No non-precreated ENI attached to this task. Nothing to do.")
     return False
 
   try:
@@ -37,7 +37,7 @@ def get_eni_ip(event):
       if detail['name'] == 'networkInterfaceId'
     )['value']
   except StopIteration:
-    print(eni_attachment['details'])
+    print(event)
     raise RuntimeError("No network interface ID listed for this ENI somehow.")
 
   enis = client_ec2.describe_network_interfaces(NetworkInterfaceIds=[eni_id])['NetworkInterfaces']
