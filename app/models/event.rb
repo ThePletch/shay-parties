@@ -17,6 +17,7 @@ class Event < ApplicationRecord
   has_many :polls, dependent: :destroy
   belongs_to :address
 
+  accepts_nested_attributes_for :polls, allow_destroy: true
   accepts_nested_attributes_for :address, update_only: true
 
   validates :start_time, :end_time, presence: true

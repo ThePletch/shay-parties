@@ -43,7 +43,7 @@ es:
         Eventos que requieren pruebas de COVID-19 tendrá un aviso que informará a los invitados sobre el requisito de la
         prueba. Asegúrese de explicar cómo enviarle evidencia de una prueba negativa en la descripción del evento.
       header_photo_help: Fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px).
-      header_photo_crop_prompt: Haga clic y arrastre la imagen de arriba para cambiar cómo se recortará su foto.
+      header_photo_crop_prompt: Haga clic y arrastre la imagen de encabezado para cambiar cómo se recortará su foto.
       description_uses_markdown_html: Se puede formatear la descripción del evento con %{link} para poner el texto en negrita, agregar enlaces, o organizar cosas en viñetas.
       description_uses_markdown_name: Markdown
       labels:

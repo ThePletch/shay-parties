@@ -13,9 +13,9 @@ es:
       host_prompt:
         logged_in:
           full_text: "%{bolded_section}, presiona al botón de abajo para organizar un evento nuevo, o presiona a \"Organizar un Evento\" debajo de \"Hospedador\" en la barra de navegación."
-          bolded_section: Si está aquí para hospedar a su propio evento
+          bolded_section: Si está aquí para organizar su propio evento
         unauthenticated:
           full_text: "%{bolded_section}, primero debe iniciar sesión. Presiona al botón de abajo para iniciar sesión, o presiona a 'Iniciar sesión' en la barra de navegación."
-          bolded_section: Si está aquí para hospedar su propio evento
+          bolded_section: Si está aquí para organizar su propio evento
       new_event_button: Organizar un evento
       log_in_button: Iniciar sesión

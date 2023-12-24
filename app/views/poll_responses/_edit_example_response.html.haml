@@ -3,6 +3,6 @@
   = f.hidden_field :id, value: poll_response.id unless poll_response.new_record?
   = f.hidden_field :_destroy, class: 'destroy', value: 0
   = f.hidden_field :example_response, value: 1
-  .input-group.m-2
+  .input-group
     = f.text_field :choice, floating: true
     %button.btn.btn-danger.dynamic-list-delete{data: {dynamic_target_id: row_id}, onclick: "return false;"} X
