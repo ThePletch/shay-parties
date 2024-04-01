@@ -1,0 +1,22 @@
+en:
+  activerecord:
+    attributes:
+      signup_sheet_item:
+        description: Description
+  signup_sheet_item:
+    claimed: Signup sheet item claimed.
+    claimed_failed: Failed to claim signup sheet item.
+    unclaimed: Signup sheet item released.
+    unclaimed_failed: Failed to release signup sheet item.
+    updated: Signup sheet item updated.
+    updated_failed: Failed to update signup sheet item.
+    updated: Signup sheet item updated.
+    updated_failed: Failed to update signup sheet item.
+    destroyed: Signup sheet item deleted.
+    destroyed_failed: Failed to delete signup sheet item.
+    undeleted: Signup sheet item restored.
+    undeleted_failed: Failed to restore signup sheet item.
+    created: Signup sheet item created.
+    created_failed: Failed to create signup sheet item.
+    rejection:
+      unauthenticated: You must log in or RSVP as a guest to update the signup sheet.

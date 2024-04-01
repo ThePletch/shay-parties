@@ -1,0 +1,21 @@
+- # required variables:
+- # f: a form object for the record in question
+- # item_name: the snake_case name of this type of item, e.g. signup_sheet_item
+- # fields: a list of symbolized names of text fields to render for each item.
+
+- row_id = f.object.persisted? ? "#{item_name}_#{f.object.id}" : "#{item_name}__timestamp_"
+- if f.object.errors.any?
+  %div{class: "#{item_name}_error_explanation_#{f.object.id}"}
+    %h2= t("#{item_name}.form.errors_msg", count: f.object.errors.count)
+    %ul
+      - f.object.errors.full_messages.each do |message|
+        %li= message
+= f.form_group layout: :inline, class: 'row', "id" => row_id, data: {persisted: (!f.object.new_record?).to_s} do
+  = f.hidden_field :id, value: f.object.id unless f.object.new_record?
+  = f.hidden_field :_destroy, class: 'destroy', value: 0
+  .input-group
+    - fields.each do |field|
+      = f.text_field field, floating: true
+    %button.btn.btn-danger.dynamic-list-delete{data: {dynamic_target_id: row_id}, onclick: "return false;"} X
+
+  = yield row_id

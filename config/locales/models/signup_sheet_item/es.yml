@@ -1,0 +1,8 @@
+es:
+  activerecord:
+    attributes:
+      signup_sheet_item:
+        description: Descripción
+  signup_sheet_item:
+    rejection:
+      unauthenticated: Se necesita estar conectado o autenticar como invitado para usar la hoja de registro.

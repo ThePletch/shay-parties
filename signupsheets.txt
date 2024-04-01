@@ -1,0 +1,31 @@
+item edit logic
+  description editing:
+    * the event host can only edit requested items
+    * people who submitted items to bring can edit their own items
+  deletion:
+    * the event host can delete any item
+      * deleting an item someone has claimed prompts them to contact that person
+    * people who submitted items can delete them. this should prompt them to notify the host.
+  unclaiming:
+    * only requested items can be unclaimed. submitted items can only be deleted.
+  creation:
+    * users can create a new signup item if:
+      * they are signed up to attend the event (YES only)
+      AND EITHER
+        * the event allows guest submitted items
+        * they are the host
+    * guest submitted items are always automatically claimed by the submitter. they cannot currently request items from others.
+
+show page
+  * the signup context description should be marked to indicate it is a message from the host, not the system
+
+form
+  * you can't edit requests on the form. you can only edit signup logic. requests are edited on the main page
+    * help text should indicate this to avoid confusion
+  * the signup context fields should be collapsed unless a toggle button (which does not alter state directly, but does disable/enable the fields) is pressed
+    * they should be visible on page load if a signup context object already exists
+
+model logic:
+  * allow destroying signup context
+  * signup context destruction destroys signup sheet items for the event
+    * because of this, require confirmation before marking signup context for destruction

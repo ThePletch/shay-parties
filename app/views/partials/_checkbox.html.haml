@@ -1,0 +1,4 @@
+- message ||= ''
+= form.check_box field_name, label: label, label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
+- if message.present?
+  = render "shared/info_tooltip", message: message

@@ -1,0 +1,12 @@
+- # required variables:
+- #   form: a form object for the PARENT of the objects being managed in the list
+- #   label: the text to put on the button being created
+- #   item_name: the name of the model being managed, as a symbol in snake_case
+- # optional variables:
+- # target: an anchor for a div to append new instances of the form to. defaults to "##{plural_item_name}"
+
+- plural_item_name = item_name.to_s.pluralize
+- kebab_item_name = item_name.to_s.dasherize
+- target ||= "##{plural_item_name}"
+
+= link_to_add_fields label, form, plural_item_name.intern, {partial: "#{plural_item_name}/form", target: target, locals: { item_name => form.object.send(plural_item_name.intern).build }, layout: :inline, child_index: "added_#{item_name}"}, class: 'btn btn-success', id: "add-#{kebab_item_name}"

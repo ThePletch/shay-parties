@@ -1,0 +1,10 @@
+%li.list-group-item.d-flex.justify-content-between.align-items-center{class: signup_sheet_color_class(signup_sheet_item)}
+  = signup_sheet_item.description
+  - if signup_sheet_item.attendee.present?
+    = image_tag(signup_sheet_item.attendee.gravatar_url(size: 25), class: 'avatar', alt: signup_sheet_item.attendee.name, title: signup_sheet_item.attendee.name, border: 1)
+    - if signup_sheet_item.attendee == user_or_guest
+      = button_to "Unclaim", unclaim_signup_sheet_item_path(signup_sheet_item), class: 'btn btn-danger', form_class: 'd-inline'
+  - elsif user_or_guest
+    = button_to "Claim", claim_signup_sheet_item_path(signup_sheet_item), class: 'btn btn-success'
+  - else
+    %em Unclaimed

@@ -1,0 +1,20 @@
+en:
+  activerecord:
+    attributes:
+      signup_context:
+        instructions: Instructions
+  signup_context:
+    show:
+      heading: Signup sheet
+    form:
+      heading: Signup Sheet
+      optional_explainer: Leave this section blank if you don't need people to bring anything.
+      help:
+        instructions: |-
+          Explain what people are bringing items for: a potluck, an auction, etc.
+          Be sure to mention anything they should include, like allergens or reserve price.
+        guest_enterable: |-
+          If checked, guests can sign up to bring items that you do not directly request.
+          They won't be able to request items from other guests.
+      labels:
+        guest_enterable: Guests can add items

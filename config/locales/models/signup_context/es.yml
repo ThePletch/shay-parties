@@ -1,0 +1,20 @@
+es:
+  activerecord:
+    attributes:
+      signup_context:
+        instructions: Instrucciones
+  signup_context:
+    show:
+      heading: Hoja de registro
+    form:
+      heading: Hoja de Registro
+      optional_explainer: Deja esta sección en blanco si usted no necesita que la gente traiga nada.
+      help:
+        instructions: |-
+          Explique por qué la gente trae artículos: una comida compartida, una subasta, etc.
+          Asegúrase de hablar sobre cualquier cosa que deban incluír, como alérgenos o precio de reserva.
+        guest_enterable: |-
+          Si está marcado, invitados pueden registrarse para traer artículos que usted no pide directamente.
+          No podrán pedir artículos de otros invitados.
+      labels:
+        guest_enterable: Invitados pueden añadir artículos
