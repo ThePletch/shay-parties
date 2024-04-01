@@ -13,7 +13,7 @@ gem 'rails', '~> 7.0'
 gem 'pg', '~> 1.5.3'
 gem 'activerecord-cockroachdb-adapter', '~> 7.0', '>= 7.0.1'
 # Use Puma as the app server
-gem 'puma', '~> 6.3'
+gem 'puma', '~> 6.4'
 # Use SCSS for stylesheets
 gem 'sassc', '~> 2.4'
 gem 'haml-rails', '~> 2.0'
