@@ -1,7 +1,7 @@
 - parent_form ||= nil
 - address ||= nil
 %h3= t('activerecord.models.address')
-= optional_parent_wrap(parent_form, address || Address.new) do |form|
+= optional_parent_wrap(parent_form, address || Address.new, {record_name: :address}) do |form|
   - if @prior_addresses.any?
     .input-group.mb-2
       %span.input-group-text= t('address.form.use_prior')
