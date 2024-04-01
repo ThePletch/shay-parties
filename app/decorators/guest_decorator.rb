@@ -1,4 +1,4 @@
-class GuestDecorator < CreatorDecorator
+class GuestDecorator < AttendeeDecorator
   decorates :guest
 
   delegate_all

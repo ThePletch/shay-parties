@@ -5,18 +5,13 @@ en:
     destroyed: Poll was deleted.
     add_prompt: Add Poll
     form:
+      heading: Polls
       errors_msg:
         one: "One error prohibited this poll from being saved:"
         other: "%{count} errors prohibited this poll from being saved:"
       add_option: Add an option
       destroy: Delete
       confirm_destroy: Are you sure you want to delete this?
-      title:
-        edit: Edit %{name}
-        new: New Poll
-      header:
-        edit: Editing %{name}
-        new: New Poll
     rejection:
       unauthenticated_html: You need to %{sign_in_link} or RSVP as a guest to answer polls.
       unauthenticated_sign_in_msg: sign in

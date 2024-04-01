@@ -1,17 +1,4 @@
-- row_id = f.object.persisted? ? "poll_#{f.object.id}" : "poll__timestamp_"
-- if f.object.errors.any?
-  %div{class: "poll_error_explanation_#{f.object.id}"}
-    %h2= t('poll.form.errors_msg', count: f.object.errors.count)
-    %ul
-      - f.object.errors.full_messages.each do |message|
-        %li= message
-= f.form_group layout: :inline, class: 'row', "id" => row_id, data: {persisted: (!f.object.new_record?).to_s} do
-  = f.hidden_field :id, value: f.object.id unless f.object.new_record?
-  = f.hidden_field :_destroy, class: 'destroy', value: 0
-  .input-group
-    = f.text_field :question, floating: true
-    %button.btn.btn-danger.dynamic-list-delete{data: {dynamic_target_id: row_id}, onclick: "return false;"} X
-
+= render "partials/dynamic_list_form_field", f: f, item_name: 'poll', fields: [:question] do |row_id|
   .my-2.px-4
     %div.mb-2{class: "example-responses-#{row_id}"}
       = f.fields_for(:responses, scope: :example, layout: :inline) do |r|

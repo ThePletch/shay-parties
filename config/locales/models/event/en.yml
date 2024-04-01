@@ -47,6 +47,8 @@ en:
       labels:
         covid_testing: Require COVID testing
         secret: Make this event secret
+        add_signup_sheet_item: Request something
+        add_poll: Add poll
     rsvp_list:
       headers:
         'yes': "Yes (%{count})"

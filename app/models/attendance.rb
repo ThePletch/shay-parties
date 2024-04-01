@@ -36,6 +36,10 @@ class Attendance < ApplicationRecord
     self.attendee = attendee_type.constantize.new(params)
   end
 
+  def signup_sheet_items
+    event.signup_sheet_items.where(attendee: attendee)
+  end
+
   private
 
   def same_event_as_parent_event

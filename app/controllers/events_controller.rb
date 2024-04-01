@@ -168,7 +168,21 @@ class EventsController < ApplicationController
             [:_destroy, :id, :example_response, :choice]
           ]
         }
+      ],
+      signup_context_attributes: [
+        :instructions,
+        :guest_enterable
+      ],
+      signup_sheet_items_attributes: [
+        :id,
+        :_destroy,
+        :description,
+        :requested
       ]
+    ).with_defaults(
+      signup_sheet_items_attributes: {
+        requested: true
+      }
     )
   end
 end

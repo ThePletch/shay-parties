@@ -5,18 +5,13 @@ es:
     destroyed: Encuesta era eliminado.
     add_prompt: Añadir Encuesta
     form:
+      heading: Encuestas
       errors_msg:
         one: "Un errór prohibió que se guardara esta encuesta:"
         other: "%{count} errores prohibieron que se guardara esta encuesta:"
       add_option: Añadir una opción
       destroy: Eliminar
       confirm_destroy: ¿Está seguro que quiere eliminar a esta encuesta?
-      title:
-        edit: Editar a %{name}
-        new: Encuesta Nueva
-      header:
-        edit: Editando a %{name}
-        new: Encuesta Nueva
     rejection:
       unauthenticated_html: Debe %{sign_in_link} o RSVP como cuenta temporal para responder a una encuesta.
       unauthenticated_sign_in_msg: iniciar sesión

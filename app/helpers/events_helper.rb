@@ -18,4 +18,16 @@ module EventsHelper
       ''
     end
   end
+
+  def signup_sheet_color_class(signup_sheet_item)
+    if signup_sheet_item.claimed?
+      if signup_sheet_item.claimed_by?(user_or_guest)
+        'list-group-item-primary'
+      else
+        'list-group-item-info'
+      end
+    else
+      ''
+    end
+  end
 end

@@ -17,6 +17,13 @@ Rails.application.routes.draw do
         get 'rsvped', to: 'events#attendee_index'
       end
 
+      resources :signup_sheet_items, only: [:create, :update, :destroy] do
+        member do
+          post 'claim'
+          post 'unclaim'
+        end
+      end
+
       resources :comments, only: [:create, :update, :destroy] do
         member do
           put 'undelete'

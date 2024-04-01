@@ -53,6 +53,17 @@
       %hr
       - @event.polls.each do |poll|
         = render 'polls/poll', poll: poll, respondent: @attendee
+    - if @event.signup_context.present?
+      %hr
+      %h3= t('signup_context.show.heading')
+      %span= @event.signup_context.instructions
+      .list-group
+        = render partial: 'signup_sheet_items/show', collection: @event.signup_sheet_items, as: :signup_sheet_item
+        - if SignupSheetItem.attendee_can_create_for_event?(@event, user_or_guest)
+          = bootstrap_form_for(@event.signup_sheet_items.build, url: event_signup_sheet_items_path(@event), html: {class: 'list-group-item d-flex'}) do |form|
+            = form.text_field :description, floating: true, wrapper: {class: 'flex-grow-1'}, label: "Add"
+            = form.submit "Add Another"
+
 %hr
 
 = render @event.root_comments, comments: @event.comments

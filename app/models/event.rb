@@ -15,9 +15,13 @@ class Event < ApplicationRecord
 
   has_many :comments, dependent: :destroy
   has_many :polls, dependent: :destroy
+  has_many :signup_sheet_items, dependent: :destroy
+
   belongs_to :address
 
-  accepts_nested_attributes_for :polls, allow_destroy: true
+  has_one :signup_context
+
+  accepts_nested_attributes_for :polls, :signup_context, :signup_sheet_items, allow_destroy: true
   accepts_nested_attributes_for :address, update_only: true
 
   validates :start_time, :end_time, presence: true

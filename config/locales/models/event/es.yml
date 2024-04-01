@@ -47,7 +47,10 @@ es:
       description_uses_markdown_html: Se puede formatear la descripción del evento con %{link} para poner el texto en negrita, agregar enlaces, o organizar cosas en viñetas.
       description_uses_markdown_name: Markdown
       labels:
+        covid_testing: Requiere pruebas de COVID
         secret: Haz que este evento sea secreto
+        add_signup_sheet_item: Pedir algo
+        add_poll: Añadir encuesta
     rsvp_list:
       headers:
         'yes': "Sí (%{count})"

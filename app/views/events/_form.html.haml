@@ -17,6 +17,7 @@
   - if event.errors.any?
     #error_explanation
       %h2= t('event.form.errors_msg')
+    = event.errors.full_messages
   = form.text_field :title, floating: true
   = form.form_group(class: 'row') do
     .col-md-6
@@ -29,11 +30,8 @@
           = form.text_field :end_time, class: 'datetimepicker', value: event.end_time_str, floating: true
     .col-md-6
       = form.form_group do
-        = form.check_box :secret, label: t('event.form.labels.secret'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
-        = render "shared/info_tooltip", message: t('event.form.secret_event_help')
-
-        = form.check_box :requires_testing, label: t('event.form.labels.covid_testing'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
-        = render "shared/info_tooltip", message: t('event.form.testing_help')
+        = render 'partials/checkbox', form: form, field_name: :secret, label: t('event.form.labels.secret'), message: t('event.form.secret_event_help')
+        = render 'partials/checkbox', form: form, field_name: :requires_testing, label: t('event.form.labels.covid_testing'), message: t('event.form.testing_help')
   .form-group
     = form.hidden_field :photo_crop_y_offset
     = form.file_field :photo, direct_upload: true, help: t('event.form.header_photo_help')
@@ -42,11 +40,26 @@
   = render "addresses/form", parent_form: form
   .form-group
     = form.text_area :description, class: 'form-control', style: "height: 10em;", floating: true, help: t('event.form.description_uses_markdown_html', link: link_to(t('event.form.description_uses_markdown_name'), 'https://www.markdownguide.org/basic-syntax/'))
+  .form-group
+    %h3= t('signup_context.form.heading')
+    %em= t('signup_context.form.optional_explainer')
+    = form.fields_for(:signup_context, event.signup_context || SignupContext.new(event: event)) do |f|
+      - if f.object.errors.any?
+        #error_explanation
+          %h2= t('signup_context.form.errors_msg')
+      = f.text_field :instructions, floating: true, help: t('signup_context.form.help.instructions')
+      = render 'partials/checkbox', form: f, field_name: :guest_enterable, label: t('signup_context.form.labels.guest_enterable'), message: t('signup_context.form.help.guest_enterable')
+    #requests
+    = form.fields_for(:signup_sheet_items, event.signup_sheet_items.requested) do |f|
+      = render partial: 'signup_sheet_items/form', locals: {f: f}
+
+    = render 'partials/add_fields_button', form: form, item_name: :signup_sheet_item, label: t('event.form.labels.add_signup_sheet_item'), target: '#requests'
+  %hr
   .form-group.mb-2
-    %h3 Polls
+    %h3= t('poll.form.heading')
     #polls
       = form.fields_for(:polls, layout: :inline) do |f|
         = render partial: "polls/form", locals: {f: f}
-    = link_to_add_fields t('event.form.add_poll'), form, :polls, {partial: 'polls/form', target: "#polls", locals: { poll: form.object.polls.build }, layout: :inline, child_index: 'added_poll'}, class: 'btn btn-success', id: "add-poll"
+    = render 'partials/add_fields_button', form: form, item_name: :poll, label: t('event.form.labels.add_poll'), target: '#polls'
   .actions
     = form.primary

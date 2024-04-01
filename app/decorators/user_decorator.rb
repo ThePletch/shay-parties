@@ -1,4 +1,4 @@
-class UserDecorator < CreatorDecorator
+class UserDecorator < AttendeeDecorator
   decorates :user
 
   delegate_all
