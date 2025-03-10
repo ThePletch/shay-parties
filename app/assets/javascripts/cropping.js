@@ -6,6 +6,7 @@ class CropAdjuster {
     this.imageLoaded = false;
 
     this.parentDiv = this.image.closest('.hero-image');
+    this.parentCollapsible = this.image.closest('.accordion');
     this.parentDiv.on('mousedown', (e) => {
       e.preventDefault();
       this.dragging = true;
@@ -15,12 +16,19 @@ class CropAdjuster {
         this.shiftYOffset(e.originalEvent.movementY);
       }
     });
+    this.parentCollapsible.on('click', () => {
+      this.shiftYOffset(0);
+    });
     $(window).on('mouseup', () => {
       this.dragging = false;
     });
     $(window).on('resize', () => {
       this.updateImageShift();
     });
+  }
+
+  parentDivHeight() {
+    return this.parentDiv.height();
   }
 
   scaleToNewImage(imageUrl, firstLoad = false) {
@@ -48,6 +56,12 @@ class CropAdjuster {
   }
 
   shiftYOffset(change) {
+    if (this.imageScaleFactor() === 0) {
+      // image scale factor will be zero when the preview is minimized
+      // abort early so we don't end up dividing by zero
+      return;
+    }
+
     this.rawYOffset = Math.min(
       Math.max(
         -this.heightShiftRange(),
@@ -60,7 +74,9 @@ class CropAdjuster {
   }
 
   updateImageShift() {
-    this.image.css('object-position', '0 ' + this.rawYOffset * this.imageScaleFactor() + 'px');
+    this.image.css({
+      'objectPosition': '0px ' + this.rawYOffset * this.imageScaleFactor() + 'px',
+    });
   }
 
   imageScaleFactor() {
@@ -100,9 +116,8 @@ $(function () {
   const adjuster = new CropAdjuster($("#photo-preview"));
 
   function loadImagePreview(input, firstLoad = false) {
-    const [file] = input.files;
-    if (file) {
-      const src = URL.createObjectURL(file);
+    if (input.files != null && input.files.length > 0) {
+      const src = URL.createObjectURL(input.files[0]);
       adjuster.scaleToNewImage(src, firstLoad);
       $('#crop-prompt, #crop-instruction').show();
       $("#photo-preview").attr('src', src);
@@ -112,18 +127,13 @@ $(function () {
     }
   }
 
-  $('input[type="file"]').on('change', (e) => {
+  $('input[type="file"]#event_photo').on('change', (e) => {
     loadImagePreview(e.target, false);
   });
 
-  const [eventPhotoInput] = $('#event_photo');
+  const [eventPhotoInput] = $('input[type="file"]#event_photo');
 
   if (eventPhotoInput) {
     loadImagePreview(eventPhotoInput, true);
-  } else {
-    const previewSrc = $("#photo-preview").attr('src');
-    if (previewSrc) {
-      adjuster.scaleToNewImage(previewSrc, true);
-    }
   }
 });
