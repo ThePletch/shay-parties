@@ -10,7 +10,9 @@ RUN bundle config set path 'vendor/bundle'
 FROM baseline AS server
 ARG ENVIRONMENT=development
 ENV RAILS_ENV=${ENVIRONMENT}
-RUN apt install build-essential imagemagick libffi-dev -y
+# vim included to simplify local debugging - not big enough to be a problem
+# for production deployments
+RUN apt install build-essential imagemagick libffi-dev vim -y
 RUN bundle config set with ${ENVIRONMENT}
 RUN bundle config build.ffi --enable-system-libffi
 COPY Gemfile Gemfile.lock ./
