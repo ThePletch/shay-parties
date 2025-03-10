@@ -1,22 +1,22 @@
 locals {
   application_env_vars = {
-    RAILS_MASTER_KEY = data.local_sensitive_file.master_key.content
+    RAILS_MASTER_KEY  = data.local_sensitive_file.master_key.content
     DATABASE_USERNAME = var.database.username
     DATABASE_PASSWORD = var.database.password
-    DATABASE_HOST = var.database.host
-    DATABASE_NAME = "${var.database.cluster_name}.${var.database.database}"
-    DATABASE_PORT = tostring(var.database.port)
-    RACK_ENV = "production"
-    RAILS_ENV = "production"
+    DATABASE_HOST     = var.database.host
+    DATABASE_NAME     = "${var.database.cluster_name}.${var.database.database}"
+    DATABASE_PORT     = tostring(var.database.port)
+    RACK_ENV          = "production"
+    RAILS_ENV         = "production"
     # Eventually we'll want to move compiled assets into the
     # same object storage we use for image hosting.
     RAILS_SERVE_STATIC_FILES = "true"
-    RAILS_LOG_TO_STDOUT = "true"
+    RAILS_LOG_TO_STDOUT      = "true"
     ACTIVE_STORAGE_S3_BUCKET = var.activestorage.s3_bucket
-    PARTIES_FULL_DOMAIN = local.main_domain
-    PARTIES_BASE_DOMAIN = var.root_domain
-    SES_SMTP_USERNAME = var.smtp.username
-    SES_SMTP_PASSWORD = var.smtp.password
+    PARTIES_FULL_DOMAIN      = local.main_domain
+    PARTIES_BASE_DOMAIN      = var.root_domain
+    SES_SMTP_USERNAME        = var.smtp.username
+    SES_SMTP_PASSWORD        = var.smtp.password
   }
   capacity_provider = "FARGATE_SPOT"
 }
@@ -32,7 +32,7 @@ resource "aws_ecr_lifecycle_policy" "delete_older" {
       {
         rulePriority = 1
         description  = "Keep most recent six images"
-        selection    = {
+        selection = {
           tagStatus   = "any"
           countType   = "imageCountMoreThan"
           countNumber = 6
@@ -76,9 +76,9 @@ resource "aws_ecs_service" "main" {
   }
 
   capacity_provider_strategy {
-    base = 1
+    base              = 1
     capacity_provider = local.capacity_provider
-    weight = 100
+    weight            = 100
   }
 }
 
@@ -119,7 +119,7 @@ resource "aws_ecs_task_definition" "main" {
       ]
       environment = [
         for name, value in local.application_env_vars : {
-          name = name
+          name  = name
           value = value
         }
       ]

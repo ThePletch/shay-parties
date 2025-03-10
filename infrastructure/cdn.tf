@@ -20,7 +20,7 @@ module "certificate" {
   }
 
   domain_name    = local.main_domain
-  aliases = [var.root_domain, "www.${var.root_domain}"]
+  aliases        = [var.root_domain, "www.${var.root_domain}"]
   hosted_zone_id = data.aws_route53_zone.root_domain.zone_id
 }
 
