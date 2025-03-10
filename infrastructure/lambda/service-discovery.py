@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, TypedDict
 import boto3
 from botocore.exceptions import ClientError
 
-
 if TYPE_CHECKING:
     from mypy_boto3_ec2.client import EC2Client
     from mypy_boto3_route53.client import Route53Client
@@ -82,24 +81,29 @@ def get_eni_ip(task_info: 'TaskTypeDef') -> str | None:
 
 
 def update_record_set(task_arn: str, ip: str, action: 'ChangeActionType'):
-    _ = client_route53.change_resource_record_sets(
-        HostedZoneId=os.environ['HOSTED_ZONE_ID'],
-        ChangeBatch={
-            'Changes': [
-                {
-                    'Action': action,
-                    'ResourceRecordSet': {
-                        'Name': f"{os.environ['TARGET_SUBDOMAIN']}.{os.environ['ROOT_DOMAIN']}",
-                        'Type': 'A',
-                        'MultiValueAnswer': True,
-                        'TTL': 60,
-                        'ResourceRecords': [{'Value': ip}],
-                        'SetIdentifier': task_arn,
+    try:
+        _ = client_route53.change_resource_record_sets(
+            HostedZoneId=os.environ['HOSTED_ZONE_ID'],
+            ChangeBatch={
+                'Changes': [
+                    {
+                        'Action': action,
+                        'ResourceRecordSet': {
+                            'Name': f"{os.environ['TARGET_SUBDOMAIN']}.{os.environ['ROOT_DOMAIN']}",
+                            'Type': 'A',
+                            'MultiValueAnswer': True,
+                            'TTL': 60,
+                            'ResourceRecords': [{'Value': ip}],
+                            'SetIdentifier': task_arn,
+                        },
                     },
-                },
-            ],
-        },
-    )
+                ],
+            },
+        )
+    except client_route53.exceptions.InvalidChangeBatch:
+        # Failing to delete something because it doesn't exist is fine.
+        if action != 'DELETE':
+            raise
 
 
 # Event shape: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_cwe_events.html#ecs_task_events
