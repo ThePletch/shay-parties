@@ -24,6 +24,27 @@ resource "aws_ecr_repository" "main" {
   name = "${var.name}-images"
 }
 
+resource "aws_ecr_lifecycle_policy" "delete_older" {
+  repository = aws_ecr_repository.main.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Keep most recent six images"
+        selection    = {
+          tagStatus   = "any"
+          countType   = "imageCountMoreThan"
+          countNumber = 6
+        }
+        action = {
+          type = "expire"
+        }
+      }
+    ]
+  })
+}
+
 resource "aws_ecs_cluster" "main" {
   name = "${var.name}-cluster"
 }

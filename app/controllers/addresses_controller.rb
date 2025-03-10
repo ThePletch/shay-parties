@@ -9,6 +9,6 @@ class AddressesController < ApplicationController
   private
 
   def set_owned_address
-    @address = current_user.addresses.find(params[:id].to_i)
+    @address = current_user.addresses.find(params[:id])
   end
 end
