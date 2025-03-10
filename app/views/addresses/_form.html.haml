@@ -7,7 +7,9 @@
     - if @prior_addresses.any? and parent_form.present?
       .input-group.mb-2
         %span.input-group-text= t('address.form.use_prior')
-        = parent_form.collection_select('address_id', @prior_addresses, :id, :to_s, include_blank: t('address.form.address_placeholder'), class: 'form-select-sm', wrapper: false)
+        = parent_form.collection_select('address_id', @prior_addresses, :id, :to_s, {include_blank: t('address.form.address_placeholder'), wrapper: false}, class: 'form-select-sm')
+      %small.form-text#fetch-in-progress Fetching address...
+      %small.form-text.text-danger#fetch-error There was an error fetching info for your address. Please enter your address manually.
       %hr
   = form.text_field :street, floating: true
   = form.text_field :street2, class: 'form-control', label: t('address.form.street2_unit_number_explain'), floating: true

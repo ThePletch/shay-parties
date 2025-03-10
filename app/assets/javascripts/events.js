@@ -10,18 +10,35 @@ const addressAttributeToFormFieldMap = {
   'zip_code': "#event_address_attributes_zip_code"
 };
 
-async function updateAddressProperties(addressId) {
-  const response = await $.get({
-    url: `/addresses/${addressId}/`,
-    headers: {
-      Accept: 'application/json',
-    },
-  });
+async function withFetchProgressIndicator(wrapped) {
+  // don't show the spinner until half a second has passed to avoid flashing the spinner on screen.
+  const fetchSpinnerTimeout = setTimeout(() => $("#fetch-in-progress").show(), 500);
+  try {
+    $("#fetch-error").hide();
+    return await wrapped();
+  } catch (e) {
+    $("#fetch-error").show();
+    throw e;
+  } finally {
+    clearTimeout(fetchSpinnerTimeout);
+    $("#fetch-in-progress").hide();
+  }
+}
 
-  Object.keys(addressAttributeToFormFieldMap).forEach(function(key) {
-    const correspondingField = $(addressAttributeToFormFieldMap[key]);
-    correspondingField.val(response[key]);
-    correspondingField.prop('disabled', true);
+async function updateAddressProperties(addressId) {
+  return withFetchProgressIndicator(async function () {
+    const response = await $.get({
+      url: `/addresses/${addressId}/`,
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    Object.keys(addressAttributeToFormFieldMap).forEach(function(key) {
+      const correspondingField = $(addressAttributeToFormFieldMap[key]);
+      correspondingField.val(response[key]);
+      correspondingField.prop('disabled', true);
+    });
   });
 }
 

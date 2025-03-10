@@ -75,3 +75,7 @@
     content: '☑';
     margin-right: 0.5em;
 }
+
+#fetch-error, #fetch-in-progress {
+    display: none;
+}
