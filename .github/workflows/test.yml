@@ -1,4 +1,7 @@
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - 'infrastructure/**'
 name: Run tests
 env:
   RAILS_ENV: test
