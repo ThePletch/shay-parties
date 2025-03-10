@@ -19,7 +19,6 @@ RSpec.describe "events/_form" do
     )
 
     expect(rendered).to have_selector('.invalid-feedback')
-    expect(rendered).to have_selector('#error_explanation')
   end
 
   it "asks if the event should be secret" do

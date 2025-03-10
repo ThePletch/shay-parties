@@ -33,7 +33,6 @@ es:
         edit: "Editando a %{title}"
         new: Evento Nuevo
       show_event_link: Mira a Evento
-      errors_msg: Hubo un errór con su evento.
       preview_label: Haga clic para ver un avance del encabezado de su evento.
       secret_event_help:
         Eventos secretos no aparecen en la página de inicio a menos que el usuario haya respondido - se necesita enviar el enlace a las personas usted mismo para que lo encuentren.

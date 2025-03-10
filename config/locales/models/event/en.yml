@@ -31,7 +31,6 @@ en:
         edit: "Editing %{title}"
         new: New Event
       show_event_link: See Event
-      errors_msg: There was an error with your event.
       preview_label: Click to see a preview of your event's header
       secret_event_help:
         Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it.
