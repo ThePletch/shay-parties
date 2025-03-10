@@ -14,6 +14,10 @@ terraform {
       source  = "integrations/github"
       version = "~> 5.0"
     }
+    local = {
+      source = "hashicorp/local"
+      version = "~> 2.5"
+    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.4"
@@ -41,3 +45,9 @@ provider "random" {}
 provider "tls" {}
 
 data "aws_region" "current" {}
+
+data "local_sensitive_file" "master_key" {
+  # assumes you're running from the `infrastructure/` directory,
+  # since we can't look up the project root
+  filename = "../config/credentials/production.key"
+}

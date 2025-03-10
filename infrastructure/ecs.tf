@@ -1,6 +1,6 @@
 locals {
   application_env_vars = {
-    SECRET_KEY_BASE = random_string.secret_key_base.result
+    RAILS_MASTER_KEY = data.local_sensitive_file.master_key.content
     DATABASE_USERNAME = var.database.username
     DATABASE_PASSWORD = var.database.password
     DATABASE_HOST = var.database.host
@@ -22,6 +22,27 @@ locals {
 }
 resource "aws_ecr_repository" "main" {
   name = "${var.name}-images"
+}
+
+resource "aws_ecr_lifecycle_policy" "delete_older" {
+  repository = aws_ecr_repository.main.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Keep most recent six images"
+        selection    = {
+          tagStatus   = "any"
+          countType   = "imageCountMoreThan"
+          countNumber = 6
+        }
+        action = {
+          type = "expire"
+        }
+      }
+    ]
+  })
 }
 
 resource "aws_ecs_cluster" "main" {

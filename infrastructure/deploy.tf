@@ -11,7 +11,7 @@ locals {
     DATABASE_HOST      = var.database.host
     DATABASE_PORT      = var.database.port
     DATABASE_NAME      = "${var.database.cluster_name}.${var.database.database}"
-    SECRET_KEY_BASE    = random_string.secret_key_base.result
+    RAILS_MASTER_KEY   = data.local_sensitive_file.master_key.content
   }
 }
 

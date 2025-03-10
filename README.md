@@ -64,7 +64,7 @@ docker compose run bundle-installer && docker compose run db-migrater
 If you just want to run the test suite, you can spin up a shell (with dependencies) for testing by running the `docker-shell` executable in the `bin` directory:
 
 ```bash
-./bin/dockershell
+./bin/docker-shell
 ```
 
 

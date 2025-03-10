@@ -1,4 +1,4 @@
 #!/bin/bash
 echo "  ...Spinning up a shell configured for running tests..."
 echo ""
-docker compose run --rm api-test-shell /bin/bash
+docker compose run --rm ${@:1} api-test-shell /bin/bash

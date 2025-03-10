@@ -1,22 +1,22 @@
 - parent_form ||= nil
 - address ||= nil
-%h3= t('activerecord.models.address')
-= optional_parent_wrap(parent_form, address || Address.new, {record_name: :address}) do |form|
-  - if @prior_addresses.any?
-    .input-group.mb-2
-      %span.input-group-text= t('address.form.use_prior')
-      = select_tag('prior_addresses', options_for_select(@prior_addresses.map{|a| [a.to_s, a.id, a.attributes] }), include_blank: t('address.form.address_placeholder'), class: 'form-select form-select-sm')
-    %hr
-    
+- address_persisted = !!address.try(:persisted?)
+%h4= t('activerecord.models.address')
+= optional_parent_wrap(parent_form, address || Address.new, {record_name: :address, include_id: !address_persisted, locals: { address: address}}) do |form|
+  - unless address_persisted
+    - if @prior_addresses.any? and parent_form.present?
+      .input-group.mb-2
+        %span.input-group-text= t('address.form.use_prior')
+        = parent_form.collection_select('address_id', @prior_addresses, :id, :to_s, {include_blank: t('address.form.address_placeholder'), wrapper: false}, class: 'form-select-sm')
+      %small.form-text#fetch-in-progress Fetching address...
+      %small.form-text.text-danger#fetch-error There was an error fetching info for your address. Please enter your address manually.
+      %hr
   = form.text_field :street, floating: true
-
   = form.text_field :street2, class: 'form-control', label: t('address.form.street2_unit_number_explain'), floating: true
-
   .row
     .col-md
       = form.text_field :city, floating: true
     .col-md
-      - states = Carmen::Country.coded('USA').subregions.typed('state').map{|state| [state.name, state.code] }
-      = form.select :state, [[t('address.form.state_placeholder'), nil]] + states, floating: true
+      = form.collection_select :state, Carmen::Country.coded('USA').subregions.typed('state'), :code, :name, include_blank: t('address.form.state_placeholder'), floating: true
     .col-md
       = form.text_field :zip_code, floating: true

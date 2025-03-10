@@ -30,8 +30,11 @@ Rails.application.routes.draw do
       end
     end
 
-    # only for testing
-    resources :addresses, only: [:create]
+    resources :addresses, only: [
+      :show,
+      # only for testing
+      :create,
+    ]
 
 
     # user-scoped events index

@@ -2,7 +2,6 @@
 # See README for docker setup and package.json
 # for docker command aliases
 ###############################################################
-version: "3.8" # latest docker-compose
 volumes:
   database-data:
   database-test-data:
@@ -80,6 +79,8 @@ services:
       <<: [*ssh-env, *db-consumer-env]
       DATABASE_HOST: partiesforall-postgres-test
       RAILS_ENV: test
+      # opens commands like `rails credentials:edit` in vim
+      EDITOR: vim
     container_name: partiesforall-shell
     volumes:
     - *v-bundle-read
