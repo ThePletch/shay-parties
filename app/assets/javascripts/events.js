@@ -43,6 +43,7 @@ async function updateAddressProperties(addressId) {
 }
 
 function clearAddressProperties() {
+  $("#fetch-error").hide();
   Object.keys(addressAttributeToFormFieldMap).forEach(function(key) {
     const correspondingField = $(addressAttributeToFormFieldMap[key]);
     correspondingField.prop('disabled', false);
