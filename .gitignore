@@ -40,14 +40,10 @@ vendor/production
 *.DS_Store
 
 storage/*
-config/secrets/*
 
 # Terraform config files
 *.tfvars
 .terraform
 *.tfstate
-/config/credentials/development.key
 
-/config/credentials/test.key
-
-/config/credentials/production.key
+/config/credentials/*.key
