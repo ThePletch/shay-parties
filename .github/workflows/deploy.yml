@@ -59,8 +59,6 @@ jobs:
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
         cache-to: |
           type=gha
-        secrets: |
-          SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}
         target: server-shrinkwrapped
     # TODO split this into a separate dependent job
     - name: Trigger deploy of ECS service
@@ -78,12 +76,12 @@ jobs:
         DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
         ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
-        SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+        # skip over SECRET_KEY_BASE config requirements since we don't need them for migrations
+        SECRET_KEY_BASE_DUMMY: 1
       run: |
         docker run \
           --rm \
           -e RAILS_ENV=production \
-          -e SECRET_KEY_BASE=$SECRET_KEY_BASE \
           --env-file <(printenv | grep DATABASE_) \
           $ECR_IMAGE \
           bundle exec rails db:migrate
