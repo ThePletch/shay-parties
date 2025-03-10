@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_24_194655) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_26_133426) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -164,6 +164,27 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_24_194655) do
     t.index ["user_id"], name: "index_polls_on_user_id"
   end
 
+  create_table "signup_contexts", force: :cascade do |t|
+    t.boolean "guest_enterable"
+    t.bigint "event_id"
+    t.text "instructions"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_signup_contexts_on_event_id"
+  end
+
+  create_table "signup_sheet_items", force: :cascade do |t|
+    t.bigint "event_id"
+    t.string "attendee_type"
+    t.bigint "attendee_id"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "requested", default: false
+    t.index ["attendee_type", "attendee_id"], name: "index_signup_sheet_items_on_attendee"
+    t.index ["event_id"], name: "index_signup_sheet_items_on_event_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -205,4 +226,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_24_194655) do
   add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "events", "addresses"
   add_foreign_key "events", "users"
+  add_foreign_key "signup_contexts", "events"
+  add_foreign_key "signup_sheet_items", "events"
 end

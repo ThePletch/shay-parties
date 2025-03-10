@@ -38,8 +38,8 @@
     = form.hidden_field :photo_crop_y_offset
     = form.file_field :photo, direct_upload: true, help: t('event.form.header_photo_help')
     %strong.form-text#crop-prompt= t('event.form.header_photo_crop_prompt')
-  = form.hidden_field :address_id, id: 'existing_address_id'
-  = render "addresses/form", parent_form: form
+  = render partial: "addresses/form", locals: { parent_form: form, address: event.address }
+  %hr
   .form-group
     = form.text_area :description, class: 'form-control', style: "height: 10em;", floating: true, help: t('event.form.description_uses_markdown_html', link: link_to(t('event.form.description_uses_markdown_name'), 'https://www.markdownguide.org/basic-syntax/'))
   .form-group.mb-2
