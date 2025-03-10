@@ -26,7 +26,7 @@ module "service_discovery_lambda" {
 
   name                      = "${var.name}-dns-handler"
   source_code_file          = "./lambda/service-discovery.py"
-  function_runtime          = "python3.9"
+  function_runtime          = "python3.13"
   iam_policy                = data.aws_iam_policy_document.discovery_hook_policy.json
   include_inline_policy     = true
   publish                   = true
