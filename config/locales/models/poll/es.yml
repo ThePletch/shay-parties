@@ -1,4 +1,9 @@
 es:
+  activerecord:
+    models:
+      poll:
+        one: Encuesta
+        other: Encuestas
   poll:
     created: Encuesta creado exitosamente.
     updated: Encuesta actualizado exitosamente.

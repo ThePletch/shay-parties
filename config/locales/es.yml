@@ -16,3 +16,8 @@ es:
       - Oct
       - Nov
       - Dic
+  helpers:
+    submit:
+      create: 'Crear %{model}'
+      update: 'Actualizar %{model}'
+      submit: 'Entregar %{model}'

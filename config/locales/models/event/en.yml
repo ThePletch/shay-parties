@@ -31,8 +31,7 @@ en:
         edit: "Editing %{title}"
         new: New Event
       show_event_link: See Event
-      errors_msg: There was an error with your event.
-      preview_label: This is a preview of how your event's title will appear.
+      preview_label: Click to see a preview of your event's header
       secret_event_help:
         Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it.
         This won't stop people who receive the link from giving it to others without your permission.
@@ -40,8 +39,10 @@ en:
       testing_help:
         Events that require testing for COVID-19 will have a banner informing guests of the testing requirement.
         Be sure to explain how to send you evidence of a negative test in your event description.
-      header_photo_help: Photos are scaled and cropped to full-screen width (1900px by 500px).
-      header_photo_crop_prompt:  Click and drag the header image to change how your header image will be cropped.
+      header_photo_help:
+        Photos are scaled and cropped to full-screen width (1900px by 500px).
+        Open the event preview at the top of the page to adjust how your header image will appear.
+      header_photo_crop_prompt:  Drag the image to change how it will be cropped.
       description_uses_markdown_html: You can format the event description with %{link} to make text bold, add links, or organize things into bullet points.
       description_uses_markdown_name: Markdown
       labels:

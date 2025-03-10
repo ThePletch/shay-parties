@@ -1,4 +1,9 @@
 en:
+  activerecord:
+    models:
+      poll:
+        one: Poll
+        other: Polls
   poll:
     created: Poll was successfully created.
     updated: Poll was successfully updated.

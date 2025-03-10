@@ -4,7 +4,7 @@
   .hero
     .hero-image
       - if @event.photo.attached?
-        = image_tag url_for(@event.landing_page_photo)
+        = image_tag rails_storage_redirect_path(@event.landing_page_photo)
       - else
         = image_tag 'default_event_image.jpg'
     .mx-2
