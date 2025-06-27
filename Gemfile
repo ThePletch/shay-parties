@@ -25,7 +25,7 @@ gem 'bootstrap', '~> 5.1'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '~> 4.4'
-gem 'jquery-ui-rails', '~> 7.0'
+gem 'jquery-ui-rails', '~> 8.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 gem 'ffi', '~> 1.15.5'
