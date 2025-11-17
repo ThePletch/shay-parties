@@ -1,4 +1,23 @@
 #!/bin/bash
-echo "  ...Spinning up a shell configured for running tests..."
+
+function usage() {
+  >&2 echo "Usage: $0 <dev|test> [...docker-run-args]"
+  >&2 echo "       Any args after the environment will be passed to \`docker compose run\`."
+}
+
+
+if [ "$1" == "dev" ]; then
+  usage="dev tasks"
+  container_name="api-dev-shell"
+elif [ "$1" == "test" ]; then
+  usage="running tests"
+  container_name="api-test-shell"
+else
+  >&2 echo "Specify a valid environment to use for the shell."
+  usage
+  exit 1
+fi
+
+echo "  ...Spinning up a shell configured for $usage..."
 echo ""
-docker compose run --rm ${@:1} api-test-shell /bin/bash
+docker compose run --rm ${@:2} "$container_name" /bin/bash

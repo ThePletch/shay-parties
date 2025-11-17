@@ -36,11 +36,15 @@
           = form.text_field :end_time, class: 'datetimepicker', value: event.end_time_str, floating: true
     .col-md-6
       = form.form_group do
-        = form.check_box :secret, label: t('event.form.labels.secret'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
+        = form.check_box :secret, label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
         = render "shared/info_tooltip", message: t('event.form.secret_event_help')
 
-        = form.check_box :requires_testing, label: t('event.form.labels.covid_testing'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
+        = form.check_box :requires_testing, label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
         = render "shared/info_tooltip", message: t('event.form.testing_help')
+  .form-group
+    = form.hidden_field :plus_one_max, value: -1
+    .form-label= t('event.form.plus_ones_prompt')
+    = form.number_field :plus_one_max, value: event.plus_one_max < 0 ? nil : event.plus_one_max, floating: true
   .form-group
     = form.hidden_field :photo_crop_y_offset
     - if event.photo.attached?
