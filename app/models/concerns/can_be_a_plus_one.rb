@@ -23,7 +23,6 @@ module CanBeAPlusOne
     return if event.plus_one_max < 0
 
     if parent_attendance.plus_ones.where.not(id: self.id).length >= event.plus_one_max
-      puts "eee"
       errors.add(:base, :beyond_plus_one_limit)
     end
   end

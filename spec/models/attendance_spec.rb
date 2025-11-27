@@ -54,7 +54,7 @@ describe Attendance do
     expect(beyond_limit_attendance).not_to be_valid
   end
 
-  it "allows no plus ones for events with plus-ones disabled" do
+  it "rejects plus ones for events with plus-ones disabled" do
     event = FactoryBot.create(:event, plus_one_max: 0)
     attendance = FactoryBot.create(:attendance, event: event)
     within_limit_attendance = FactoryBot.build(:guest_attendance, event: event, parent_attendance: attendance)

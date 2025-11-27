@@ -63,7 +63,7 @@ class AttendancesController < ApplicationController
         redirect_to event_path(@event), notice: t('attendance.destroyed')
       end
     else
-      redirect_to event_path(event, guest_guid: params[:guest_guid]), status: :unprocessable_entity
+      redirect_to event_path(@event, guest_guid: params[:guest_guid]), status: :unprocessable_entity
     end
   end
 
