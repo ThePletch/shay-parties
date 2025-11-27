@@ -116,5 +116,5 @@ class DynamicListManager {
 }
 
 $(function() {
-  const listManagers = $('[data-form-prepend]').map((_, button) => new DynamicListManager(button.id));
+  $('[data-form-prepend]').each((_, button) => new DynamicListManager(button.id));
 });
