@@ -12,9 +12,7 @@ module CanHavePlusOnes
     return if event.plus_one_max < 0
 
     if plus_ones.length > event.plus_one_max
-      errors.add(:too_many_plus_ones)
+      errors.add(:base, :too_many_plus_ones)
     end
   end
-
-
 end

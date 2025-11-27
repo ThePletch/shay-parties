@@ -25,3 +25,8 @@ label.side-label {
   font-family: 'Raleway', sans-serif;
   font-size: 1.75rem;
 }
+
+.input-group .btn {
+  // Override this to fix z-index issues with datetimepicker alongside buttons
+  z-index: 0;
+}

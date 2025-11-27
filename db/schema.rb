@@ -206,6 +206,4 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_27_234627) do
   add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "events", "addresses"
   add_foreign_key "events", "users"
-  add_foreign_key "signup_contexts", "events"
-  add_foreign_key "signup_sheet_items", "events"
 end

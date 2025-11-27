@@ -9,9 +9,9 @@ en:
         end_time: End Time
         photo: Header Photo
         description: Description
-        plus_one_max: Max +1s per user
-        requires_testing: Require COVID testing
-        secret: Make this event secret
+        plus_one_max: Max +1s per guest
+        requires_testing: Require COVID test
+        secret: Secret event
     errors:
       models:
         event:
@@ -48,7 +48,8 @@ en:
       header_photo_crop_prompt:  Drag the image to change how it will be cropped.
       description_uses_markdown_html: You can format the event description with %{link} to make text bold, add links, or organize things into bullet points.
       description_uses_markdown_name: Markdown
-      plus_ones_prompt: Allow guests to invite +1s?
+      plus_ones_prompt: Allow +1s?
+      plus_ones_unlimited: Unlimited
     rsvp_list:
       headers:
         'yes': "Yes (%{count})"

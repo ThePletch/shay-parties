@@ -9,9 +9,9 @@ es:
         end_time: Hora Final
         photo: Foto de Encabezado
         description: Descripción
-        plus_one_max: Max +1s por usuario
-        requires_testing: Requiera prueba de COVID
-        secret: Haz que este evento sea secreto
+        plus_one_max: Máx +1s por usuario
+        requires_testing: Prueba de COVID requerida
+        secret: Evento secreto
     errors:
       models:
         event:
@@ -50,7 +50,8 @@ es:
       header_photo_crop_prompt: Arrastre la imagen para cambiar cómo se recortará su foto.
       description_uses_markdown_html: Se puede formatear la descripción del evento con %{link} para poner el texto en negrita, agregar enlaces, o organizar cosas en viñetas.
       description_uses_markdown_name: Markdown
-      plus_ones_prompt: ¿Permitir a los invitados invitar a acompañantes?
+      plus_ones_prompt: ¿Acompañantes?
+      plus_ones_unlimited: Ilimitados
     rsvp_list:
       headers:
         'yes': "Sí (%{count})"

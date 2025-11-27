@@ -76,3 +76,5 @@ group :test do
   gem 'poltergeist', '~> 1.18'
   gem 'database_cleaner', '~> 2.0'
 end
+
+gem "humanize", "~> 3.1"

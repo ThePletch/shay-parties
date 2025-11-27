@@ -14,7 +14,7 @@ module CanBeAPlusOne
     return unless parent_attendance.present?
 
     if parent_attendance.event_id != event_id
-      errors.add(:attendance_id, :parent_event_is_different)
+      errors.add(:base, :parent_event_is_different)
     end
   end
 
@@ -23,9 +23,8 @@ module CanBeAPlusOne
     return if event.plus_one_max < 0
 
     if parent_attendance.plus_ones.where.not(id: self.id).length >= event.plus_one_max
-      errors.add(:attendance_id, :too_many_plus_ones)
+      puts "eee"
+      errors.add(:base, :beyond_plus_one_limit)
     end
   end
-
-
 end

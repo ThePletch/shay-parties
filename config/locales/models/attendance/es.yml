@@ -13,10 +13,14 @@ es:
         attendance:
           rejection: No pudo guardar su RSVP
           attributes:
+            base:
+              too_many_plus_ones: Ha intentado invitar más +1s de los que el evento permite.
+              beyond_plus_one_limit: Este +1 excede el límite de +1s del evento.
             rsvp_status:
               inclusion: No es un RSVP válido.
             attendance_id:
               parent_event_is_different: Este RSVP es un +1, pero no está apuntado a lo mismo evento. Esta es una problema tecnico.
+              too_many_plus_ones: Ha intentado invitar más +1s de los que el evento permite.
             attendee_id:
               email_already_rsvped: Ya existe un RSVP de su dirección de email.
             attendee_type:
@@ -45,6 +49,7 @@ es:
       remove_attendance: "Quita el RSVP y respuestas de encuesta para %{name}?"
     form:
       add_plus_one: Agregar +1
+      plus_ones_limit_prompt: "Se puede invitar hasta %{count} +1(s)."
       prompt_guest: RSVP como cuenta temporal
       can_change_later: Se podrá cambiar a su RSVP más tarde.
       sign_in_alt: ...o iniciar sesión.

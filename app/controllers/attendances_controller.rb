@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   before_action :require_user_or_guest_auth, except: [:create]
   before_action :set_event, only: [:create]
-  before_action :set_owned_attendance, only: [:update]
+  before_action :set_owned_attendance_and_event, only: [:update]
   before_action :set_attendance, only: [:destroy]
   before_action :require_own_attendance_or_event, only: [:destroy]
 
@@ -36,7 +36,7 @@ class AttendancesController < ApplicationController
 
       redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: notice
     else
-      render 'events/show', alert: t('activerecord.errors.models.attendance.rejection') + ": " + @attendance.errors.map(&:full_message).join(". "), status: :unprocessable_entity
+      render 'events/show', alert: t('activerecord.errors.models.attendance.rejection') + ": " + @attendance.errors.full_messages.join(". "), status: :unprocessable_entity
     end
   end
 
@@ -50,22 +50,20 @@ class AttendancesController < ApplicationController
 
 
   def update
-    event = @attendance.event
-
     if attendance_params[:rsvp_status] == "No RSVP"
       result = @attendance.destroy
     else
-      result = upsert(@attendance, event)
+      result = upsert(@attendance, @event)
     end
 
     if result
       if @attendance.persisted?
-        redirect_to event_path(event, guest_guid: @attendance.attendee.try(:guid)), notice: t('attendance.updated')
+        redirect_to event_path(@event, guest_guid: @attendance.attendee.try(:guid)), notice: t('attendance.updated')
       else
-        redirect_to event_path(event), notice: t('attendance.destroyed')
+        redirect_to event_path(@event), notice: t('attendance.destroyed')
       end
     else
-      redirect_to event_path(event, guest_guid: params[:guest_guid]), alert: @attendance.errors.map(&:full_message).join("\n")
+      redirect_to event_path(event, guest_guid: params[:guest_guid]), status: :unprocessable_entity
     end
   end
 
@@ -97,8 +95,9 @@ class AttendancesController < ApplicationController
     end
   end
 
-  def set_owned_attendance
+  def set_owned_attendance_and_event
     @attendance = @authenticated_user.attendances.includes(:event).preload(:attendee).find(params[:id])
+    @event = EventDecorator.decorate(@attendance.event)
   end
 
   def set_attendance

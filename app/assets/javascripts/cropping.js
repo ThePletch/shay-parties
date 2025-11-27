@@ -111,7 +111,7 @@ $(function () {
   $('#event_requires_testing').on('change', (e) => {
     setTestingWarningVisible(e.target.checked);
   });
-  setTestingWarningVisible(document.getElementById('event_requires_testing').checked);
+  setTestingWarningVisible($('event_requires_testing').checked);
 
   const adjuster = new CropAdjuster($("#photo-preview"));
 
