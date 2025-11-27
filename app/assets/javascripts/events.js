@@ -70,4 +70,5 @@ $(function() {
     $("#event_address_id").change(handleAddressChange);
     handleAddressChange();
   }
+  disableFieldWith('event_plus_one_max', 'event_plus_one_enable');
 });

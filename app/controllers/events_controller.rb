@@ -151,6 +151,7 @@ class EventsController < ApplicationController
       :description,
       :photo,
       :photo_crop_y_offset,
+      :plus_one_max,
       :address_id,
       address_attributes: [
         :street,

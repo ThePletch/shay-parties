@@ -38,6 +38,10 @@ x-default-service: &servicedefaults
   - &cache-app-dir ./:/usr/src/app:cached
   - &ssh-keys ~/.ssh/:/root/.ssh:cached # link ssh keys into container so that npm install works with private github repos
   restart: on-failure
+
+x-shell-depends: &shelldeps
+
+
 services:
   api:
     <<: *servicedefaults
@@ -66,19 +70,16 @@ services:
         condition: service_completed_successfully
       db-migrater:
         condition: service_completed_successfully
-
-  # Shell only - must be run via `docker compose run`
-  api-test-shell:
+  api-dev-shell: &shell
     <<: *servicedefaults
     profiles:
-    - test
+    - dev
     build:
       <<: *builddefaults
       target: server
-    environment:
+    environment: &shellenv
       <<: [*ssh-env, *db-consumer-env]
-      DATABASE_HOST: partiesforall-postgres-test
-      RAILS_ENV: test
+      # define DATABASE_HOST and RAILS_ENV to override
       # opens commands like `rails credentials:edit` in vim
       EDITOR: vim
     container_name: partiesforall-shell
@@ -87,6 +88,23 @@ services:
     - *ssh-pass
     - *cache-app-dir
     - *ssh-keys
+    depends_on:
+      postgres:
+        condition: service_healthy
+      bundle-installer:
+        condition: service_completed_successfully
+      db-migrater:
+        condition: service_completed_successfully
+  # Shell only - must be run via `docker compose run`
+  api-test-shell:
+    <<: *shell
+    profiles:
+    - test
+    environment:
+      <<: *shellenv
+      DATABASE_HOST: partiesforall-postgres-test
+      RAILS_ENV: test
+    container_name: partiesforall-shell-test
     depends_on:
       postgres-test:
         condition: service_healthy

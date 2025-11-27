@@ -18,11 +18,14 @@
           = attendee_form.email_field :email, floating: true
   = form.select(:rsvp_status, options_for_select(attendance_types_localized, selected: attendance.rsvp_status), floating: true)
   #plus-ones
-    = form.fields_for(:plus_ones, attendance.plus_ones.select(&:persisted?), layout: :inline) do |plus_one_form|
+    = form.fields_for(:plus_ones, attendance.plus_ones, layout: :inline) do |plus_one_form, i|
       = render partial: 'attendances/plus_one_form', locals: {f: plus_one_form, plus_one: plus_one_form.object, event: event}
-  .d-grid.mb-2
-    - # Keep the layout/style options for this fields_for in sync with the plus-ones fields_for above.
-    - # This ensures that the style for the dynamic +1s and the existing +1s is consistent.
-    = link_to_add_fields(t('attendance.form.add_plus_one'), form, :plus_ones, {partial: 'attendances/plus_one_form', target: "#plus-ones", locals: { plus_one: form.object.plus_ones.build, event: event }, layout: :inline}, class: 'btn btn-success', id: "add-plus-one")
+  - if event.allows_plus_ones?
+    .d-grid.mb-2
+      - # Keep the layout/style options for this fields_for in sync with the plus-ones fields_for above.
+      - # This ensures that the style for the dynamic +1s and the existing +1s is consistent.
+      = link_to_add_fields(t('attendance.form.add_plus_one'), form, :plus_ones, {record_limit: event.plus_one_max, partial: 'attendances/plus_one_form', target: "#plus-ones", locals: { plus_one: form.object.plus_ones.build, event: event }, layout: :inline}, class: 'btn btn-success', id: "add-plus-one")
+      - if event.has_plus_one_limit?
+        .form-text= t('attendance.form.plus_ones_limit_prompt', count: event.plus_one_max.humanize(locale: I18n.locale))
   .d-grid
     = form.primary('RSVP')

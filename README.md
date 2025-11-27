@@ -64,9 +64,14 @@ docker compose run bundle-installer && docker compose run db-migrater
 If you just want to run the test suite, you can spin up a shell (with dependencies) for testing by running the `docker-shell` executable in the `bin` directory:
 
 ```bash
-./bin/docker-shell
+./bin/docker-shell test
 ```
 
+To run Rails tasks (e.g. generating migrations), you can spin up a dev shell instead:
+
+```bash
+./bin/docker-shell dev
+```
 
 #### Run directly
 

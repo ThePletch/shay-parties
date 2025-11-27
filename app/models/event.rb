@@ -68,6 +68,14 @@ class Event < ApplicationRecord
     end_time.try(:strftime, TIMESTAMP_FORMAT)
   end
 
+  def allows_plus_ones?
+    plus_one_max != 0
+  end
+
+  def has_plus_one_limit?
+    allows_plus_ones? && plus_one_max > 0
+  end
+
   def icalendar(event_url)
     cal = Icalendar::Calendar.new
     cal.prodid = "-//#{self.owner.name}//NONSGML ExportToCalendar//EN"

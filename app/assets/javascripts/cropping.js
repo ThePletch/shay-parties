@@ -104,6 +104,7 @@ $(function () {
   });
   setTitlePreview($('#event_title').val());
 
+  // handles visibility only in the crop preview
   function setTestingWarningVisible(visible) {
     $('#requires-testing').toggle(visible);
   }
@@ -111,7 +112,7 @@ $(function () {
   $('#event_requires_testing').on('change', (e) => {
     setTestingWarningVisible(e.target.checked);
   });
-  setTestingWarningVisible(document.getElementById('event_requires_testing').checked);
+  setTestingWarningVisible($('#event_requires_testing').checked);
 
   const adjuster = new CropAdjuster($("#photo-preview"));
 
