@@ -29,7 +29,7 @@ RSpec.describe "events/_form" do
       event: event
     )
 
-    expect(rendered).to have_text('Make this event secret')
+    expect(rendered).to have_text('Secret event')
   end
 
   it "asks if the event should require COVID testing" do
@@ -40,7 +40,7 @@ RSpec.describe "events/_form" do
       event: event
     )
 
-    expect(rendered).to have_text('Require COVID testing')
+    expect(rendered).to have_text('Require COVID test')
   end
 
   context "addresses" do

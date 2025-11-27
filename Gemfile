@@ -56,6 +56,9 @@ gem "friendly_id", "~> 5.4"
 
 gem "bootstrap_form", "~> 5"
 
+# lets us display numbers as locale-specific words
+gem "humanize", "~> 3.1"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rb-readline'
@@ -76,5 +79,3 @@ group :test do
   gem 'poltergeist', '~> 1.18'
   gem 'database_cleaner', '~> 2.0'
 end
-
-gem "humanize", "~> 3.1"
