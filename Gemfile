@@ -21,7 +21,7 @@ gem 'haml-rails', '~> 2.0'
 gem 'draper', '~> 4.0'
 
 # use bootstrap as css framework
-gem 'bootstrap', '~> 5.1'
+gem 'bootstrap', '~> 5.3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '~> 4.4'
@@ -38,9 +38,9 @@ gem 'ffi', '~> 1.15.5'
 gem 'carmen', '~> 1.1'
 
 # accounts and authentication
-gem 'devise', '~> 4.8'
+gem 'devise', '~> 4.9.4'
 # markdown for descriptions
-gem 'commonmarker', '~> 1.0.0.pre9'
+gem 'commonmarker', '~> 2.5'
 
 gem 'aws-sdk-s3', '~> 1.100', require: false
 gem 'image_processing', '~> 1.2'
@@ -79,3 +79,7 @@ group :test do
   gem 'poltergeist', '~> 1.18'
   gem 'database_cleaner', '~> 2.0'
 end
+
+gem "vite_rails", "~> 3.0"
+
+gem "sassc-rails", "~> 2.1"
