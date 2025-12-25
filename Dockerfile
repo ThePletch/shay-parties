@@ -38,7 +38,8 @@ CMD bundle exec rails server -b 0.0.0.0 -p $PORT
 # For production deployments.
 
 FROM server AS server-shrinkwrapped
-# Tel this step not to require SECRET_KEY_BASE
+COPY config/credentials/${ENVIRONMENT}.key ./config/credentials/
+# Tell this step not to require SECRET_KEY_BASE
 RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
 # ==== LOCAL DEVELOPMENT CONTAINER STAGES ====

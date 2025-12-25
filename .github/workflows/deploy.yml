@@ -80,7 +80,7 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         build-args: |
           PORT=3030
-          ENVIRONMENT=production
+          ENVIRONMENT=${{ inputs.environment }}
         cache-from: |
           type=gha
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
@@ -106,7 +106,7 @@ jobs:
       run: |
         docker run \
           --rm \
-          -e RAILS_ENV=production \
+          -e RAILS_ENV=${{ inputs.environment }} \
           -e SECRET_KEY_BASE_DUMMY=1 \
           --env-file <(printenv | grep DATABASE_) \
           $ECR_IMAGE \
