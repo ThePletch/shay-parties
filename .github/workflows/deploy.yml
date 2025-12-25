@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: [Run tests]
     types: [completed]
-    branches: [master]
+    branches: [master, staging]
 jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
