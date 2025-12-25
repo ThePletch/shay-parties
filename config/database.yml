@@ -71,3 +71,9 @@ production:
   adapter: cockroachdb
   database: <%= ENV['DATABASE_NAME'] %>
   sslmode: require
+
+staging:
+  <<: *default
+  adapter: cockroachdb
+  database: <%= ENV['DATABASE_NAME'] %>
+  sslmode: require

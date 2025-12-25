@@ -1,7 +1,3 @@
-locals {
-  service_discovery_service_name = "sdtest"
-}
-
 data "aws_iam_policy_document" "discovery_hook_policy" {
   statement {
     actions = [
@@ -34,7 +30,7 @@ module "service_discovery_lambda" {
   environment_config = {
     HOSTED_ZONE_ID   = data.aws_route53_zone.root_domain.zone_id
     ROOT_DOMAIN      = var.root_domain
-    TARGET_SUBDOMAIN = local.service_discovery_service_name
+    TARGET_SUBDOMAIN = var.service_discovery_subdomain
   }
 }
 

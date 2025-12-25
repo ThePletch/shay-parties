@@ -44,7 +44,7 @@ resource "aws_cloudfront_distribution" "cdn" {
 
   origin {
     origin_id   = local.cdn_origin
-    domain_name = "${local.service_discovery_service_name}.${var.root_domain}"
+    domain_name = "${var.service_discovery_subdomain}.${var.root_domain}"
 
     custom_origin_config {
       origin_protocol_policy = "http-only"

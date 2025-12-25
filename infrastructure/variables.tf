@@ -63,6 +63,10 @@ variable "alias_subdomains" {
   default = []
 }
 
+variable "service_discovery_subdomain" {
+  type = string
+}
+
 variable "include_root_domain_alias" {
   type = bool
   default = false
