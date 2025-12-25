@@ -1,6 +1,7 @@
 locals {
   main_domain = "${var.main_subdomain}.${var.root_domain}"
   cdn_origin  = "PartiesServiceDiscovery"
+  aliases = concat([for alias in var.alias_subdomains : "${alias}.${var.root_domain}"], var.include_root_domain_alias ? [var.root_domain] : [])
 }
 
 # you need to use this one for the ACM cert because Cloudfront is xenophobic
@@ -20,15 +21,14 @@ module "certificate" {
   }
 
   domain_name    = local.main_domain
-  aliases        = [var.root_domain, "www.${var.root_domain}"]
+  aliases        = local.aliases
   hosted_zone_id = data.aws_route53_zone.root_domain.zone_id
 }
 
 resource "aws_cloudfront_distribution" "cdn" {
   enabled = true
 
-  # temporary
-  aliases = [local.main_domain, "www.${var.root_domain}", var.root_domain]
+  aliases = local.aliases
 
   default_cache_behavior {
     # Managed "disable all caching" policy

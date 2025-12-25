@@ -15,13 +15,11 @@ gem 'activerecord-cockroachdb-adapter', '~> 7.0', '>= 7.0.1'
 # Use Puma as the app server
 gem 'puma', '~> 6.4'
 # Use SCSS for stylesheets
-gem 'sassc', '~> 2.4'
 gem 'haml-rails', '~> 2.0'
 
 gem 'draper', '~> 4.0'
 
 # use bootstrap as css framework
-gem 'bootstrap', '~> 5.3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '~> 4.4'
@@ -46,7 +44,7 @@ gem 'aws-sdk-s3', '~> 1.100', require: false
 gem 'image_processing', '~> 1.2'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: [:windows, :jruby]
 
 gem "icalendar", "~> 2.7"
 
@@ -81,5 +79,3 @@ group :test do
 end
 
 gem "vite_rails", "~> 3.0"
-
-gem "sassc-rails", "~> 2.1"

@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap');
+@import "bootstrap";
+
+label.side-label {
+  margin: 0 1em;
+}
+
+.navbar-brand {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.75rem;
+}
+
+.input-group .btn {
+  // Override this to fix z-index issues with datetimepicker alongside buttons
+  z-index: 0;
+}

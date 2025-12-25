@@ -1,3 +1,6 @@
+= vite_typescript_tag 'events'
+= vite_stylesheet_tag 'entrypoints/stylesheets/events.scss'
+
 - # svg config for info circle
 %svg.d-none{xmlns: "http://www.w3.org/2000/svg"}
   %symbol#info-fill{viewBox: "0 0 16 16", fill: 'currentColor'}
@@ -14,7 +17,7 @@
         %div= t('event.form.header_photo_crop_prompt')
       .hero.border-top
         .hero-image
-          %img#photo-preview{src: event.photo.attached? ? rails_storage_redirect_path(event.photo) : image_path('default_event_image.jpg'), data: {initial_y_offset: event.photo_crop_y_offset}}
+          %img#photo-preview{src: event.photo.attached? ? rails_storage_redirect_path(event.photo) : vite_asset_path('images/default_event_image.jpg'), data: {initial_y_offset: event.photo_crop_y_offset}}
         .mx-2
           .hero-title
             %h1.title.display-4#title-preview{data: {default: t('event.title_placeholder')}}

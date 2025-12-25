@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.8",
+    "flatpickr": "^4.6.13",
+    "jquery": "^3.7.1",
+    "vite-plugin-ruby": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
+    "@types/jquery": "^3.5.33",
+    "sass": "^1.97.1",
+    "sass-embedded": "^1.97.1",
+    "vite": "^7.3.0"
+  }
+}

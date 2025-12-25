@@ -7,11 +7,15 @@ data "tls_certificate" "github" {
   url = local.github_oidc_url
 }
 
-resource "aws_iam_openid_connect_provider" "github" {
-  url = local.github_oidc_url
+# resource "aws_iam_openid_connect_provider" "github" {
+#   url = local.github_oidc_url
 
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = data.tls_certificate.github.certificates.*.sha1_fingerprint
+#   client_id_list  = ["sts.amazonaws.com"]
+#   thumbprint_list = data.tls_certificate.github.certificates.*.sha1_fingerprint
+# }
+
+data "aws_iam_openid_connect_provider" "github" {
+  url = local.github_oidc_url
 }
 
 data "aws_iam_policy_document" "ecs_assume_role" {
@@ -31,7 +35,7 @@ data "aws_iam_policy_document" "github_assume_role" {
 
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github.arn]
+      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
     }
 
     condition {
@@ -111,21 +115,21 @@ data "aws_iam_policy_document" "service_actions" {
 resource "aws_iam_role" "deploy" {
   name               = "${var.name}-deploy"
   assume_role_policy = data.aws_iam_policy_document.github_assume_role.json
+}
 
-  inline_policy {
-    name   = "deploy"
-    policy = data.aws_iam_policy_document.ecs_deploy.json
-  }
+resource "aws_iam_role_policy" "deploy" {
+  role = aws_iam_role.deploy.name
+  policy = data.aws_iam_policy_document.ecs_deploy.json
 }
 
 resource "aws_iam_role" "task_execution" {
   name               = "${var.name}-task-execution"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
+}
 
-  inline_policy {
-    name   = "logs"
-    policy = data.aws_iam_policy_document.ecs_logs.json
-  }
+resource "aws_iam_role_policy" "task_execution" {
+  role = aws_iam_role.task_execution.name
+  policy = data.aws_iam_policy_document.ecs_logs.json
 }
 
 resource "aws_iam_role_policy_attachment" "task_execution" {
@@ -136,10 +140,9 @@ resource "aws_iam_role_policy_attachment" "task_execution" {
 resource "aws_iam_role" "task" {
   name               = "${var.name}-task"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
+}
 
-  inline_policy {
-    name   = "service"
-    policy = data.aws_iam_policy_document.service_actions.json
-  }
-
+resource "aws_iam_role_policy" "task" {
+  role = aws_iam_role.task.name
+  policy = data.aws_iam_policy_document.service_actions.json
 }

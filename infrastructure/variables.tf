@@ -22,6 +22,11 @@ variable "name" {
   type = string
 }
 
+variable "environment" {
+  type = string
+  default = "production"
+}
+
 variable "activestorage" {
   type = object({
     s3_bucket = string
@@ -51,6 +56,16 @@ variable "root_domain" {
 variable "main_subdomain" {
   type        = string
   description = "Subdomain by which people will access the site. Do not include a dot."
+}
+
+variable "alias_subdomains" {
+  type = list(string)
+  default = []
+}
+
+variable "include_root_domain_alias" {
+  type = bool
+  default = false
 }
 
 variable "vpc_cidr" {
