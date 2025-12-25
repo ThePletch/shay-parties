@@ -5,7 +5,9 @@ on:
     branches: [staging]
 jobs:
   deploy-staging:
+    environment: staging
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: ./.github/workflows/deploy.yml
     with:
       environment: staging
+    secrets: inherit

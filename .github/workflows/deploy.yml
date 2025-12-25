@@ -6,6 +6,27 @@ on:
       environment:
         required: true
         type: string
+    secrets:
+      AWS_ECR_ROLE:
+        required: true
+      AWS_REGION:
+        required: true
+      AWS_ECR_REPOSITORY:
+        required: true
+      AWS_ECS_CLUSTER:
+        required: true
+      AWS_ECS_SERVICE:
+        required: true
+      DATABASE_USERNAME:
+        required: true
+      DATABASE_PASSWORD:
+        required: true
+      DATABASE_HOST:
+        required: true
+      DATABASE_PORT:
+        required: true
+      DATABASE_NAME:
+        required: true
 jobs:
   deploy:
     runs-on: ubuntu-latest
