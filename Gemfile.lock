@@ -111,8 +111,6 @@ GEM
     benchmark (0.5.0)
     bigdecimal (4.0.1)
     bindex (0.8.1)
-    bootstrap (5.3.5)
-      popper_js (>= 2.11.8, < 3)
     bootstrap_form (5.5.0)
       actionpack (>= 7.2)
       activemodel (>= 7.2)
@@ -252,7 +250,6 @@ GEM
       capybara (>= 2.1, < 4)
       cliver (~> 0.3.1)
       websocket-driver (>= 0.2.0)
-    popper_js (2.11.8)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -354,23 +351,7 @@ GEM
       ffi (~> 1.12)
       logger
     ruby2_keywords (0.0.5)
-    sassc (2.4.0)
-      ffi (~> 1.9)
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     securerandom (0.4.1)
-    sprockets (4.2.2)
-      concurrent-ruby (~> 1.0)
-      logger
-      rack (>= 2.2.4, < 4)
-    sprockets-rails (3.5.2)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-      sprockets (>= 3.0.0)
     stringio (3.2.0)
     temple (0.10.4)
     thor (1.4.0)
@@ -418,7 +399,6 @@ DEPENDENCIES
   activerecord-cockroachdb-adapter (~> 7.0, >= 7.0.1)
   add_to_calendar (~> 0.3.0)
   aws-sdk-s3 (~> 1.100)
-  bootstrap (~> 5.3)
   bootstrap_form (~> 5)
   byebug
   capybara (~> 3.35)
@@ -445,8 +425,6 @@ DEPENDENCIES
   rails-controller-testing (~> 1.0)
   rb-readline
   rspec-rails (~> 6.0)
-  sassc (~> 2.4)
-  sassc-rails
   tzinfo-data
   vite_rails (~> 3.0)
   web-console (>= 3.3.0)
