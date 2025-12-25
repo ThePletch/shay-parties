@@ -1,6 +1,13 @@
 # TODO pull environment into workflow input
 name: Deploy
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        # can be expanded to new environments later - no manual deploys to prod
+        options: [staging]
   workflow_call:
     inputs:
       environment:
