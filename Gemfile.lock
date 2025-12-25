@@ -100,7 +100,7 @@ GEM
     aws-sdk-kms (1.118.0)
       aws-sdk-core (~> 3, >= 3.239.1)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.209.0)
+    aws-sdk-s3 (1.208.0)
       aws-sdk-core (~> 3, >= 3.234.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -111,6 +111,8 @@ GEM
     benchmark (0.5.0)
     bigdecimal (4.0.1)
     bindex (0.8.1)
+    bootstrap (5.3.5)
+      popper_js (>= 2.11.8, < 3)
     bootstrap_form (5.5.0)
       actionpack (>= 7.2)
       activemodel (>= 7.2)
@@ -209,12 +211,8 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-<<<<<<< HEAD
-    loofah (2.24.0)
-=======
     logger (1.7.0)
     loofah (2.25.0)
->>>>>>> 7c85c50 (WIP)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.9.0)
@@ -241,22 +239,11 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
-<<<<<<< HEAD
-    nio4r (2.7.1)
-    nokogiri (1.18.3-aarch64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.3-aarch64-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.3-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.18.3-x86_64-linux-gnu)
-=======
     nio4r (2.7.5)
     nokogiri (1.18.10)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     nokogiri (1.18.10-arm64-darwin)
->>>>>>> 7c85c50 (WIP)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
@@ -265,6 +252,7 @@ GEM
       capybara (>= 2.1, < 4)
       cliver (~> 0.3.1)
       websocket-driver (>= 0.2.0)
+    popper_js (2.11.8)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -276,16 +264,11 @@ GEM
     puma (6.6.1)
       nio4r (~> 2.0)
     racc (1.8.1)
-<<<<<<< HEAD
-    rack (3.0.13)
-    rack-session (2.0.0)
-=======
     rack (3.2.4)
     rack-proxy (0.7.7)
       rack
     rack-session (2.1.1)
       base64 (>= 0.1.0)
->>>>>>> 7c85c50 (WIP)
       rack (>= 3.0.0)
     rack-test (2.2.0)
       rack (>= 1.3)
@@ -313,15 +296,6 @@ GEM
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
-<<<<<<< HEAD
-    rails-html-sanitizer (1.6.1)
-      loofah (~> 2.21)
-      nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
-    railties (7.1.3.4)
-      actionpack (= 7.1.3.4)
-      activesupport (= 7.1.3.4)
-      irb
-=======
     rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
@@ -330,7 +304,6 @@ GEM
       activesupport (= 7.2.3)
       cgi
       irb (~> 1.13)
->>>>>>> 7c85c50 (WIP)
       rackup (>= 1.0.0)
       rake (>= 12.2)
       thor (~> 1.0, >= 1.2.2)
@@ -344,7 +317,7 @@ GEM
     rb-readline (0.5.5)
     rb_sys (0.9.123)
       rake-compiler-dock (= 1.10.0)
-    rdoc (7.0.3)
+    rdoc (7.0.2)
       erb
       psych (>= 4.0.0)
       tsort
@@ -381,7 +354,23 @@ GEM
       ffi (~> 1.12)
       logger
     ruby2_keywords (0.0.5)
+    sassc (2.4.0)
+      ffi (~> 1.9)
+    sassc-rails (2.1.2)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     securerandom (0.4.1)
+    sprockets (4.2.2)
+      concurrent-ruby (~> 1.0)
+      logger
+      rack (>= 2.2.4, < 4)
+    sprockets-rails (3.5.2)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      sprockets (>= 3.0.0)
     stringio (3.2.0)
     temple (0.10.4)
     thor (1.4.0)
@@ -429,6 +418,7 @@ DEPENDENCIES
   activerecord-cockroachdb-adapter (~> 7.0, >= 7.0.1)
   add_to_calendar (~> 0.3.0)
   aws-sdk-s3 (~> 1.100)
+  bootstrap (~> 5.3)
   bootstrap_form (~> 5)
   byebug
   capybara (~> 3.35)
@@ -455,6 +445,8 @@ DEPENDENCIES
   rails-controller-testing (~> 1.0)
   rb-readline
   rspec-rails (~> 6.0)
+  sassc (~> 2.4)
+  sassc-rails
   tzinfo-data
   vite_rails (~> 3.0)
   web-console (>= 3.3.0)
