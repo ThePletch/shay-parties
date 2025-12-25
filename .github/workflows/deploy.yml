@@ -1,5 +1,12 @@
 name: Deploy
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        # to be expanded
+        options: [staging]
   workflow_call:
     inputs:
       environment:
