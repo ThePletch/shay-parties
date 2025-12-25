@@ -1,5 +1,4 @@
 locals {
-  environment_name = "production"
   plaintext_secrets = {
     AWS_ECR_REPOSITORY = aws_ecr_repository.main.name
     AWS_ECR_ROLE       = aws_iam_role.deploy.arn
@@ -21,7 +20,7 @@ data "github_repository" "main" {
 
 # Pending work to modularize this to support multiple environments
 resource "github_repository_environment" "deploy_env" {
-  environment = local.environment_name
+  environment = var.environment
   repository  = data.github_repository.main.name
 }
 

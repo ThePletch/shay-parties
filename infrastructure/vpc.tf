@@ -4,13 +4,17 @@ data "aws_availability_zones" "all_azs" {
 
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
+
+  tags = {
+    Name = "partiesforall-${var.environment}"
+  }
 }
 
 resource "aws_subnet" "public" {
-  count             = length(data.aws_availability_zones.all_azs.names)
+  for_each = toset(data.aws_availability_zones.all_azs.names)
   vpc_id            = aws_vpc.main.id
-  availability_zone = data.aws_availability_zones.all_azs.names[count.index]
-  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 4, count.index)
+  availability_zone = each.key
+  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 4, index(data.aws_availability_zones.all_azs.names, each.key))
 }
 
 resource "aws_internet_gateway" "main" {
@@ -28,8 +32,8 @@ resource "aws_route" "public_igw" {
 }
 
 resource "aws_route_table_association" "public" {
-  for_each       = toset(aws_subnet.public.*.id)
-  subnet_id      = each.key
+  for_each       = aws_subnet.public
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
 

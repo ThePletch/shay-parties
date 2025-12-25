@@ -1,0 +1,85 @@
+// Place all the styles related to the Events controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+/*
+ *= require jquery-ui/datepicker
+ *= require jquery-ui/slider
+ *= require jquery-ui-timepicker-addon
+ */
+
+ @import "flatpickr/dist/themes/material_blue.css";
+ @import "comments";
+
+
+ $hero-gradient-height: 200px;
+
+ .hero {
+    width: 100%;
+ }
+
+.hero-image {
+    position: relative;
+}
+
+.hero-image::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    height: $hero-gradient-height;
+    background-image: linear-gradient(to bottom, transparent 0%, white 100%);
+}
+
+.hero-image img {
+    max-width: 100%;
+}
+
+.hero-title {
+    position: relative;
+    bottom: 5vh;
+}
+
+#photo-preview {
+    object-fit: cover;
+    max-height: Min(500px, 26vw);
+    width: 100%;
+    object-position: top;
+}
+
+.poll-response-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #bbf;
+}
+
+.poll-response-label {
+    position: relative;
+}
+
+.emojified-warning {
+    span, em, strong {
+        &::before, &::after {
+            content: '⚠️';
+            margin: 1em;
+        }
+    }
+}
+
+.marked-checkbox + label::before {
+    content: '☐';
+    margin-right: 0.5em;
+}
+
+.marked-checkbox:checked + label::before {
+    content: '☑';
+    margin-right: 0.5em;
+}
+
+#fetch-error, #fetch-in-progress {
+    display: none;
+}

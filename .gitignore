@@ -47,3 +47,9 @@ storage/*
 *.tfstate
 
 /config/credentials/*.key
+
+node_modules
+public/vite-dev
+/config/master.key
+
+/config/credentials/staging.key

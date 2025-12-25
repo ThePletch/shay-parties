@@ -1,0 +1,101 @@
+{
+  "_default_event_image-CQFTa27C.jpg": {
+    "file": "assets/default_event_image-CQFTa27C.jpg",
+    "src": "_default_event_image-CQFTa27C.jpg"
+  },
+  "_jquery-CbzS8guM.js": {
+    "file": "assets/jquery-CbzS8guM.js",
+    "name": "jquery"
+  },
+  "entrypoints/application.scss": {
+    "file": "assets/application-BhcL7cTS.css",
+    "src": "entrypoints/application.scss",
+    "isEntry": true,
+    "name": "entrypoints/application.scss",
+    "names": [
+      "entrypoints/application.css"
+    ]
+  },
+  "entrypoints/application.ts": {
+    "file": "assets/application-D5jcB-qA.js",
+    "name": "entrypoints/application.ts",
+    "src": "entrypoints/application.ts",
+    "isEntry": true,
+    "imports": [
+      "entrypoints/tooltips.ts",
+      "entrypoints/prepend.ts",
+      "_jquery-CbzS8guM.js"
+    ]
+  },
+  "entrypoints/comments.ts": {
+    "file": "assets/comments-bOP6UAp3.js",
+    "name": "entrypoints/comments.ts",
+    "src": "entrypoints/comments.ts",
+    "isEntry": true,
+    "imports": [
+      "_jquery-CbzS8guM.js"
+    ]
+  },
+  "entrypoints/cropping.ts": {
+    "file": "assets/cropping-_Y2tn-HA.js",
+    "name": "entrypoints/cropping.ts",
+    "src": "entrypoints/cropping.ts",
+    "isEntry": true,
+    "imports": [
+      "_jquery-CbzS8guM.js"
+    ]
+  },
+  "entrypoints/events.ts": {
+    "file": "assets/events-BVilaNPW.js",
+    "name": "entrypoints/events.ts",
+    "src": "entrypoints/events.ts",
+    "isEntry": true,
+    "imports": [
+      "_jquery-CbzS8guM.js",
+      "entrypoints/cropping.ts",
+      "entrypoints/form.ts"
+    ]
+  },
+  "entrypoints/form.ts": {
+    "file": "assets/form-BRp_AfEA.js",
+    "name": "entrypoints/form.ts",
+    "src": "entrypoints/form.ts",
+    "isEntry": true,
+    "imports": [
+      "_jquery-CbzS8guM.js"
+    ]
+  },
+  "entrypoints/prepend.ts": {
+    "file": "assets/prepend-DTZH8V77.js",
+    "name": "entrypoints/prepend.ts",
+    "src": "entrypoints/prepend.ts",
+    "isEntry": true,
+    "imports": [
+      "_jquery-CbzS8guM.js"
+    ]
+  },
+  "entrypoints/stylesheets/comments.scss": {
+    "file": "assets/comments-BDqF94ZJ.css",
+    "src": "entrypoints/stylesheets/comments.scss",
+    "isEntry": true,
+    "name": "entrypoints/stylesheets/comments.scss",
+    "names": [
+      "entrypoints/stylesheets/comments.css"
+    ]
+  },
+  "entrypoints/stylesheets/events.scss": {
+    "file": "assets/events-w1ROXh1f.css",
+    "src": "entrypoints/stylesheets/events.scss",
+    "isEntry": true,
+    "name": "entrypoints/stylesheets/events.scss",
+    "names": [
+      "entrypoints/stylesheets/events.css"
+    ]
+  },
+  "entrypoints/tooltips.ts": {
+    "file": "assets/tooltips-CrJFw952.js",
+    "name": "entrypoints/tooltips.ts",
+    "src": "entrypoints/tooltips.ts",
+    "isEntry": true
+  }
+}

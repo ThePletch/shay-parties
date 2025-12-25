@@ -1,0 +1,1 @@
+import{b as t,P as i}from"./tooltips-CrJFw952.js";import{i as n}from"./prepend-DTZH8V77.js";import"./jquery-CbzS8guM.js";window.bootstrap=t;function o(){document.querySelectorAll('[data-bs-toggle="popover"]').forEach(e=>new i(e))}window.addEventListener("load",o);window.addEventListener("load",n);window.addEventListener("turbo:render",o);
