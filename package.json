@@ -1,6 +1,9 @@
 {
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "~>24"
+  },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
