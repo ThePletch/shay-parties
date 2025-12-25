@@ -1,0 +1,11 @@
+on:
+  workflow_run:
+    workflows: [Run tests]
+    types: [completed]
+    branches: [master]
+jobs:
+  deploy-prod:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: production
