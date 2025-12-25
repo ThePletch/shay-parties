@@ -53,3 +53,5 @@ public/vite-dev
 /config/master.key
 
 /config/credentials/staging.key
+
+/config/credentials/production.key

@@ -1,7 +1,7 @@
 locals {
-  main_domain = "${var.main_subdomain}.${var.root_domain}"
+  main_domain = var.main_subdomain == "" ? var.root_domain : "${var.main_subdomain}.${var.root_domain}"
   cdn_origin  = "PartiesServiceDiscovery"
-  aliases = concat([for alias in var.alias_subdomains : "${alias}.${var.root_domain}"], var.include_root_domain_alias ? [var.root_domain] : [])
+  aliases = concat([local.main_domain], [for alias in var.alias_subdomains : "${alias}.${var.root_domain}"], var.include_root_domain_alias ? [var.root_domain] : [])
 }
 
 # you need to use this one for the ACM cert because Cloudfront is xenophobic
