@@ -110,4 +110,4 @@ jobs:
           -e SECRET_KEY_BASE_DUMMY=1 \
           --env-file <(printenv | grep DATABASE_) \
           $ECR_IMAGE \
-          bundle exec rails db:migrate
+          bundle exec rails db:setup
