@@ -37,6 +37,7 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version-file: package.json
+    - run: npm ci
     - name: Set up database
       run: bundle exec rails db:setup
     - name: Test with Rspec
