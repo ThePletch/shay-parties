@@ -6,8 +6,8 @@ on:
       environment:
         required: true
         type: choice
-        # can be expanded to new environments later - no manual deploys to prod
-        options: [staging]
+        # manual deploys to prod will be limited to master by environment rules
+        options: [production, staging]
   workflow_call:
     inputs:
       environment:
