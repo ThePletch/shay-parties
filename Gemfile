@@ -42,7 +42,7 @@ gem 'devise', '~> 4.8'
 # markdown for descriptions
 gem 'commonmarker', '~> 1.0.0.pre9'
 
-gem 'aws-sdk-s3', '~> 1.100', require: false
+gem 'aws-sdk-s3', '~> 1.208', require: false
 gem 'image_processing', '~> 1.2'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
