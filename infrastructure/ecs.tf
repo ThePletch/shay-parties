@@ -20,6 +20,7 @@ locals {
   }
   capacity_provider = "FARGATE_SPOT"
 }
+
 resource "aws_ecr_repository" "main" {
   name = "${var.name}-images"
 }
@@ -75,6 +76,15 @@ resource "aws_ecs_service" "main" {
     assign_public_ip = true
   }
 
+  service_connect_configuration {
+    enabled = true
+    namespace = aws_service_discovery_public_dns_namespace.public_ipv6.arn
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.public.arn
+  }
+
   capacity_provider_strategy {
     base              = 1
     capacity_provider = local.capacity_provider
@@ -112,6 +122,7 @@ resource "aws_ecs_task_definition" "main" {
       essential = true
       portMappings = [
         {
+          name = "http"
           protocol      = "tcp"
           hostPort      = var.internal_port
           containerPort = var.internal_port

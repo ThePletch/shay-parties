@@ -7,6 +7,10 @@ on:
         type: choice
         # manual deploys to prod will be limited to master by environment rules
         options: [production, staging]
+      createdb:
+        required: true
+        type: boolean
+        default: false
   workflow_call:
     inputs:
       environment:
@@ -96,8 +100,9 @@ jobs:
         SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
       run: |
         aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
-    # This step assumes that the database is accessible from the public internet.
-    - name: Run migrations
+    # These steps assume that the database is accessible from the public internet.
+    - name: Create database
+      if: inputs.createdb
       env:
         DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
@@ -114,3 +119,21 @@ jobs:
           --env-file <(printenv | grep DATABASE_) \
           $ECR_IMAGE \
           bundle exec rails db:setup
+      
+    - name: Run migrations
+      env:
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+        ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+      run: |
+        docker run \
+          --rm \
+          -e RAILS_ENV=${{ inputs.environment }} \
+          -e RAILS_MASTER_KEY="$RAILS_MASTER_KEY" \
+          --env-file <(printenv | grep DATABASE_) \
+          $ECR_IMAGE \
+          bundle exec rails db:migrate

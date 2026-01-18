@@ -4,6 +4,7 @@ data "aws_availability_zones" "all_azs" {
 
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
+  assign_generated_ipv6_cidr_block = true
 
   tags = {
     Name = "partiesforall-${var.environment}"
@@ -15,6 +16,8 @@ resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.main.id
   availability_zone = each.key
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 4, index(data.aws_availability_zones.all_azs.names, each.key))
+  ipv6_cidr_block = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, index(data.aws_availability_zones.all_azs.names, each.key))
+  assign_ipv6_address_on_creation = true
 }
 
 resource "aws_internet_gateway" "main" {
@@ -29,6 +32,12 @@ resource "aws_route" "public_igw" {
   route_table_id         = aws_route_table.public.id
   gateway_id             = aws_internet_gateway.main.id
   destination_cidr_block = "0.0.0.0/0"
+}
+
+resource "aws_route" "public_igw_ipv6" {
+  route_table_id         = aws_route_table.public.id
+  gateway_id             = aws_internet_gateway.main.id
+  destination_ipv6_cidr_block = "::/0"
 }
 
 resource "aws_route_table_association" "public" {

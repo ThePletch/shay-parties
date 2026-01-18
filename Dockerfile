@@ -28,7 +28,7 @@ RUN npm install
 ARG PORT
 ENV PORT=${PORT}
 COPY . .
-CMD bundle exec rails server -b 0.0.0.0 -p $PORT
+CMD bundle exec rails server -b :: -p $PORT
 
 # ==== DEPLOYABLE CONTAINER STAGES ====
 

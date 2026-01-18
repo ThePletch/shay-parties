@@ -1,3 +1,6 @@
+locals {
+  service_discovery_domain = "sdtest.${var.main_subdomain}.${var.root_domain}"
+}
 data "aws_iam_policy_document" "discovery_hook_policy" {
   statement {
     actions = [
@@ -58,4 +61,34 @@ resource "aws_lambda_permission" "event_invoke_lambda" {
 resource "aws_cloudwatch_event_target" "lambda" {
   rule = aws_cloudwatch_event_rule.task_start_stop.name
   arn  = module.service_discovery_lambda.arn
+}
+
+resource "aws_service_discovery_public_dns_namespace" "public_ipv6" {
+  name = local.service_discovery_domain
+}
+
+data "aws_route53_zone" "service_discovery_namespace" {
+  zone_id = aws_service_discovery_public_dns_namespace.public_ipv6.hosted_zone
+}
+
+// route subdomain traffic to the SD namespace instead
+resource "aws_route53_record" "subdomain_routing" {
+  zone_id = data.aws_route53_zone.root_domain.zone_id
+  type = "NS"
+  name = local.service_discovery_domain
+  ttl = 172800
+  records = data.aws_route53_zone.service_discovery_namespace.name_servers
+}
+
+resource "aws_service_discovery_service" "public" {
+  name = "${var.environment}-partiesforall"
+
+  dns_config {
+    namespace_id = aws_service_discovery_public_dns_namespace.public_ipv6.id
+
+    dns_records {
+      ttl = 30
+      type = "A"
+    }
+  }
 }
