@@ -6,8 +6,8 @@ locals {
     DATABASE_HOST     = var.database.host
     DATABASE_NAME     = "${var.database.cluster_name}.${var.database.database}"
     DATABASE_PORT     = tostring(var.database.port)
-    RACK_ENV          = "production"
-    RAILS_ENV         = "production"
+    RACK_ENV          = var.environment
+    RAILS_ENV         = var.environment
     # Eventually we'll want to move compiled assets into the
     # same object storage we use for image hosting.
     RAILS_SERVE_STATIC_FILES = "true"
