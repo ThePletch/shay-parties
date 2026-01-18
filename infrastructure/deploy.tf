@@ -9,7 +9,7 @@ locals {
     DATABASE_PASSWORD  = var.database.password
     DATABASE_HOST      = var.database.host
     DATABASE_PORT      = var.database.port
-    DATABASE_NAME      = "${var.database.cluster_name}.${var.database.database}"
+    DATABASE_NAME      = var.database.database
     RAILS_MASTER_KEY   = data.local_sensitive_file.master_key.content
   }
 }
