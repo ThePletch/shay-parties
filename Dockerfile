@@ -2,6 +2,10 @@ FROM timbru31/ruby-node:3.5-slim-24 AS baseline
 
 WORKDIR /usr/src/app
 
+# delete old nodesource, which doesn't get updated upon key refresh and still tries to use SHA1
+RUN rm -f /etc/apt/sources.list.d/nodesource.list
+# fetch new gpg key for downloading nodejs
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /usr/share/keyrings/nodesource.gpg
 RUN apt update -y && apt upgrade -y && apt install postgresql -y
 RUN gem update bundler
 RUN bundle config set path 'vendor/bundle'
@@ -16,8 +20,7 @@ RUN apt install -y \
     libffi-dev \
     # needed for certain rust native extensions
     libclang-dev \
-    # used to simplify local debugging - not big enough to be a problem
-    # for production deployments
+    # used to simplify local debugging - not big enough to be a problem for production deployments
     vim
 RUN bundle config set with ${ENVIRONMENT}
 RUN bundle config build.ffi --enable-system-libffi
