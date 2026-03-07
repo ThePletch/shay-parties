@@ -64,6 +64,16 @@ data "aws_iam_policy_document" "ecs_logs" {
   }
 }
 
+data "aws_iam_policy_document" "ecs_task_execution_secrets" {
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+    ]
+    resources = [for secret in aws_secretsmanager_secret.application : secret.arn]
+  }
+}
+
 data "aws_iam_policy_document" "ecs_deploy" {
   statement {
     actions = [
@@ -135,6 +145,11 @@ resource "aws_iam_role_policy" "task_execution" {
 resource "aws_iam_role_policy_attachment" "task_execution" {
   role       = aws_iam_role.task_execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy" "task_execution_secrets" {
+  role   = aws_iam_role.task_execution.name
+  policy = data.aws_iam_policy_document.ecs_task_execution_secrets.json
 }
 
 resource "aws_iam_role" "task" {

@@ -27,6 +27,9 @@ module "certificate" {
 
 resource "aws_cloudfront_distribution" "cdn" {
   enabled = true
+  is_ipv6_enabled = true
+  http_version = "http2and3"
+  price_class = "PriceClass_100"
 
   aliases = local.aliases
 
@@ -50,13 +53,15 @@ resource "aws_cloudfront_distribution" "cdn" {
       origin_protocol_policy = "http-only"
       http_port              = var.internal_port
       https_port             = 443
-      origin_ssl_protocols   = ["TLSv1.2"]
+      origin_ssl_protocols   = ["SSLv3","TLSv1","TLSv1.1","TLSv1.2"]
+      ip_address_type = "ipv6"
     }
   }
 
   viewer_certificate {
     acm_certificate_arn = module.certificate.arn
     ssl_support_method  = "sni-only"
+    minimum_protocol_version = "TLSv1.3_2025"
   }
 
   restrictions {

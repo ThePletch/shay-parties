@@ -9,7 +9,6 @@ variable "github" {
 variable "database" {
   type = object({
     host         = string
-    cluster_name = string
     port         = optional(number, 5432)
     username     = string
     password     = string

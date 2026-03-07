@@ -4,7 +4,7 @@ locals {
     AWS_ECR_ROLE       = aws_iam_role.deploy.arn
     AWS_ECS_CLUSTER    = aws_ecs_cluster.main.name
     AWS_ECS_SERVICE    = aws_ecs_service.main.name
-    AWS_REGION         = data.aws_region.current.name
+    AWS_REGION         = data.aws_region.current.region
     DATABASE_USERNAME  = var.database.username
     DATABASE_PASSWORD  = var.database.password
     DATABASE_HOST      = var.database.host

@@ -1,10 +1,22 @@
+locals {
+  endpoint_services = [
+    # accessing ecr/ecs through endpoints is required for ipv6-only stacks
+    "ecr.api",
+    "ecr.dkr",
+    "ecs",
+    "ecs-agent",
+    "ecs-telemetry"
+  ]
+}
+
 data "aws_availability_zones" "all_azs" {
   state = "available"
 }
 
 resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr
   assign_generated_ipv6_cidr_block = true
+  enable_dns_hostnames = true
+  enable_dns_support = true
 
   tags = {
     Name = "partiesforall-${var.environment}"
@@ -14,10 +26,13 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "public" {
   for_each = toset(data.aws_availability_zones.all_azs.names)
   vpc_id            = aws_vpc.main.id
-  availability_zone = each.key
-  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 4, index(data.aws_availability_zones.all_azs.names, each.key))
-  ipv6_cidr_block = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, index(data.aws_availability_zones.all_azs.names, each.key))
+  availability_zone = each.value
+  ipv6_native = true
+  ipv6_cidr_block = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, index(data.aws_availability_zones.all_azs.names, each.value))
   assign_ipv6_address_on_creation = true
+  enable_resource_name_dns_aaaa_record_on_launch = true
+  enable_dns64 = true
+  private_dns_hostname_type_on_launch = "resource-name"
 }
 
 resource "aws_internet_gateway" "main" {
@@ -54,7 +69,6 @@ resource "aws_security_group" "http" {
     from_port        = var.internal_port
     to_port          = var.internal_port
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
 
@@ -62,7 +76,7 @@ resource "aws_security_group" "http" {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }

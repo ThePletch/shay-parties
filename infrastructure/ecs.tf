@@ -1,13 +1,8 @@
 locals {
+  # Non-sensitive application environment variables that can be embedded directly
   application_env_vars = {
-    RAILS_MASTER_KEY  = data.local_sensitive_file.master_key.content
-    DATABASE_USERNAME = var.database.username
-    DATABASE_PASSWORD = var.database.password
-    DATABASE_HOST     = var.database.host
-    DATABASE_NAME     = "${var.database.cluster_name}.${var.database.database}"
-    DATABASE_PORT     = tostring(var.database.port)
-    RACK_ENV          = var.environment
-    RAILS_ENV         = var.environment
+    RACK_ENV                = var.environment
+    RAILS_ENV               = var.environment
     # Eventually we'll want to move compiled assets into the
     # same object storage we use for image hosting.
     RAILS_SERVE_STATIC_FILES = "true"
@@ -15,10 +10,44 @@ locals {
     ACTIVE_STORAGE_S3_BUCKET = var.activestorage.s3_bucket
     PARTIES_FULL_DOMAIN      = local.main_domain
     PARTIES_BASE_DOMAIN      = var.root_domain
-    SES_SMTP_USERNAME        = var.smtp.username
-    SES_SMTP_PASSWORD        = var.smtp.password
   }
+
+  # Sensitive application environment variables stored in AWS Secrets Manager
+  application_sensitive_env_vars = {
+    RAILS_MASTER_KEY  = data.local_sensitive_file.master_key.content
+    DATABASE_USERNAME = var.database.username
+    DATABASE_PASSWORD = var.database.password
+    DATABASE_HOST     = var.database.host
+    DATABASE_NAME     = var.database.database
+    DATABASE_PORT     = tostring(var.database.port)
+    SES_SMTP_USERNAME = var.smtp.username
+    SES_SMTP_PASSWORD = var.smtp.password
+  }
+
   capacity_provider = "FARGATE_SPOT"
+  # default domain is not listening for ipv6 requests, so we need to use the `on.aws` domain for dualstack support
+  dualstack_registry_endpoint = replace(
+    replace(
+      aws_ecr_repository.main.repository_url,
+      "amazonaws.com",
+      "on.aws"
+    ),
+    "dkr.ecr",
+    "dkr-ecr"
+  )
+}
+
+resource "aws_secretsmanager_secret" "application" {
+  for_each = local.application_sensitive_env_vars
+
+  name = "${var.name}/${each.key}"
+}
+
+resource "aws_secretsmanager_secret_version" "application" {
+  for_each = local.application_sensitive_env_vars
+
+  secret_id     = aws_secretsmanager_secret.application[each.key].id
+  secret_string = each.value
 }
 
 resource "aws_ecr_repository" "main" {
@@ -118,7 +147,7 @@ resource "aws_ecs_task_definition" "main" {
   container_definitions = jsonencode([
     {
       name      = "rails"
-      image     = "${aws_ecr_repository.main.repository_url}:latest"
+      image     = "${local.dualstack_registry_endpoint}:latest"
       essential = true
       portMappings = [
         {
@@ -134,6 +163,16 @@ resource "aws_ecs_task_definition" "main" {
           value = value
         }
       ]
+      secrets = [
+        for name, secret in aws_secretsmanager_secret.application : {
+          name      = name
+          valueFrom = secret.arn
+        }
+      ]
+      healthCheck = {
+        command = [ "CMD-SHELL", "curl -f http://localhost:${var.internal_port}/ || exit 1" ]
+        startPeriod = 30
+      }
       logConfiguration = {
         logDriver = "awslogs",
         options = {
