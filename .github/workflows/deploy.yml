@@ -27,18 +27,8 @@ on:
         required: true
       AWS_ECS_SERVICE:
         required: true
-      DATABASE_USERNAME:
-        required: true
-      DATABASE_PASSWORD:
-        required: true
-      DATABASE_HOST:
-        required: true
-      DATABASE_PORT:
-        required: true
-      DATABASE_NAME:
-        required: true
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     permissions:
@@ -50,8 +40,6 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v2
       with:
         role-to-assume: ${{ secrets.AWS_ECR_ROLE }}
-        # not a secret, but you can only configure secrets with the Github Terraform provider,
-        # not environment variables.
         aws-region: ${{ secrets.AWS_REGION }}
     - name: Log in to AWS ECR
       id: login-ecr
@@ -93,47 +81,90 @@ jobs:
         cache-to: |
           type=gha
         target: server-shrinkwrapped
-    # TODO split this into a separate dependent job
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    needs: [build]
+    outputs:
+      task-definition-arn: ${{ steps.trigger-deploy.outputs.task-definition-arn }}
+      network-config: ${{ steps.trigger-deploy.outputs.network-config }}
+    steps:
     - name: Trigger deploy of ECS service
+      id: trigger-deploy
       env:
         CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
         SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
       run: |
-        aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
-    # These steps assume that the database is accessible from the public internet.
+        aws ecs update-service --cluster $CLUSTER \
+          --service $SERVICE \
+          --force-new-deployment  \
+          > service-info.json
+        echo "task-definition-arn=$(jq '.service.taskDefinition' service-info.json -r)" >> $GITHUB_OUTPUT
+        
+        echo "network-config=<<EOF" >> $GITHUB_OUTPUT
+        jq '.service.networkConfiguration' service-info.json -r >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
+  migrate:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    needs: [deploy]
+    steps:
     - name: Create database
       if: inputs.createdb
       env:
-        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-        RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-        ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        TASK_NETWORK_CONFIG: ${{ needs.deploy.outputs.network-config }}
+        CONTAINER_OVERRIDES: >
+          {
+            "containerOverrides": [
+              {
+                "name": "rails",
+                "command": [
+                  "bundle",
+                  "exec",
+                  "rails",
+                  "db:setup"
+                ]
+              }
+            ]
+          }
       run: |
-        docker run \
-          --rm \
-          -e RAILS_ENV=${{ inputs.environment }} \
-          -e RAILS_MASTER_KEY="$RAILS_MASTER_KEY" \
-          --env-file <(printenv | grep DATABASE_) \
-          $ECR_IMAGE \
-          bundle exec rails db:setup
-      
+        # doesn't wait for task completion before exiting - we can use `aws ecs wait` if we need to do
+        # post-migration tasks in the future.
+        aws ecs run-task \
+          --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+          --task-definition ${{ needs.deploy.outputs.task-definition-arn }} \
+          --network-configuration "$TASK_NETWORK_CONFIG" \
+          --overrides "$CONTAINER_OVERRIDES"
+    # heavily copypasted - find a way to just switch the base rails command?
     - name: Run migrations
+      if: ${{ ! inputs.createdb }}
       env:
-        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-        RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-        ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        TASK_NETWORK_CONFIG: ${{ needs.deploy.outputs.network-config }}
+        CONTAINER_OVERRIDES: >
+          {
+            "containerOverrides": [
+              {
+                "name": "rails",
+                "command": [
+                  "bundle",
+                  "exec",
+                  "rails",
+                  "db:migrate"
+                ]
+              }
+            ]
+          }
       run: |
-        docker run \
-          --rm \
-          -e RAILS_ENV=${{ inputs.environment }} \
-          -e RAILS_MASTER_KEY="$RAILS_MASTER_KEY" \
-          --env-file <(printenv | grep DATABASE_) \
-          $ECR_IMAGE \
-          bundle exec rails db:migrate
+        # doesn't wait for task completion before exiting - we can use `aws ecs wait` if we need to do
+        # post-migration tasks in the future.
+        aws ecs run-task \
+          --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+          --task-definition ${{ needs.deploy.outputs.task-definition-arn }} \
+          --network-configuration "$TASK_NETWORK_CONFIG" \
+          --overrides "$CONTAINER_OVERRIDES"
