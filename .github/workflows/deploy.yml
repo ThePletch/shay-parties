@@ -16,6 +16,10 @@ on:
       environment:
         required: true
         type: string
+      createdb:
+        required: false
+        type: boolean
+        default: false
     secrets:
       AWS_ECR_ROLE:
         required: true
@@ -35,7 +39,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v6
       with:
@@ -108,11 +112,13 @@ jobs:
           --service $SERVICE \
           --force-new-deployment  \
           > service-info.json
-        echo "task-definition-arn=$(jq '.service.taskDefinition' service-info.json -r)" >> $GITHUB_OUTPUT
-        
-        echo "network-config=<<EOF" >> $GITHUB_OUTPUT
-        jq '.service.networkConfiguration' service-info.json -r >> $GITHUB_OUTPUT
-        echo 'EOF' >> $GITHUB_OUTPUT
+        echo "task-definition-arn=$(jq '.service.taskDefinition' service-info.json -r)" >> "$GITHUB_OUTPUT"
+
+        {
+          echo 'network-config<<EOF'
+          jq '.service.networkConfiguration' service-info.json -r
+          echo 'EOF'
+        } >> "$GITHUB_OUTPUT"
   migrate:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
