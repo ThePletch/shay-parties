@@ -35,9 +35,9 @@ jobs:
       id-token: write
       contents: read
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v6
       with:
         role-to-assume: ${{ secrets.AWS_ECR_ROLE }}
         aws-region: ${{ secrets.AWS_REGION }}
@@ -92,6 +92,11 @@ jobs:
       task-definition-arn: ${{ steps.trigger-deploy.outputs.task-definition-arn }}
       network-config: ${{ steps.trigger-deploy.outputs.network-config }}
     steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v6
+      with:
+        role-to-assume: ${{ secrets.AWS_ECR_ROLE }}
+        aws-region: ${{ secrets.AWS_REGION }}
     - name: Trigger deploy of ECS service
       id: trigger-deploy
       env:
@@ -116,6 +121,11 @@ jobs:
       contents: read
     needs: [deploy]
     steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v6
+      with:
+        role-to-assume: ${{ secrets.AWS_ECR_ROLE }}
+        aws-region: ${{ secrets.AWS_REGION }}
     - name: Create database
       if: inputs.createdb
       env:
