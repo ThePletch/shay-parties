@@ -138,6 +138,7 @@ jobs:
         # post-migration tasks in the future.
         aws ecs run-task \
           --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+          --launch-type FARGATE \
           --task-definition ${{ needs.deploy.outputs.task-definition-arn }} \
           --network-configuration "$TASK_NETWORK_CONFIG" \
           --overrides "$CONTAINER_OVERRIDES"
@@ -165,6 +166,7 @@ jobs:
         # post-migration tasks in the future.
         aws ecs run-task \
           --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+          --launch-type FARGATE \
           --task-definition ${{ needs.deploy.outputs.task-definition-arn }} \
           --network-configuration "$TASK_NETWORK_CONFIG" \
           --overrides "$CONTAINER_OVERRIDES"
