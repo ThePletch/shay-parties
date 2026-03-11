@@ -97,6 +97,7 @@ jobs:
       env:
         CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
         SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: |
         aws ecs update-service --cluster $CLUSTER \
           --service $SERVICE \
@@ -118,6 +119,7 @@ jobs:
     - name: Create database
       if: inputs.createdb
       env:
+        AWS_REGION: ${{ secrets.AWS_REGION }}
         TASK_NETWORK_CONFIG: ${{ needs.deploy.outputs.network-config }}
         CONTAINER_OVERRIDES: >
           {
@@ -146,6 +148,7 @@ jobs:
     - name: Run migrations
       if: ${{ ! inputs.createdb }}
       env:
+        AWS_REGION: ${{ secrets.AWS_REGION }}
         TASK_NETWORK_CONFIG: ${{ needs.deploy.outputs.network-config }}
         CONTAINER_OVERRIDES: >
           {
