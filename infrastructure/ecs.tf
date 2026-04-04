@@ -40,7 +40,7 @@ locals {
 resource "aws_ssm_parameter" "application" {
   for_each = local.application_sensitive_env_vars
 
-  name = "${var.name}/${each.key}"
+  name = "/${var.environment}/${var.name}/${each.key}"
   type = "SecureString"
   value = each.value
 }

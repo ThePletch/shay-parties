@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "ecs_task_execution_secrets" {
       # all read-only actions that can be scoped to individual params, e.g. GetParameterByPath
       "ssm:GetParameter*",
     ]
-    resources = [for secret in aws_secretsmanager_secret.application : secret.arn]
+    resources = [for secret in aws_ssm_parameter.application : secret.arn]
   }
 
   statement {
