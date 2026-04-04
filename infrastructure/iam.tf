@@ -7,6 +7,7 @@ data "tls_certificate" "github" {
   url = local.github_oidc_url
 }
 
+# # uncomment to set up initial OIDC - shared across all of your configs with GH access, so only do this once
 # resource "aws_iam_openid_connect_provider" "github" {
 #   url = local.github_oidc_url
 
@@ -67,10 +68,17 @@ data "aws_iam_policy_document" "ecs_logs" {
 data "aws_iam_policy_document" "ecs_task_execution_secrets" {
   statement {
     actions = [
-      "secretsmanager:GetSecretValue",
-      "secretsmanager:DescribeSecret",
+      # all read-only actions that can be scoped to individual params, e.g. GetParameterByPath
+      "ssm:GetParameter*",
     ]
     resources = [for secret in aws_secretsmanager_secret.application : secret.arn]
+  }
+
+  statement {
+    actions = [
+      "ssm:DescribeParameters",
+    ]
+    resources = ["*"]
   }
 }
 

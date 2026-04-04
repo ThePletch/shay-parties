@@ -12,7 +12,7 @@ locals {
     PARTIES_BASE_DOMAIN      = var.root_domain
   }
 
-  # Sensitive application environment variables stored in AWS Secrets Manager
+  # Sensitive application environment variables stored in secured AWS SSM Parameters
   application_sensitive_env_vars = {
     RAILS_MASTER_KEY  = data.local_sensitive_file.master_key.content
     DATABASE_USERNAME = var.database.username
@@ -37,17 +37,12 @@ locals {
   )
 }
 
-resource "aws_secretsmanager_secret" "application" {
+resource "aws_ssm_parameter" "application" {
   for_each = local.application_sensitive_env_vars
 
   name = "${var.name}/${each.key}"
-}
-
-resource "aws_secretsmanager_secret_version" "application" {
-  for_each = local.application_sensitive_env_vars
-
-  secret_id     = aws_secretsmanager_secret.application[each.key].id
-  secret_string = each.value
+  type = "SecureString"
+  value = each.value
 }
 
 resource "aws_ecr_repository" "main" {
@@ -164,7 +159,7 @@ resource "aws_ecs_task_definition" "main" {
         }
       ]
       secrets = [
-        for name, secret in aws_secretsmanager_secret.application : {
+        for name, secret in aws_ssm_parameter.application : {
           name      = name
           valueFrom = secret.arn
         }
