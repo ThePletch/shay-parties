@@ -113,8 +113,6 @@ jobs:
           --service $SERVICE \
           --force-new-deployment  \
           > service-info.json
-        # dump full output for debugging
-        cat service-info.json | jq .
         echo "task-definition-arn=$(jq '.service.taskDefinition' service-info.json -r)" >> "$GITHUB_OUTPUT"
 
         {
