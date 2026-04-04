@@ -1,4 +1,6 @@
 - row_id = f.object.persisted? ? "poll_#{f.object.id}" : "poll__timestamp_"
+- # Prepend template (event "add poll") uses _timestamp_ so each appended poll gets unique nested control ids; normal fields_for rows use id/object_id.
+- add_poll_response_dom_id = (f.options[:child_index].to_s == 'added_poll') ? 'add-poll-response-_timestamp_' : "add-poll-response-#{f.object.persisted? ? f.object.id : f.object.object_id}"
 - if f.object.errors.any?
   %div{class: "poll_error_explanation_#{f.object.id}"}
     %h2= t('poll.form.errors_msg', count: f.object.errors.count)
@@ -16,4 +18,4 @@
     %div.mb-2{class: "example-responses-#{row_id}"}
       = f.fields_for(:responses, scope: :example, layout: :inline) do |r|
         = render partial: 'poll_responses/edit_example_response', locals: {f: r, poll_response: r.object}
-    = link_to_add_fields t('poll.form.add_option'), f, :responses, {partial: 'poll_responses/edit_example_response', target: ".example-responses-#{row_id}", locals: { poll_response: f.object.responses.build }, layout: :inline, child_index: 'added_response'}, class: 'btn btn-success', id: "add-response"
+    = link_to_add_fields t('poll.form.add_option'), f, :responses, {partial: 'poll_responses/edit_example_response', target: ".example-responses-#{row_id}", locals: { poll_response: f.object.responses.build }, layout: :inline, child_index: 'added_response'}, class: 'btn btn-success', id: add_poll_response_dom_id

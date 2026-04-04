@@ -65,8 +65,7 @@ jobs:
           type=ref,event=pr
           type=sha,format=long
           type=raw,value=latest
-    # TODO split out bundle install into separate step that caches in GHA cache,
-    # currently it's not cached at all due to multi-stage builds
+    # BuildKit cache mounts in the Dockerfile cache Bundler/npm downloads; GHA + registry cache persist build cache.
     - name: Build and push
       uses: docker/build-push-action@v7
       with:

@@ -1,17 +1,17 @@
 import * as bootstrap from "bootstrap";
-import { initializeDynamicListManagers } from "./prepend";
-import './tooltips';
+import { initializeDynamicListManagersWithin } from "@/prepend.js";
+import '@/tooltips.js';
 
 type WindowWithBootstrap = typeof window & {
     bootstrap: typeof bootstrap;
 };
 (window as WindowWithBootstrap).bootstrap = bootstrap;
 
-function initPage() {
+function initPopovers() {
   // initialize popovers
   document.querySelectorAll('[data-bs-toggle="popover"]').forEach((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
 }
 
-window.addEventListener('load', initPage);
-window.addEventListener('load', initializeDynamicListManagers);
-window.addEventListener('turbo:render', initPage);
+window.addEventListener('load', initPopovers);
+window.addEventListener('load', () => initializeDynamicListManagersWithin(document));
+window.addEventListener('turbo:render', initPopovers);

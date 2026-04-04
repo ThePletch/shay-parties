@@ -50,6 +50,7 @@ storage/*
 
 node_modules
 public/vite-dev
+public/vite
 /config/master.key
 
 /config/credentials/staging.key

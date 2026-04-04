@@ -1,4 +1,5 @@
-= vite_typescript_tag 'comments'
+= vite_typescript_tag 'src/comments'
+= vite_stylesheet_tag 'styles/events.scss'
 - title @event.title
 
 = content_for :edge_to_edge do
@@ -7,7 +8,7 @@
       - if @event.photo.attached?
         = image_tag rails_storage_redirect_path(@event.landing_page_photo)
       - else
-        = image_tag 'default_event_image.jpg'
+        = image_tag vite_asset_path('images/default_event_image.jpg')
     .mx-2
       .hero-title
         %h1.title.display-4

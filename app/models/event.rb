@@ -4,7 +4,7 @@ class Event < ApplicationRecord
 
   LANDING_PAGE_PHOTO_HEIGHT = 400
 
-  TIMESTAMP_FORMAT = '%m/%d/%Y %l:%M %P'
+  TIMESTAMP_FORMAT = '%s'
 
   friendly_id :title, use: :history
 
@@ -56,16 +56,16 @@ class Event < ApplicationRecord
     super(parse_time(value))
   end
 
-  def start_time_str
-    start_time.try(:strftime, TIMESTAMP_FORMAT)
+  def start_time_epoch
+    start_time.try(:to_i)
   end
 
   def end_time=(value)
     super(parse_time(value))
   end
 
-  def end_time_str
-    end_time.try(:strftime, TIMESTAMP_FORMAT)
+  def end_time_epoch
+    end_time.try(:to_i)
   end
 
   def allows_plus_ones?

@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+# BuildKit cache mounts speed up CI/production rebuilds; enable with DOCKER_BUILDKIT=1 (default in Buildx).
 FROM timbru31/ruby-node:3.5-slim-24 AS baseline
 
 WORKDIR /usr/src/app
@@ -25,9 +27,12 @@ RUN apt install -y \
 RUN bundle config set with ${ENVIRONMENT}
 RUN bundle config build.ffi --enable-system-libffi
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
-COPY package.json ./
-RUN npm install
+RUN --mount=type=cache,id=bundler-${TARGETARCH},target=/usr/src/app/vendor/cache \
+    bundle config set --local cache_path vendor/cache && \
+    bundle install
+COPY package.json package-lock.json ./
+RUN --mount=type=cache,id=npm-${TARGETARCH},target=/root/.npm \
+    npm ci
 ARG PORT
 ENV PORT=${PORT}
 COPY . .
@@ -48,6 +53,10 @@ RUN --mount=type=secret,id=CREDENTIALS_KEY,env=RAILS_MASTER_KEY bundle exec rail
 # Sidecar container that installs bundled gems
 FROM server AS bundle-installer
 CMD ["bundle", "install"]
+
+# Sidecar container that installs npm packages (local dev; compose mounts node_modules volume)
+FROM server AS npm-installer
+CMD ["npm", "install"]
 
 # Sidecar container that runs pending migrations
 FROM server AS db-migrater

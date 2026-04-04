@@ -107,6 +107,22 @@ data "aws_iam_policy_document" "ecs_deploy" {
     # i hate that aws_ecs_service exposes the ARN but not under 'arn'
     resources = [aws_ecs_service.main.id]
   }
+
+  statement {
+    actions = ["ecs:RunTask"]
+    # we need to wildcard this or we'd need to sync terraform to the
+    # current revision during every single deploy
+    resources = ["${aws_ecs_task_definition.main.arn_without_revision}:*"]
+  }
+
+  # required permission for running task definitions (avoids privilege escalation to ECS task's role permissions)
+  statement {
+    actions = ["iam:PassRole"]
+    resources = [
+      aws_ecs_task_definition.main.task_role_arn,
+      aws_ecs_task_definition.main.execution_role_arn
+    ]
+  }
 }
 
 data "aws_s3_bucket" "activestorage" {

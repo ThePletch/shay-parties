@@ -1,11 +1,16 @@
 ###############################################################
 # See README for docker setup and package.json
 # for docker command aliases
+#
+# Sidecar restarts under `docker compose watch` (Compose 2.32+ for restart):
+# - bundle/npm installers: Gemfile*, package*.json
+# - db migraters: db/migrate/*.rb
 ###############################################################
 volumes:
   database-data:
   database-test-data:
   vendor-bundle:
+  node-modules:
 
 x-db-consumer-env: &db-consumer-env
   DATABASE_HOST: partiesforall-postgres
@@ -19,10 +24,20 @@ x-db-host-env: &postgres-env
   POSTGRES_DB: development
   POSTGRES_HOST_AUTH_METHOD: trust
 
+x-vite-ruby-client-env: &vite-ruby-client-env
+  VITE_RUBY_HOST: vite
+
 x-bundle-readonly-volume: &v-bundle-read
   type: volume
   source: vendor-bundle
   target: /usr/src/app/vendor/bundle/
+  volume:
+    nocopy: true
+
+x-node-modules-readonly-volume: &v-node-modules-read
+  type: volume
+  source: node-modules
+  target: /usr/src/app/node_modules/
   volume:
     nocopy: true
 
@@ -49,7 +64,7 @@ services:
       <<: *builddefaults
       target: server
     environment:
-      <<: [*ssh-env, *db-consumer-env]
+      <<: [*ssh-env, *db-consumer-env, *vite-ruby-client-env]
       PORT: ${RAILS_PORT:-3000}
       PIDFILE: /tmp/pid/rails.pid
       RAILS_SERVE_STATIC_FILES: true
@@ -58,6 +73,7 @@ services:
     container_name: partiesforall-app
     volumes:
     - *v-bundle-read
+    - *v-node-modules-read
     - *ssh-pass
     - *cache-app-dir
     - *ssh-keys
@@ -68,7 +84,32 @@ services:
         condition: service_healthy
       bundle-installer:
         condition: service_completed_successfully
+      npm-installer:
+        condition: service_completed_successfully
       db-migrater:
+        condition: service_completed_successfully
+      vite:
+        condition: service_started
+  vite:
+    <<: *servicedefaults
+    build:
+      <<: *builddefaults
+      target: server
+    environment:
+      <<: *ssh-env
+      VITE_RUBY_HOST: "0.0.0.0"
+    ports:
+    - "23036:3036"
+    container_name: partiesforall-vite
+    volumes:
+    - *v-bundle-read
+    - *v-node-modules-read
+    - *ssh-pass
+    - *cache-app-dir
+    - *ssh-keys
+    command: bundle exec vite dev
+    depends_on:
+      npm-installer:
         condition: service_completed_successfully
   api-dev-shell: &shell
     <<: *servicedefaults
@@ -78,13 +119,14 @@ services:
       <<: *builddefaults
       target: server
     environment: &shellenv
-      <<: [*ssh-env, *db-consumer-env]
+      <<: [*ssh-env, *db-consumer-env, *vite-ruby-client-env]
       # define DATABASE_HOST and RAILS_ENV to override
       # opens commands like `rails credentials:edit` in vim
       EDITOR: vim
     container_name: partiesforall-shell
     volumes:
     - *v-bundle-read
+    - *v-node-modules-read
     - *ssh-pass
     - *cache-app-dir
     - *ssh-keys
@@ -92,6 +134,8 @@ services:
       postgres:
         condition: service_healthy
       bundle-installer:
+        condition: service_completed_successfully
+      npm-installer:
         condition: service_completed_successfully
       db-migrater:
         condition: service_completed_successfully
@@ -110,6 +154,8 @@ services:
         condition: service_healthy
       bundle-installer:
         condition: service_completed_successfully
+      npm-installer:
+        condition: service_completed_successfully
       db-migrater-test:
         condition: service_completed_successfully
   bundle-installer:
@@ -124,6 +170,32 @@ services:
       - *ssh-keys
       # only container with write access to the bundle directory
       - vendor-bundle:/usr/src/app/vendor/bundle/
+    develop:
+      watch:
+      - path: .
+        action: restart
+        include:
+        - Gemfile
+        - Gemfile.lock
+  npm-installer:
+    <<: *servicedefaults
+    build:
+      <<: *builddefaults
+      dockerfile: Dockerfile
+      target: npm-installer
+    volumes:
+    - *ssh-pass
+    - *cache-app-dir
+    - *ssh-keys
+    # only container with write access to node_modules
+    - node-modules:/usr/src/app/node_modules/
+    develop:
+      watch:
+      - path: .
+        action: restart
+        include:
+        - package.json
+        - package-lock.json
   db-migrater:
     <<: *servicedefaults
     build:
@@ -142,6 +214,12 @@ services:
         condition: service_healthy
       bundle-installer:
         condition: service_completed_successfully
+    develop:
+      watch:
+      - path: db/migrate
+        action: restart
+        include:
+        - "*.rb"
   db-migrater-test:
     <<: *servicedefaults
     profiles:
@@ -164,6 +242,12 @@ services:
         condition: service_healthy
       bundle-installer:
         condition: service_completed_successfully
+    develop:
+      watch:
+      - path: db/migrate
+        action: restart
+        include:
+        - "*.rb"
   postgres: &postgres-container
     container_name: partiesforall-postgres
     image: postgres:14-alpine

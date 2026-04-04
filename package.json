@@ -14,8 +14,10 @@
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
     "@types/jquery": "^3.5.33",
+    "@types/node": "^25.5.2",
     "sass": "^1.97.1",
     "sass-embedded": "^1.97.1",
+    "typescript": "^6.0.2",
     "vite": "^7.3.0"
   }
 }

@@ -1,9 +1,9 @@
 import $ from 'jquery';
 import flatpickr from "flatpickr";
 
-import './cropping';
+import '@/cropping.js';
 
-import { disableFieldWith } from './form';
+import { disableFieldWith } from '@/form.js';
 
 const addressAttributeToFormFieldMap = {
   street: "#event_address_attributes_street",
@@ -68,7 +68,17 @@ function handleAddressChange() {
 }
 
 $(function() {
-  flatpickr('.datetimepicker', { enableTime: true, dateFormat: "m/d/Y h:i K", allowInput: true, allowInvalidPreload: true });
+  flatpickr(
+    '.datetimepicker',
+    {
+      enableTime: true,
+      altInput: true,
+      altFormat: "m/d/Y h:i K",
+      dateFormat: 'U',
+      allowInput: true,
+      allowInvalidPreload: false,
+    }
+  );
 
   if ($("#event_address_id").length > 0) {
     $("#event_address_id").change(handleAddressChange);

@@ -3,7 +3,9 @@
 - address_persisted = !!address.try(:persisted?)
 %h4= t('activerecord.models.address')
 = optional_parent_wrap(parent_form, address || Address.new, {record_name: :address, include_id: !address_persisted, locals: { address: address}}) do |form|
-  - unless address_persisted
+  - if address_persisted
+    = form.hidden_field :id
+  - else
     - if @prior_addresses.any? and parent_form.present?
       .input-group.mb-2
         %span.input-group-text= t('address.form.use_prior')

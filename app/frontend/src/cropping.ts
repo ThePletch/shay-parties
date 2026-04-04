@@ -133,7 +133,7 @@ $(function () {
 
   function loadImagePreview(input: HTMLInputElement, firstLoad = false) {
     if (input.files != null && input.files.length > 0) {
-      const src = URL.createObjectURL(input.files[0]);
+      const src = URL.createObjectURL(input.files[0]!);
       adjuster.scaleToNewImage(src, firstLoad);
       $('#crop-prompt, #crop-instruction').show();
       $("#photo-preview").attr('src', src);
