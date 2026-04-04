@@ -101,6 +101,7 @@ jobs:
       with:
         role-to-assume: ${{ secrets.AWS_ECR_ROLE }}
         aws-region: ${{ secrets.AWS_REGION }}
+        mask-account-id: false
     - name: Trigger deploy of ECS service
       id: trigger-deploy
       env:
