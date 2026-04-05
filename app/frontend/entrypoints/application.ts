@@ -1,5 +1,5 @@
 import * as bootstrap from "bootstrap";
-import { initializeDynamicListManagersWithin } from "@/prepend.js";
+import { initializeDynamicListManagersWithin } from "@/DynamicListManager.js";
 import '@/tooltips.js';
 
 type WindowWithBootstrap = typeof window & {

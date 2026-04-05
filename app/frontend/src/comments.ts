@@ -1,40 +1,40 @@
 import $ from 'jquery';
 
-$(() => {
+window.addEventListener('load', function () {
     $('.edit-form,.reply-form,.comment-form').hide();
-    $('.edit-button').on('click', function (e) {
+    $('.edit-button').on('click', function () {
         const button = $(this);
         button.hide();
         const commentId = button.data('id');
         $(`#comment-${commentId}-edit`).show();
         $(`#comment-${commentId}-body`).hide();
     });
-    $('.reply-button').on('click', function (e) {
+    $('.reply-button').on('click', function () {
         const button = $(this);
         button.hide();
         const commentId = button.data('id');
         $(`.reply-form[data-id="${commentId}"`).show();
     });
 
-    $('.cancel-reply').on('click', function (e) {
+    $('.cancel-reply').on('click', function () {
         const commentId = $(this).data('id');
         $(`.reply-form[data-id="${commentId}"`).hide();
         $(`.reply-button[data-id="${commentId}"`).show();
     });
 
-    $('.cancel-edit').on('click', function (e) {
+    $('.cancel-edit').on('click', function () {
         const commentId = $(this).data('id');
         $(`#comment-${commentId}-edit`).hide();
         $(`#comment-${commentId}-body`).show();
         $(`.edit-button[data-id="${commentId}`).show();
     });
-    $('.comment-button').on('click', function (e) {
+    $('.comment-button').on('click', function () {
         const button = $(this);
         button.hide();
         const commentId = button.data('id');
         $(`.comment-form[data-id="${commentId}"`).show();
     });
-    $('.cancel-comment').on('click', function (e) {
+    $('.cancel-comment').on('click', function () {
         const commentId = $(this).data('id');
         $(`.comment-form[data-id="${commentId}"`).hide();
         $(`.comment-button[data-id="${commentId}"`).show();

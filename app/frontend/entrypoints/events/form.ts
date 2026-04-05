@@ -4,6 +4,7 @@ import flatpickr from "flatpickr";
 import '@/cropping.js';
 
 import { disableFieldWith } from '@/form.js';
+import { withFetchProgressIndicator } from '@/remote-calls.js'
 
 const addressAttributeToFormFieldMap = {
   street: "#event_address_attributes_street",
@@ -12,29 +13,15 @@ const addressAttributeToFormFieldMap = {
   state: "#event_address_attributes_state",
   zip_code: "#event_address_attributes_zip_code"
 };
+type AddressAttribute = keyof typeof addressAttributeToFormFieldMap;
 
-async function withFetchProgressIndicator(wrapped: () => Promise<unknown>) {
-  // don't show the spinner until half a second has passed to avoid flashing the spinner on screen.
-  const fetchSpinnerTimeout = setTimeout(() => $("#fetch-in-progress").show(), 500);
-  try {
-    $("#fetch-error").hide();
-    return await wrapped();
-  } catch (e) {
-    $("#fetch-error").show();
-    throw e;
-  } finally {
-    clearTimeout(fetchSpinnerTimeout);
-    $("#fetch-in-progress").hide();
-  }
-}
-
-function forEachAddressAttribute(callback: (key: keyof typeof addressAttributeToFormFieldMap) => void) {
-  (Object.keys(addressAttributeToFormFieldMap) as (keyof typeof addressAttributeToFormFieldMap)[]).forEach(callback);
+function forEachAddressAttribute(callback: (key: AddressAttribute) => void) {
+  (Object.keys(addressAttributeToFormFieldMap) as (AddressAttribute)[]).forEach(callback);
 }
 
 async function updateAddressProperties(addressId: string) {
   return withFetchProgressIndicator(async function () {
-    const response = await $.get({
+    const response: Record<AddressAttribute, string> = await $.get({
       url: `/addresses/${addressId}/`,
       headers: {
         Accept: 'application/json',
@@ -81,7 +68,7 @@ $(function() {
   );
 
   if ($("#event_address_id").length > 0) {
-    $("#event_address_id").change(handleAddressChange);
+    $("#event_address_id").on('change', handleAddressChange);
     handleAddressChange();
   }
   disableFieldWith('event_plus_one_max', 'event_plus_one_enable');
