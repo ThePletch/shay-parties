@@ -44,24 +44,8 @@ class Event < ApplicationRecord
     photo_crop_y_offset * width_scale
   end
 
-  def parse_time(timestamp)
-    return timestamp if timestamp.is_a?(Time)
-
-    return Time.zone.strptime(timestamp, TIMESTAMP_FORMAT)
-  rescue ArgumentError
-    nil
-  end
-
-  def start_time=(value)
-    super(parse_time(value))
-  end
-
   def start_time_epoch
     start_time.try(:to_i)
-  end
-
-  def end_time=(value)
-    super(parse_time(value))
   end
 
   def end_time_epoch
