@@ -43,15 +43,7 @@ class Event < ApplicationRecord
     end
     photo_crop_y_offset * width_scale
   end
-
-  def start_time_epoch
-    start_time.try(:to_i)
-  end
-
-  def end_time_epoch
-    end_time.try(:to_i)
-  end
-
+  
   def allows_plus_ones?
     plus_one_max != 0
   end

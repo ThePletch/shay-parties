@@ -61,7 +61,7 @@ $(function() {
       enableTime: true,
       altInput: true,
       altFormat: "m/d/Y h:i K",
-      dateFormat: 'U',
+      dateFormat: 'Z',
       allowInput: true,
       allowInvalidPreload: false,
     }

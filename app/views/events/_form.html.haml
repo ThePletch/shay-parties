@@ -29,11 +29,11 @@
   = form.text_field :title, floating: true
   = form.form_group(class: 'mt-3 d-lg-flex') do
     .flex-lg-grow-1
-      = form.text_field :start_time, class: 'datetimepicker', value: event.start_time_epoch, floating: true
+      = form.text_field :start_time, class: 'datetimepicker', value: event.start_time, floating: true
     .align-items-center.text-center.mx-3
       %em.col= "…#{t('event.show.time_separator')}…"
     .flex-lg-grow-1
-      = form.text_field :end_time, class: 'datetimepicker', value: event.end_time_epoch, floating: true
+      = form.text_field :end_time, class: 'datetimepicker', value: event.end_time, floating: true
   .row
     .flex-grow-0.col-lg-6
       .input-group
