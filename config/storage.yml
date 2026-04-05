@@ -9,3 +9,5 @@ amazon:
   # todo make this dynamic
   region: "us-east-1"
   bucket: <%= ENV["ACTIVE_STORAGE_S3_BUCKET"] %>
+  http_open_timeout: 5
+  http_read_timeout: 5

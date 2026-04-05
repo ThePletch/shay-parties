@@ -1,10 +1,15 @@
 import $ from 'jquery';
 import flatpickr from "flatpickr";
+import * as ActiveStorage from "@rails/activestorage";
+
 
 import '@/cropping.js';
 
 import { disableFieldWith } from '@/form.js';
 import { withFetchProgressIndicator } from '@/remote-calls.js'
+
+// set up support for directly uploading files without needing to pass through the backend
+ActiveStorage.start()
 
 const addressAttributeToFormFieldMap = {
   street: "#event_address_attributes_street",
