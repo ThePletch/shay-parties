@@ -125,11 +125,6 @@ data "aws_iam_policy_document" "ecs_deploy" {
   }
 }
 
-data "aws_s3_bucket" "activestorage" {
-  provider = aws.bucket
-  bucket   = var.activestorage.s3_bucket
-}
-
 data "aws_iam_policy_document" "service_actions" {
   statement {
     actions = [
@@ -140,8 +135,8 @@ data "aws_iam_policy_document" "service_actions" {
     ]
 
     resources = [
-      data.aws_s3_bucket.activestorage.arn,
-      "${data.aws_s3_bucket.activestorage.arn}/*",
+      aws_s3_bucket.activestorage.arn,
+      "${aws_s3_bucket.activestorage.arn}/*",
     ]
   }
 }

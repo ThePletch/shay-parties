@@ -7,7 +7,7 @@ locals {
     # same object storage we use for image hosting.
     RAILS_SERVE_STATIC_FILES = "true"
     RAILS_LOG_TO_STDOUT      = "true"
-    ACTIVE_STORAGE_S3_BUCKET = var.activestorage.s3_bucket
+    ACTIVE_STORAGE_S3_BUCKET = aws_s3_bucket.activestorage.id
     PARTIES_FULL_DOMAIN      = local.main_domain
     PARTIES_BASE_DOMAIN      = var.root_domain
   }

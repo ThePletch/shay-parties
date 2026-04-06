@@ -1,15 +1,10 @@
 import $ from 'jquery';
 import flatpickr from "flatpickr";
-import * as ActiveStorage from "@rails/activestorage";
-
 
 import '@/cropping.js';
 
-import { disableFieldWith } from '@/form.js';
+import { configureDirectUpload, disableFieldWith } from '@/form.js';
 import { withFetchProgressIndicator } from '@/remote-calls.js'
-
-// set up support for directly uploading files without needing to pass through the backend
-ActiveStorage.start()
 
 const addressAttributeToFormFieldMap = {
   street: "#event_address_attributes_street",
@@ -21,7 +16,7 @@ const addressAttributeToFormFieldMap = {
 type AddressAttribute = keyof typeof addressAttributeToFormFieldMap;
 
 function forEachAddressAttribute(callback: (key: AddressAttribute) => void) {
-  (Object.keys(addressAttributeToFormFieldMap) as (AddressAttribute)[]).forEach(callback);
+  (Object.keys(addressAttributeToFormFieldMap) as AddressAttribute[]).forEach(callback);
 }
 
 async function updateAddressProperties(addressId: string) {
@@ -60,6 +55,8 @@ function handleAddressChange() {
 }
 
 $(function() {
+  configureDirectUpload(true);
+
   flatpickr(
     '.datetimepicker',
     {

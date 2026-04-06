@@ -32,7 +32,7 @@ Rails.application.configure do
   config.force_ssl = false
 
   # Force direct upload URL to use HTTPS instead of HTTP by default.
-  config.force_https_in_direct_uploads_url = true
+  config.force_https_in_direct_uploads_url = false
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
