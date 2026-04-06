@@ -5,7 +5,7 @@
   .hero
     .hero-image
       - if @event.photo.attached?
-        = image_tag url_for(@event.photo)
+        = image_tag rails_service_blob_path(@event.photo)
       - else
         = image_tag vite_asset_path('images/default_event_image.jpg')
     .mx-2
