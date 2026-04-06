@@ -26,6 +26,6 @@ export function configureDirectUpload(debug: boolean) {
       'progress',
       'error',
       'end',
-    ].forEach(event => addEventListener(`direct-uploads:${event}`, console.debug));
+    ].forEach(event => addEventListener(`direct-upload:${event}`, console.debug));
   }
 }
