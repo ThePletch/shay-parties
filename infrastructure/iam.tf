@@ -93,7 +93,10 @@ data "aws_iam_policy_document" "ecs_deploy" {
       "ecr:PutImage",
       "ecr:UploadLayerPart",
     ]
-    resources = [aws_ecr_repository.main.arn]
+    resources = [
+      aws_ecr_repository.main.arn,
+      aws_ecr_repository.image_transform_lambda.arn,
+    ]
   }
 
   # Token is scoped to permissions defined in the rest of this policy

@@ -84,6 +84,16 @@ jobs:
         cache-to: |
           type=gha
         target: runtime
+    - name: Build and push image transform Lambda
+      uses: docker/build-push-action@v7
+      with:
+        context: infrastructure/lambda/image_transform
+        push: true
+        pull: true
+        platforms: linux/arm64
+        tags: ${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_IMAGE_TRANSFORM_REPOSITORY }}:latest
+        cache-from: type=gha,scope=image-transform-lambda
+        cache-to: type=gha,scope=image-transform-lambda,mode=max
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}

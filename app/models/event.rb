@@ -2,9 +2,14 @@ class Event < ApplicationRecord
   extend FriendlyId
   include Ownable
 
-  LANDING_PAGE_PHOTO_HEIGHT = 400
+  LANDING_PAGE_PHOTO_WIDTH = 1900
+  LANDING_PAGE_PHOTO_HEIGHT = 500
+  LANDING_PAGE_PHOTO_LIST_HEIGHT = 400
 
   TIMESTAMP_FORMAT = '%s'
+
+  after_save :remember_landing_page_photo_prewarm
+  after_commit :prewarm_landing_page_photo
 
   friendly_id :title, use: :history
 
@@ -30,18 +35,37 @@ class Event < ApplicationRecord
   scope :not_secret, -> { where(secret: false) }
   scope :attended_by, ->(user) { joins(:attendances).where(attendances: {attendee_id: user.id, attendee_type: "User"}) }
 
+  def landing_page_photo_transformations
+    {
+      resize: LANDING_PAGE_PHOTO_WIDTH.to_s,
+      crop: "#{LANDING_PAGE_PHOTO_WIDTH}x#{LANDING_PAGE_PHOTO_HEIGHT}+0+#{header_photo_crop_y_offset}"
+    }
+  end
+
   def landing_page_photo
-    photo.variant(resize: '1900', crop: "1900x500+0+#{header_photo_crop_y_offset}")
+    photo.variant(landing_page_photo_transformations)
+  end
+
+  def landing_page_photo_ready?
+    return false unless photo.attached?
+
+    photo.blob.variant_records.exists?(
+      variation_digest: landing_page_photo.variation.digest
+    )
   end
 
   def header_photo_crop_y_offset
-    if photo.metadata['width']
-      width_scale = 1900.0 / photo.metadata['width']
-    else
-      puts photo.metadata
-      width_scale = 1
-    end
+    width = photo.metadata["width"]
+    width_scale = width ? LANDING_PAGE_PHOTO_WIDTH.to_f / width : 1
     photo_crop_y_offset * width_scale
+  end
+
+  def header_photo_crop_object_position
+    height = photo.metadata["height"]
+    return "top" unless height&.positive?
+
+    y_percent = (photo_crop_y_offset.to_f / height * 100).round(4)
+    "0 #{y_percent}%"
   end
   
   def allows_plus_ones?
@@ -69,6 +93,20 @@ class Event < ApplicationRecord
   end
 
   private
+
+  def remember_landing_page_photo_prewarm
+    @prewarm_landing_page_photo = photo.attached? && (
+      saved_change_to_photo_crop_y_offset? || attachment_changes["photo"].present?
+    )
+  end
+
+  def prewarm_landing_page_photo
+    return unless @prewarm_landing_page_photo
+
+    photo.blob.preprocessed(landing_page_photo_transformations)
+  ensure
+    @prewarm_landing_page_photo = false
+  end
 
   def ends_after_it_starts
     return unless [end_time, start_time].all?

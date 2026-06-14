@@ -26,5 +26,6 @@ module ShayParties
     config.active_record.default_timezone = :local
     config.force_https_in_direct_uploads_url = false
     config.autoload_paths << Rails.root.join('lib')
+    config.active_storage.track_variants = true
   end
 end

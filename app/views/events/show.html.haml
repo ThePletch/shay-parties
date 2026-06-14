@@ -4,10 +4,7 @@
 = content_for :edge_to_edge do
   .hero
     .hero-image
-      - if @event.photo.attached?
-        = image_tag rails_storage_redirect_path(@event.photo)
-      - else
-        = image_tag vite_asset_path('images/default_event_image.jpg')
+      = event_header_image_tag(@event)
     .mx-2
       .hero-title
         %h1.title.display-4

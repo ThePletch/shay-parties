@@ -37,6 +37,16 @@
     max-width: 100%;
 }
 
+.hero-photo {
+    object-fit: cover;
+    max-height: Min(500px, 26vw);
+    width: 100%;
+}
+
+.hero-photo--pending {
+    object-position: top;
+}
+
 .hero-title {
     position: relative;
     bottom: 5vh;

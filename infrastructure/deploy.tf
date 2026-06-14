@@ -1,6 +1,7 @@
 locals {
   environment_variables = {
     AWS_ECR_REPOSITORY = aws_ecr_repository.main.name
+    AWS_ECR_IMAGE_TRANSFORM_REPOSITORY = aws_ecr_repository.image_transform_lambda.name
     AWS_ECR_ROLE       = aws_iam_role.deploy.arn
     AWS_ECS_CLUSTER    = aws_ecs_cluster.main.name
     AWS_ECS_SERVICE    = aws_ecs_service.main.name

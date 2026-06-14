@@ -61,7 +61,6 @@ RUN rm -f /etc/apt/sources.list.d/nodesource.list \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
     libpq5 \
-    imagemagick \
     libffi8 \
     vim \
   && apt-get purge -y --auto-remove nodejs libffi-dev \

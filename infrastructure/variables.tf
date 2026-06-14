@@ -29,7 +29,6 @@ variable "environment" {
 variable "activestorage" {
   type = object({
     s3_bucket = string
-    region    = string
   })
   description = "Name of S3 bucket where ActiveStorage files are stored"
 }
