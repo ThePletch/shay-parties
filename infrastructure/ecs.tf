@@ -8,6 +8,7 @@ locals {
     RAILS_SERVE_STATIC_FILES = "true"
     RAILS_LOG_TO_STDOUT      = "true"
     ACTIVE_STORAGE_S3_BUCKET = aws_s3_bucket.activestorage.id
+    ACTIVE_STORAGE_S3_REGION = var.activestorage.region
     PARTIES_FULL_DOMAIN      = local.main_domain
     PARTIES_BASE_DOMAIN      = var.root_domain
   }

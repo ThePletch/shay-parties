@@ -1,14 +1,3 @@
-locals {
-  endpoint_services = [
-    # accessing ecr/ecs through endpoints is required for ipv6-only stacks
-    "ecr.api",
-    "ecr.dkr",
-    "ecs",
-    "ecs-agent",
-    "ecs-telemetry"
-  ]
-}
-
 data "aws_availability_zones" "all_azs" {
   state = "available"
 }
