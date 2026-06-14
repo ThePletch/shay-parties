@@ -38,6 +38,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      actions: write
     steps:
     - uses: actions/checkout@v6
     - name: Configure AWS credentials
@@ -79,10 +80,9 @@ jobs:
         secrets: |
           CREDENTIALS_KEY=${{ secrets.RAILS_MASTER_KEY }}
         cache-from: |
-          type=gha
+          type=gha,scope=app-runtime
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_REPOSITORY }}:latest
-        cache-to: |
-          type=gha
+        cache-to: type=gha,scope=app-runtime,mode=max
         target: runtime
     - name: Build and push image transform Lambda
       uses: docker/build-push-action@v7
