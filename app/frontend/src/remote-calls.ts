@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export async function withFetchProgressIndicator<T>(wrapped: () => Promise<T>) {
     // don't show the spinner until half a second has passed to avoid flashing the spinner on screen.
     const fetchSpinnerTimeout = setTimeout(() => $("#fetch-in-progress").show(), 500);

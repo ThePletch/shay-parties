@@ -83,7 +83,7 @@ jobs:
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_REPOSITORY }}:latest
         cache-to: |
           type=gha
-        target: server-shrinkwrapped
+        target: runtime
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}

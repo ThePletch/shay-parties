@@ -1,11 +1,12 @@
 import type { UserConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import RubyPlugin from 'vite-plugin-ruby';
 import path from 'path';
 
-export default {
-  plugins: [
-    RubyPlugin(),
-  ],
+const isTest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
+
+export default defineConfig({
+  plugins: isTest ? [] : [RubyPlugin()],
   // config for local dev server
   server: {
     // Vite 7+ returns 403 when Host is not localhost / *.localhost / an IP.
@@ -26,4 +27,15 @@ export default {
       "@": path.resolve(__dirname, "./app/frontend/src"),
     },
   },
-} satisfies UserConfig;
+  test: {
+    environment: 'jsdom',
+    globals: false,
+    include: ['app/frontend/**/*.test.ts'],
+    setupFiles: ['app/frontend/test/setup.ts'],
+    clearMocks: true,
+    restoreMocks: true,
+    fakeTimers: {
+      toFake: ['setTimeout', 'clearTimeout'],
+    },
+  },
+}) satisfies UserConfig;
