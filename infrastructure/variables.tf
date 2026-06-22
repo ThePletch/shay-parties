@@ -79,3 +79,13 @@ variable "errors_email" {
   type        = string
   description = "Email that receives notifications when infrastructure fails to run properly"
 }
+
+variable "create_image_transform_lambda" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+    Create the image-transform Lambda function. Leave false for the first apply so Terraform can
+    provision the ECR repository and GitHub deploy variables before any image exists. Run the deploy
+    workflow to push the Lambda image, then set this to true and apply again.
+  EOT
+}

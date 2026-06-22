@@ -9,7 +9,7 @@ locals {
     RAILS_LOG_TO_STDOUT      = "true"
     ACTIVE_STORAGE_S3_BUCKET = aws_s3_bucket.activestorage.id
     ACTIVE_STORAGE_S3_REGION = aws_s3_bucket.activestorage.bucket_region
-    ACTIVE_STORAGE_TRANSFORM_LAMBDA = aws_lambda_function.image_transform.function_name
+    ACTIVE_STORAGE_TRANSFORM_LAMBDA = try(aws_lambda_function.image_transform[0].function_name, "")
     PARTIES_FULL_DOMAIN      = local.main_domain
     PARTIES_BASE_DOMAIN      = var.root_domain
   }
