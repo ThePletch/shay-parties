@@ -84,6 +84,7 @@ jobs:
           type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_REPOSITORY }}:latest
         cache-to: type=gha,scope=app-runtime,mode=max
         target: runtime
+    # Lambda rejects buildx's default provenance attestations (OCI index at :latest).
     - name: Build and push image transform Lambda
       uses: docker/build-push-action@v7
       with:
@@ -92,6 +93,8 @@ jobs:
         pull: true
         platforms: linux/arm64
         tags: ${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_IMAGE_TRANSFORM_REPOSITORY }}:latest
+        provenance: false
+        sbom: false
         cache-from: type=gha,scope=image-transform-lambda
         cache-to: type=gha,scope=image-transform-lambda,mode=max
   deploy:
