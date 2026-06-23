@@ -44,7 +44,8 @@ module ActiveStorage
         require "aws-sdk-lambda"
 
         client = Aws::Lambda::Client.new(
-          region: ENV.fetch("ACTIVE_STORAGE_S3_REGION", ENV.fetch("AWS_REGION", "us-east-2"))
+          region: ENV.fetch("ACTIVE_STORAGE_S3_REGION", ENV.fetch("AWS_REGION", "us-east-2")),
+          use_dualstack_endpoint: true
         )
 
         response = client.invoke(

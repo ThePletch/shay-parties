@@ -25,7 +25,9 @@ RSpec.describe ActiveStorage::LambdaTransform do
   describe ".transform_via_lambda" do
     it "creates a variant record from the Lambda response" do
       lambda_client = instance_double(Aws::Lambda::Client)
-      allow(Aws::Lambda::Client).to receive(:new).and_return(lambda_client)
+      allow(Aws::Lambda::Client).to receive(:new)
+        .with(region: "us-east-2", use_dualstack_endpoint: true)
+        .and_return(lambda_client)
       allow(lambda_client).to receive(:invoke).and_return(
         instance_double(
           Aws::Lambda::Types::InvokeResponse,
