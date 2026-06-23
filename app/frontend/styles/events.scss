@@ -39,8 +39,8 @@
 
 .hero-photo {
     object-fit: cover;
-    max-height: Min(500px, 26vw);
     width: 100%;
+    height: Min(500px, 26vw);
 }
 
 .hero-photo--pending {
@@ -54,8 +54,8 @@
 
 #photo-preview {
     object-fit: cover;
-    max-height: Min(500px, 26vw);
     width: 100%;
+    height: Min(500px, 26vw);
     object-position: top;
 }
 

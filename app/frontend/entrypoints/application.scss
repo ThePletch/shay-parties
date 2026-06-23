@@ -48,6 +48,16 @@ label.side-label {
     max-width: 100%;
 }
 
+.hero-photo {
+    object-fit: cover;
+    width: 100%;
+    height: Min(500px, 26vw);
+}
+
+.hero-photo--pending {
+    object-position: top;
+}
+
 .hero-title {
     position: relative;
     bottom: 5vh;
@@ -55,8 +65,8 @@ label.side-label {
 
 #photo-preview {
     object-fit: cover;
-    max-height: Min(500px, 26vw);
     width: 100%;
+    height: Min(500px, 26vw);
     object-position: top;
 }
 
