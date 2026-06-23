@@ -6,7 +6,7 @@ module EventsHelper
       else
         image_tag rails_storage_redirect_path(event.photo),
           class: "hero-photo hero-photo--pending",
-          style: "object-position: #{event.header_photo_crop_object_position}"
+          data: { crop_y_offset: event.photo_crop_y_offset }
       end
     else
       image_tag vite_asset_path("images/default_event_image.jpg"), class: "hero-photo"

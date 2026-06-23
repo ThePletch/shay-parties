@@ -60,14 +60,6 @@ class Event < ApplicationRecord
     photo_crop_y_offset * width_scale
   end
 
-  def header_photo_crop_object_position
-    height = photo.metadata["height"]
-    return "top" unless height&.positive?
-
-    y_percent = (photo_crop_y_offset.to_f / height * 100).round(4)
-    "0 #{y_percent}%"
-  end
-  
   def allows_plus_ones?
     plus_one_max != 0
   end

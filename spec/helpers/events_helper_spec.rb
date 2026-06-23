@@ -24,7 +24,7 @@ RSpec.describe EventsHelper, type: :helper do
       html = helper.event_header_image_tag(event)
 
       expect(html).to include("hero-photo--pending")
-      expect(html).to include("object-position")
+      expect(html).to include('data-crop-y-offset="25"')
     end
 
     it "renders the processed variant when it is ready" do

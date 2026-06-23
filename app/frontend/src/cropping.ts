@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+import { headerPhotoCropObjectPosition } from '@/headerPhotoCrop.js';
+
 class CropAdjuster {
   private image: JQuery<HTMLElement>;
 
@@ -89,8 +91,16 @@ class CropAdjuster {
   }
 
   updateImageShift() {
+    if (!this.rawDimensions) {
+      return;
+    }
+
     this.image.css({
-      'objectPosition': '0px ' + this.rawYOffset * this.imageScaleFactor() + 'px',
+      objectPosition: headerPhotoCropObjectPosition(
+        -this.rawYOffset,
+        this.parentDiv.width() ?? 0,
+        this.rawDimensions.width,
+      ),
     });
   }
 
