@@ -56,7 +56,7 @@ class Event < ApplicationRecord
 
   def header_photo_crop_y_offset
     # unanalyzed photos may have nil metadata - treat it as a missing width
-    width = photo.metadata&.["width"]
+    width = (photo.metadata || {})["width"]
     width_scale = width ? LANDING_PAGE_PHOTO_WIDTH.to_f / width : 1
     photo_crop_y_offset * width_scale
   end
