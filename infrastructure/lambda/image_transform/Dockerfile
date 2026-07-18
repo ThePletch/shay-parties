@@ -2,7 +2,7 @@ FROM public.ecr.aws/lambda/ruby:3.3 AS builder
 
 RUN dnf install -y gcc gcc-c++ make && dnf clean all
 
-COPY Gemfile ${LAMBDA_TASK_ROOT}/
+COPY Gemfile Gemfile.lock ${LAMBDA_TASK_ROOT}/
 WORKDIR ${LAMBDA_TASK_ROOT}
 RUN bundle config set --local path vendor/bundle && \
     bundle config set without 'development test' && \
