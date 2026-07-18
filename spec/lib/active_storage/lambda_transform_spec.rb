@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require "aws-sdk-lambda"
 
 RSpec.describe ActiveStorage::LambdaTransform do
   let(:blob) do
@@ -15,11 +16,22 @@ RSpec.describe ActiveStorage::LambdaTransform do
     { resize: "1900", crop: "1900x500+0+0" }
   end
 
-  before do
-    stub_const("ENV", ENV.to_hash.merge(
-      "ACTIVE_STORAGE_TRANSFORM_LAMBDA" => "test-image-transform",
-      "ACTIVE_STORAGE_S3_REGION" => "us-east-2"
-    ))
+  around do |example|
+    original = {
+      "ACTIVE_STORAGE_TRANSFORM_LAMBDA" => ENV["ACTIVE_STORAGE_TRANSFORM_LAMBDA"],
+      "ACTIVE_STORAGE_S3_REGION" => ENV["ACTIVE_STORAGE_S3_REGION"]
+    }
+    ENV["ACTIVE_STORAGE_TRANSFORM_LAMBDA"] = "test-image-transform"
+    ENV["ACTIVE_STORAGE_S3_REGION"] = "us-east-2"
+    example.run
+  ensure
+    original.each do |key, value|
+      if value.nil?
+        ENV.delete(key)
+      else
+        ENV[key] = value
+      end
+    end
   end
 
   describe ".transform_via_lambda" do
@@ -29,8 +41,7 @@ RSpec.describe ActiveStorage::LambdaTransform do
         .with(region: "us-east-2", use_dualstack_endpoint: true)
         .and_return(lambda_client)
       allow(lambda_client).to receive(:invoke).and_return(
-        instance_double(
-          Aws::Lambda::Types::InvokeResponse,
+        double(
           function_error: nil,
           payload: StringIO.new({
             statusCode: 200,
@@ -40,12 +51,15 @@ RSpec.describe ActiveStorage::LambdaTransform do
         )
       )
 
-      allow(blob.service).to receive(:bucket).and_return("test-bucket")
+      without_partial_double_verification do
+        allow(blob.service).to receive(:bucket).and_return("test-bucket")
+      end
 
-      described_class.transform_via_lambda(blob, transformations)
-
-      variation = ActiveStorage::Variation.wrap(transformations)
-      expect(blob.variant_records.find_by(variation_digest: variation.digest)).to be_present
+      expect {
+        described_class.transform_via_lambda(blob, transformations)
+      }.to change {
+        ActiveStorage::VariantRecord.where(blob_id: blob.id).count
+      }.from(0).to(1)
     end
   end
 end

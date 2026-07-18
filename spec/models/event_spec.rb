@@ -25,9 +25,9 @@ RSpec.describe Event do
       content_type: "image/png"
     )
 
-    expect do
-      event.update!(photo_crop_y_offset: 40)
-    end.to have_enqueued_job(ActiveStorage::TransformJob).with(
+    event.update!(photo_crop_y_offset: 40)
+
+    expect(ActiveStorage::TransformJob).to have_been_enqueued.with(
       event.photo.blob,
       event.landing_page_photo_transformations
     )
