@@ -8,5 +8,7 @@ amazon:
   service: S3
   region: <%= ENV.fetch("ACTIVE_STORAGE_S3_REGION", "us-east-1") %>
   bucket: <%= ENV["ACTIVE_STORAGE_S3_BUCKET"] %>
+  # IPv6-only ECS tasks cannot reach the default IPv4 S3 hostname.
+  use_dualstack_endpoint: true
   http_open_timeout: 5
   http_read_timeout: 60

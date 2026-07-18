@@ -67,7 +67,7 @@ module ImageTransform
   end
 end
 
-def lambda_handler(event:, _context:)
+def lambda_handler(event:, context:)
   payload = event.is_a?(String) ? JSON.parse(event) : event
 
   ImageTransform.apply(
