@@ -23,7 +23,7 @@ resource "aws_s3_bucket_cors_configuration" "application_cors" {
       ]
       allowed_methods = ["GET", "PUT", "POST", "HEAD"]
       allowed_origins = [
-        for alias in local.aliases :
+        for alias in local.aliases_with_main :
         "https://${alias}"
       ]
       max_age_seconds = 3000

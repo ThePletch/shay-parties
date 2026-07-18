@@ -73,6 +73,11 @@ variable "include_root_domain_alias" {
 variable "vpc_cidr" {
   type    = string
   default = "10.0.0.0/16"
+  description = <<-DESC
+    IPv4 CIDR for the VPC. Arbitrary dummy value.
+    Our infrastructure is IPv6-only, but AWS still requires an IPv4 CIDR to be specified
+    on all VPCs.
+  DESC
 }
 
 variable "errors_email" {

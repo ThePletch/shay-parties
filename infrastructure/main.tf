@@ -35,7 +35,7 @@ provider "aws" {
 
 provider "aws" {
   alias  = "bucket"
-  region = var.activestorage.region
+  region = "us-east-2"
 }
 
 provider "github" {}

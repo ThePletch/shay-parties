@@ -38,7 +38,7 @@ resource "aws_route53_record" "subdomain_routing" {
 }
 
 resource "aws_service_discovery_service" "public" {
-  name = "${var.environment}-partiesforall"
+  name = var.service_discovery_subdomain
 
   dns_config {
     namespace_id = aws_service_discovery_public_dns_namespace.public_ipv6.id

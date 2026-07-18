@@ -3,9 +3,12 @@ data "aws_availability_zones" "all_azs" {
 }
 
 resource "aws_vpc" "main" {
+  # AWS still requires an IPv4 CIDR on the VPC even for IPv6-only workloads;
+  # IPv6-only is enforced at the subnet layer via ipv6_native = true.
+  cidr_block                       = var.vpc_cidr
   assign_generated_ipv6_cidr_block = true
-  enable_dns_hostnames = true
-  enable_dns_support = true
+  enable_dns_hostnames             = true
+  enable_dns_support               = true
 
   tags = {
     Name = "partiesforall-${var.environment}"

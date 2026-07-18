@@ -1,7 +1,8 @@
 locals {
   main_domain = var.main_subdomain == "" ? var.root_domain : "${var.main_subdomain}.${var.root_domain}"
   cdn_origin  = "PartiesServiceDiscovery"
-  aliases = concat([local.main_domain], [for alias in var.alias_subdomains : "${alias}.${var.root_domain}"], var.include_root_domain_alias ? [var.root_domain] : [])
+  aliases = concat([for alias in var.alias_subdomains : "${alias}.${var.root_domain}"], var.include_root_domain_alias ? [var.root_domain] : [])
+  aliases_with_main        = concat([local.main_domain], local.aliases)
 }
 
 # you need to use this one for the ACM cert because Cloudfront is xenophobic
@@ -21,7 +22,7 @@ module "certificate" {
   }
 
   domain_name    = local.main_domain
-  aliases        = local.aliases
+  aliases        = local.aliases_with_main
   hosted_zone_id = data.aws_route53_zone.root_domain.zone_id
 }
 
@@ -31,7 +32,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   http_version = "http2and3"
   price_class = "PriceClass_100"
 
-  aliases = local.aliases
+  aliases = local.aliases_with_main
 
   default_cache_behavior {
     # Managed "disable all caching" policy
@@ -47,7 +48,7 @@ resource "aws_cloudfront_distribution" "cdn" {
 
   origin {
     origin_id   = local.cdn_origin
-    domain_name = "${var.service_discovery_subdomain}.${var.root_domain}"
+    domain_name = "${var.service_discovery_subdomain}.${local.service_discovery_domain}"
 
     custom_origin_config {
       origin_protocol_policy = "http-only"
@@ -72,9 +73,15 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 }
 
-resource "aws_route53_record" "cdn" {
+moved {
+  from = aws_route53_record.cdn
+  to = aws_route53_record.cdn_aliases["aws2.partiesforall.events"]
+}
+
+resource "aws_route53_record" "cdn_aliases" {
+  for_each = toset(local.aliases_with_main)
   zone_id = data.aws_route53_zone.root_domain.zone_id
-  name    = local.main_domain
+  name    = each.value
   type    = "A"
 
   alias {
