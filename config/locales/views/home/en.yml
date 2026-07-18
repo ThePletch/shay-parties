@@ -4,10 +4,9 @@ en:
       welcome: Welcome to Parties for All!
       purpose: You can organize events with your friends here.
       rsvp_prompt:
-        full_text: "%{bolded_section}, click the button below to find the event in the list of public events."
+        full_text: "%{bolded_section}, open the link your host sent you — that's how you get to the event page to RSVP."
         bolded_section: If you're here to RSVP to a friend's event
-      secret_info: If the event is secret, you'll need to go directly to the link you got from the host. Secret events don't show up in event lists until you RSVP to them.
-      events_button: Browse public events
+      invite_info: Events aren't listed publicly. You need the invitation link from your host to find and RSVP to an event.
       host_prompt:
         logged_in:
           full_text: "%{bolded_section}, click the button below to organize a new event, or click 'Organize an event' under 'Host' in the navigation bar."

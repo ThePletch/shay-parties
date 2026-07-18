@@ -31,8 +31,6 @@ class Event < ApplicationRecord
 
   validates_associated :address
 
-  scope :secret, -> { where(secret: true) }
-  scope :not_secret, -> { where(secret: false) }
   scope :attended_by, ->(user) { joins(:attendances).where(attendances: {attendee_id: user.id, attendee_type: "User"}) }
 
   def landing_page_photo_transformations

@@ -40,9 +40,6 @@
         = form.check_box(:plus_one_max, {label: t('event.form.plus_ones_prompt'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'input-group-text', id: 'event_plus_one_enable', checked: event.plus_one_max != 0}, -1, 0)
         = form.select :plus_one_max, [[t('event.form.plus_ones_unlimited'), -1], 1, 2, 3], class: 'pe-sm-3', selected: event.plus_one_max, floating: true
     .col-auto
-      = form.check_box :secret, label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
-      = render "shared/info_tooltip", message: t('event.form.secret_event_help')
-    .col-auto
       = form.check_box :requires_testing, label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
       = render "shared/info_tooltip", message: t('event.form.testing_help')
   = form.form_group do
@@ -65,4 +62,4 @@
   %hr
   .actions
     = form.primary
-    = link_to t('back'), events_path, class: 'ms-2 btn btn-light'
+    = link_to t('back'), hosted_events_path, class: 'ms-2 btn btn-light'

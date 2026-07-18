@@ -4,9 +4,7 @@
 .row.align-items-end
     .col-md.my-2
         %p= t('.rsvp_prompt.full_text', bolded_section: content_tag(:strong, t('.rsvp_prompt.bolded_section'))).html_safe
-        %p.mb-3= t('.secret_info')
-
-        = link_to t('.events_button'), events_path, class: 'btn btn-primary btn-lg btn-block'
+        %p.mb-3= t('.invite_info')
     .col-md.my-2
         %p
             - if current_user
@@ -17,4 +15,3 @@
             = link_to t('.new_event_button'), new_event_path, class: 'btn btn-success btn-lg btn-block'
         - else
             = link_to t('.log_in_button'), new_user_session_path, class: 'btn btn-success btn-lg btn-block'
-

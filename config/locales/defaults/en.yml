@@ -18,7 +18,6 @@ en:
       mailing_lists: Manage Mailing Lists
     attendee:
       header: Attendee
-      public_events: Public Events
       rsvped_events: RSVPed Events
     profile: My Profile
     log_out: Log out

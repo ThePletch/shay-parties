@@ -18,7 +18,6 @@ es:
       mailing_lists: Administrar Listas de Correo
     attendee:
       header: Invitado
-      public_events: Eventos Públicos
       rsvped_events: Eventos con RSVP
     profile: Mi Perfil
     log_out: Cerrar sesión

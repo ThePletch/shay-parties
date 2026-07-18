@@ -11,7 +11,6 @@ es:
         description: Descripción
         plus_one_max: Máx +1s por usuario
         requires_testing: Prueba de COVID requerida
-        secret: Evento secreto
     errors:
       models:
         event:
@@ -37,10 +36,6 @@ es:
         new: Evento Nuevo
       show_event_link: Mira a Evento
       preview_label: Haga clic para ver un avance del encabezado de su evento.
-      secret_event_help:
-        Eventos secretos no aparecen en la página de inicio a menos que el usuario haya respondido - se necesita enviar el enlace a las personas usted mismo para que lo encuentren.
-        Esto no impedirá que las personas a las que usted envíe el enlace se darlo a otras personas sin su permiso.
-        Se puede encontrar a sus eventos secretos en la "Hospedador -> Mis Eventos Hospedados" sección en la barra de navegación.
       testing_help:
         Eventos que requieren pruebas de COVID-19 tendrá un aviso que informará a los invitados sobre el requisito de la
         prueba. Asegúrese de explicar cómo enviarle evidencia de una prueba negativa en la descripción del evento.
@@ -60,8 +55,6 @@ es:
       empty_category: Todavía nadie.
       host_email_collection_header: Emails
     index:
-      for_user: "Eventos de %{name}"
-      public: Eventos Públicos
       self: Sus Eventos
       hosted_by: "Hospedado por %{name}"
       attending:
@@ -75,20 +68,15 @@ es:
         attendees: Asistentes
         going: Yendo
         maybe: Quizás
-        secret: (secreto)
       zero_state:
         message: Parece que no hay eventos aquí.
         click_to_make: Intente presionar el botón de abajo para organizar un nuevo evento.
-        other_user:
-          Este usuario podría no haber organizado ningúnos eventos que pueda ver.
-          Si está buscando usted a un evento específico, es posible que necesita pedir el hospedador en un enlace a la página de evento.
         past_prompt: Quería mirar a %{past_link} en su lugar?
         past_events: eventos pasados
         upcoming_prompt: Intente mirar a %{upcoming_link} en su lugar.
         upcoming_events: eventos próximos
       new_button:
         self: Organiza un evento nuevo
-        other: Organiza su propio evento
     show:
       time_separator: hace
       hosted_by_other: Hospedado por %{name}
