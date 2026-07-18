@@ -11,7 +11,6 @@ en:
         description: Description
         plus_one_max: Max +1s per guest
         requires_testing: Require COVID test
-        secret: Secret event
     errors:
       models:
         event:
@@ -35,10 +34,6 @@ en:
         new: New Event
       show_event_link: See Event
       preview_label: Click to see a preview of your event's header
-      secret_event_help:
-        Secret events don't appear on the home page unless someone has RSVPed - you'll need to send people the event link yourself for them to find it.
-        This won't stop people who receive the link from giving it to others without your permission.
-        You can find your secret events in the "Host > My Hosted Events" section in the navigation bar.
       testing_help:
         Events that require testing for COVID-19 will have a banner informing guests of the testing requirement.
         Be sure to explain how to send you evidence of a negative test in your event description.
@@ -58,8 +53,6 @@ en:
       empty_category: Nobody yet.
       host_email_collection_header: Emails
     index:
-      for_user: "Events from %{name}"
-      public: Public Events
       self: Your Events
       attending:
         title: Your RSVPed Events
@@ -73,20 +66,15 @@ en:
         attendees: Attendees
         going: "Going"
         maybe: "Maybe"
-        secret: (secret)
       zero_state:
         message: It looks like there aren't any events here.
         click_to_make: Try clicking the button below to organize a new event.
-        other_user:
-          This user might not have organized any events you can see.
-          If you're looking for a specific event, you might need to ask for a link to the event page from the host.
         past_prompt: Did you want to look at %{past_link} instead?
         past_events: past events
         upcoming_prompt: Try looking at %{upcoming_link} instead.
         upcoming_events: upcoming events
       new_button:
         self: Organize new event
-        other: Organize your own event
     show:
       time_separator: until
       hosted_by_other: Hosted by %{name}

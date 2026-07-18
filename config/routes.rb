@@ -8,12 +8,13 @@ Rails.application.routes.draw do
         locale: I18n.locale,
       }
 
-    resources :events, shallow: true do
+    resources :events, except: [:index], shallow: true do
       member do
         get 'ical'
       end
 
       collection do
+        get 'hosted', to: 'events#host_index'
         get 'rsvped', to: 'events#attendee_index'
       end
 
@@ -30,6 +31,7 @@ Rails.application.routes.draw do
       end
     end
 
+
     resources :addresses, only: [
       :show,
       # only for testing
@@ -37,10 +39,8 @@ Rails.application.routes.draw do
     ]
 
 
-    # user-scoped events index
     resources :user, shallow: true, only: [] do
       resources :addresses, only: [:create]
-      resources :events, only: [:index]
     end
 
     resources :mailing_lists do

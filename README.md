@@ -8,8 +8,7 @@ It's **free of charge** and **ad-free**, and it **always will be**.
 
 Parties for All provides the following features in a lightweight, simple interface:
 
-* Event discovery at a general level and for events specific to an individual host.
-* Support for secret/hidden events, blocked from displaying in the events index unless you've RSVPed to them already.
+* Private events that guests reach via invitation link — no public event listings.
 * Event landing pages, including address management and scheduling.
 * Multiple systems for communicating with your guests before the event:
   * Polls, for any questions that need answering

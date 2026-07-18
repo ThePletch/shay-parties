@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :ical, :index, :attendee_index]
+  before_action :authenticate_user!, except: [:show, :ical]
   before_action :set_event, only: [:show, :ical]
   before_action :set_owned_event, only: [:edit, :update, :destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]
@@ -15,30 +15,21 @@ class EventsController < ApplicationController
     },
   ]
 
-  def index
-    if params[:user_id]
-      @host = User.friendly.find(params[:user_id])
-      if current_user && current_user == @host
-        @index_title = t('event.index.self')
-      else
-        @index_title = t('event.index.for_user', name: @host.name)
-      end
-    else
-      @index_title = t('event.index.public')
-    end
+  def host_index
+    @hosted_list = true
+    @index_title = t('event.index.self')
+    @events, @current_scope = time_scoped_events_list(
+      current_user.managed_events.includes(:attendances, :owner),
+      params[:scope]
+    )
 
-    @events, @current_scope = time_scoped_events_list(get_events_list_for(@host), params[:scope])
+    render :index
   end
 
   def attendee_index
-    if @authenticated_user.nil?
-      redirect_to events_url, notice: t('event.index.attending.auth_required')
-      return
-    end
-
     @index_title = t('event.index.attending.title')
 
-    @events, @current_scope = time_scoped_events_list(@authenticated_user.rsvped_events, params[:scope])
+    @events, @current_scope = time_scoped_events_list(current_user.rsvped_events, params[:scope])
 
     render :index
   end
@@ -86,28 +77,10 @@ class EventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to events_url, notice: t('event.destroyed')
+    redirect_to hosted_events_url, notice: t('event.destroyed')
   end
 
   private
-
-  def get_events_list_for(host)
-    if host
-      events = host.managed_events
-
-      # users can see all their own events, so we short-circuit here for users
-      # viewing their own events list to avoid any further filtering
-      if @authenticated_user == host
-        return events.includes(:attendances, :owner)
-      end
-    else
-      events = Event.all
-    end
-
-    events = events.includes(:attendances, :owner)
-
-    user_scoped_events_list(events, @authenticated_user)
-  end
 
   def time_scoped_events_list(events, target_scope)
     case target_scope
@@ -115,16 +88,6 @@ class EventsController < ApplicationController
       return [events.where("end_time <= ?", Time.current).order(end_time: :desc), "past"]
     else
       return [events.where("end_time > ?", Time.current).order(end_time: :desc), "future"]
-    end
-  end
-
-  # Hides all secret events except ones the user has already RSVPed to.
-  # Obviously, unauthenticated users haven't RSVPed to any events.
-  def user_scoped_events_list(events, viewing_user)
-    if viewing_user
-      events.left_joins(:attendances).where("NOT events.secret OR (attendances.attendee_id = ? and attendances.attendee_type = 'User')", viewing_user.id).distinct
-    else
-      events.not_secret
     end
   end
 
@@ -146,7 +109,6 @@ class EventsController < ApplicationController
       :title,
       :start_time,
       :end_time,
-      :secret,
       :requires_testing,
       :description,
       :photo,

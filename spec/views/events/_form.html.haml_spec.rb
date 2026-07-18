@@ -21,17 +21,6 @@ RSpec.describe "events/_form" do
     expect(rendered).to have_selector('.invalid-feedback')
   end
 
-  it "asks if the event should be secret" do
-    event = FactoryBot.create(:event)
-
-    render(
-      'events/form',
-      event: event
-    )
-
-    expect(rendered).to have_text('Secret event')
-  end
-
   it "asks if the event should require COVID testing" do
     event = FactoryBot.create(:event)
 

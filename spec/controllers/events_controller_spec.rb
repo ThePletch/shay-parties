@@ -3,9 +3,9 @@ require 'rails_helper'
 describe EventsController do
 
   describe "GET attendee_index" do
-    it "redirects to the main index when not logged in" do
+    it "redirects to the login page when not logged in" do
       get :attendee_index
-      expect(response).to redirect_to events_path
+      expect(response).to redirect_to new_user_session_path
     end
 
     context "logged in" do
@@ -32,129 +32,38 @@ describe EventsController do
     end
   end
 
-  describe "GET index" do
+  describe "GET host_index" do
     before do
-      # we make both to test 'wrong user' cases more thoroughly
       @user_a = FactoryBot.create(:user)
       @user_b = FactoryBot.create(:user)
     end
 
-    context "with unspecified user" do
-      it "shows all events for default host with end times after the current time" do
-        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
-        later_a = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
-
-        get :index
-        expect(assigns(:events)).to match_array([later_event, later_a])
-      end
-
-      it "shows all past events for default host when set to 'past' scope" do
-        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
-
-        get :index, params: {scope: :past}
-        expect(assigns(:events)).to match_array([earlier_a, earlier_event])
-      end
-
-      it "excludes secret events" do
-        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-        secret_event = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
-
-        get :index, params: {scope: :past}
-        expect(assigns(:events)).to match_array([earlier_a])
-      end
-
-      context "logged in" do
-        before do
-          sign_in @user_a
-        end
-
-        it "excludes secret events the user hasn't RSVPed to" do
-          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
-
-          get :index, params: {scope: :past}
-          expect(assigns(:events)).to match_array([earlier_a])
-        end
-
-        it "includes secret events the user has RSVPed to" do
-          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
-          attendance = FactoryBot.create(:attendance, event: earlier_secret, attendee: @user_a)
-          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
-
-          get :index, params: {scope: :past}
-          expect(assigns(:events)).to match_array([earlier_a, earlier_secret])
-        end
-      end
+    it "redirects to the login page when not logged in" do
+      get :host_index
+      expect(response).to redirect_to new_user_session_path
     end
 
-    context "with specified user" do
-      it "shows all events for specified user with end times after the current time" do
-        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
-        later_a = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
-
-        get :index, params: {user_id: @user_a.id}
-        expect(assigns(:events)).to match_array([later_a])
+    context "logged in" do
+      before do
+        sign_in @user_a
       end
 
-      it "shows all past events for specified user when set to 'past' scope" do
-        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-        earlier_event = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
-        later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
-
-        get :index, params: {scope: :past, user_id: @user_a.id}
-        expect(assigns(:events)).to match_array([earlier_a])
-      end
-
-      it "excludes secret events" do
-        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-        earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+      it "shows the current user's future hosted events" do
+        FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
         later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
+        FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_b)
 
-        get :index, params: {scope: :past, user_id: @user_a.id}
-        expect(assigns(:events)).to match_array([earlier_a])
+        get :host_index
+        expect(assigns(:events)).to match_array([later_event])
       end
 
-      context "logged in" do
-        before do
-          sign_in @user_b
-        end
+      it "shows the current user's past hosted events when set to 'past' scope" do
+        earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
+        FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
+        FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
 
-        it "excludes secret events the user hasn't RSVPed to" do
-          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
-
-          get :index, params: {scope: :past, user_id: @user_a.id}
-          expect(assigns(:events)).to match_array([earlier_a])
-        end
-
-        it "includes secret events the user has RSVPed to" do
-          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          attendance = FactoryBot.create(:attendance, event: earlier_secret, attendee: @user_b)
-          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
-
-          get :index, params: {scope: :past, user_id: @user_a.id}
-          expect(assigns(:events)).to match_array([earlier_a, earlier_secret])
-        end
-
-        it "doesn't include RSVPed secret events from other users" do
-          earlier_a = FactoryBot.create(:event, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          earlier_secret = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_a)
-          earlier_secret_b = FactoryBot.create(:event, secret: true, start_time: Time.current - 25.hours, end_time: Time.current - 1.day, owner: @user_b)
-          attendance = FactoryBot.create(:attendance, event: earlier_secret_b, attendee: @user_b)
-          later_event = FactoryBot.create(:event, start_time: Time.current, end_time: Time.current + 1.day, owner: @user_a)
-
-          get :index, params: {scope: :past, user_id: @user_a.id}
-          expect(assigns(:events)).to match_array([earlier_a])
-        end
+        get :host_index, params: {scope: :past}
+        expect(assigns(:events)).to match_array([earlier_a])
       end
     end
   end
@@ -262,12 +171,13 @@ describe EventsController do
       expect { delete :destroy, params: {id: event.id} }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "deletes the event" do
+    it "deletes the event and redirects to the host's events list" do
       event = FactoryBot.create(:event)
       sign_in event.owner
       delete :destroy, params: {id: event.id}
 
       expect(Event.find_by(id: event.id)).to be_nil
+      expect(response).to redirect_to(hosted_events_path)
     end
   end
 

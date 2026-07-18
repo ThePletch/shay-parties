@@ -46,7 +46,7 @@ class MailingListsController < ApplicationController
 
   def destroy
     @mailing_list.destroy
-    redirect_to events_url, notice: t('mailing_list.destroyed')
+    redirect_to mailing_lists_url, notice: t('mailing_list.destroyed')
   end
 
   def sync_users
