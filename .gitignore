@@ -34,6 +34,7 @@ public/assets
 public/packs
 
 # ignore vendored bundles
+vendor/bundle
 vendor/development
 vendor/production
 
