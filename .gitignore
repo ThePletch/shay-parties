@@ -49,9 +49,7 @@ storage/*
 /config/credentials/*.key
 
 node_modules
-public/vite
-public/vite-dev
-public/vite-test
+public/vite*
 /config/master.key
 
 /config/credentials/staging.key
