@@ -36,7 +36,7 @@ gem 'ffi', '~> 1.15.5'
 gem 'carmen', '~> 1.1'
 
 # accounts and authentication
-gem 'devise', '~> 4.9.4'
+gem 'devise', '~> 5.0.4'
 # markdown for descriptions
 gem 'commonmarker', '~> 2.5'
 
