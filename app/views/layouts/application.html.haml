@@ -9,8 +9,8 @@
         = ' - '
       Parties For All
     = csrf_meta_tags
-    = stylesheet_link_tag    'application', media: 'all'
-    = javascript_include_tag 'application'
+    = vite_stylesheet_tag 'application.scss', media: 'all'
+    = vite_typescript_tag 'application'
   %body
     = render 'partials/navbar'
     - if notice

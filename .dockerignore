@@ -6,3 +6,5 @@ Dockerfile
 infrastructure
 log
 tmp
+node_modules
+storage

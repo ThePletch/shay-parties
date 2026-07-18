@@ -1,25 +1,52 @@
 locals {
+  # Non-sensitive application environment variables that can be embedded directly
   application_env_vars = {
-    RAILS_MASTER_KEY  = data.local_sensitive_file.master_key.content
-    DATABASE_USERNAME = var.database.username
-    DATABASE_PASSWORD = var.database.password
-    DATABASE_HOST     = var.database.host
-    DATABASE_NAME     = "${var.database.cluster_name}.${var.database.database}"
-    DATABASE_PORT     = tostring(var.database.port)
-    RACK_ENV          = "production"
-    RAILS_ENV         = "production"
+    RACK_ENV                = var.environment
+    RAILS_ENV               = var.environment
     # Eventually we'll want to move compiled assets into the
     # same object storage we use for image hosting.
     RAILS_SERVE_STATIC_FILES = "true"
     RAILS_LOG_TO_STDOUT      = "true"
-    ACTIVE_STORAGE_S3_BUCKET = var.activestorage.s3_bucket
+    ACTIVE_STORAGE_S3_BUCKET = aws_s3_bucket.activestorage.id
+    ACTIVE_STORAGE_S3_REGION = aws_s3_bucket.activestorage.bucket_region
+    ACTIVE_STORAGE_TRANSFORM_LAMBDA = try(aws_lambda_function.image_transform[0].function_name, "")
     PARTIES_FULL_DOMAIN      = local.main_domain
     PARTIES_BASE_DOMAIN      = var.root_domain
-    SES_SMTP_USERNAME        = var.smtp.username
-    SES_SMTP_PASSWORD        = var.smtp.password
   }
+
+  # Sensitive application environment variables stored in secured AWS SSM Parameters
+  application_sensitive_env_vars = {
+    RAILS_MASTER_KEY  = data.local_sensitive_file.master_key.content
+    DATABASE_USERNAME = var.database.username
+    DATABASE_PASSWORD = var.database.password
+    DATABASE_HOST     = var.database.host
+    DATABASE_NAME     = var.database.database
+    DATABASE_PORT     = tostring(var.database.port)
+    SES_SMTP_USERNAME = var.smtp.username
+    SES_SMTP_PASSWORD = var.smtp.password
+  }
+
   capacity_provider = "FARGATE_SPOT"
+  # default domain is not listening for ipv6 requests, so we need to use the `on.aws` domain for dualstack support
+  dualstack_registry_endpoint = replace(
+    replace(
+      aws_ecr_repository.main.repository_url,
+      "amazonaws.com",
+      "on.aws"
+    ),
+    "dkr.ecr",
+    "dkr-ecr"
+  )
 }
+
+resource "aws_ssm_parameter" "application" {
+  for_each = local.application_sensitive_env_vars
+
+  name = "/${var.environment}/${var.name}/${each.key}"
+  type = "SecureString"
+  value = each.value
+}
+
 resource "aws_ecr_repository" "main" {
   name = "${var.name}-images"
 }
@@ -70,9 +97,18 @@ resource "aws_ecs_service" "main" {
   desired_count   = 1
 
   network_configuration {
-    subnets          = aws_subnet.public.*.id
+    subnets          = [for subnet in aws_subnet.public : subnet.id]
     security_groups  = [aws_security_group.http.id]
     assign_public_ip = true
+  }
+
+  service_connect_configuration {
+    enabled = true
+    namespace = aws_service_discovery_public_dns_namespace.public_ipv6.arn
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.public.arn
   }
 
   capacity_provider_strategy {
@@ -108,10 +144,11 @@ resource "aws_ecs_task_definition" "main" {
   container_definitions = jsonencode([
     {
       name      = "rails"
-      image     = "${aws_ecr_repository.main.repository_url}:latest"
+      image     = "${local.dualstack_registry_endpoint}:latest"
       essential = true
       portMappings = [
         {
+          name = "http"
           protocol      = "tcp"
           hostPort      = var.internal_port
           containerPort = var.internal_port
@@ -123,6 +160,16 @@ resource "aws_ecs_task_definition" "main" {
           value = value
         }
       ]
+      secrets = [
+        for name, secret in aws_ssm_parameter.application : {
+          name      = name
+          valueFrom = secret.arn
+        }
+      ]
+      healthCheck = {
+        command = [ "CMD-SHELL", "curl -f http://localhost:${var.internal_port}/ || exit 1" ]
+        startPeriod = 30
+      }
       logConfiguration = {
         logDriver = "awslogs",
         options = {

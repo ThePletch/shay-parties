@@ -46,7 +46,7 @@ class EventsController < ApplicationController
   def show
     if @authenticated_user
       @attendee = @authenticated_user
-      @attendance = @event.attendances.includes(:attendee, plus_ones: :attendee).find_by(attendee: @authenticated_user)
+      @attendance ||= @event.attendances.includes(:attendee, plus_ones: :attendee).find_by(attendee: @authenticated_user)
     end
 
     @attendance ||= @event.attendances.includes(:attendee).build

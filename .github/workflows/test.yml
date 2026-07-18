@@ -33,8 +33,15 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
+    - name: Set up Node
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: package.json
+    - run: npm ci
     - name: Set up database
       run: bundle exec rails db:setup
+    - name: Test JavaScript
+      run: npm test
     - name: Test with Rspec
       run: |
         bundle exec rspec

@@ -206,8 +206,8 @@ describe EventsController do
         start_time = 10.minutes.ago
         post :create, params: {event: {
           title: 'foobar',
-          start_time: start_time.strftime(Event::TIMESTAMP_FORMAT),
-          end_time: Time.current.strftime(Event::TIMESTAMP_FORMAT),
+          start_time:,
+          end_time: Time.current,
         }}
         expect(response).to redirect_to(event_path(assigns(:event)))
         expect(assigns(:event)).to be_persisted

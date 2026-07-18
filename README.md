@@ -53,12 +53,16 @@ Currently, I keep track of what features I want to add or upgrade in the Project
 
 This app doesn't do anything particularly unusual, as Rails apps go. It runs its database on PostgreSQL, uses Puma for its server, and Bundler for its dependencies.
 
-#### Run with Docker Compose (preferred)
+#### Run with Docker Compose (recommended)
 
-Running `docker compose up` will spin up a server and all dependencies. The local development server will listen on [port 23000](http://localhost:23000). Sidecar containers will also run on boot handle installing your bundle and running any pending migrations. If you change your dependency versions or add a new migration, you'll need to run the sidecars again to get things up to date:
+Running `docker compose up` will spin up a server and all dependencies. The local development server will listen on [port 23000](http://localhost:23000). Sidecar containers will also run on boot to handle installing dependencies and running any pending migrations.
+
+If you use **`docker compose watch`** instead (Docker Compose 2.32+), the bundle installer, npm installer, and database migration sidecars restart automatically when `Gemfile`, `Gemfile.lock`, `package.json`, `package-lock.json`, or Ruby files under `db/migrate/` change.
+
+If you use plain `docker compose up` and change dependency versions, run the sidecars again to refresh installed gems and packages (and run migrations when needed):
 
 ```bash
-docker compose run bundle-installer && docker compose run db-migrater
+docker compose run bundle-installer && docker compose run npm-installer && docker compose run db-migrater
 ```
 
 If you just want to run the test suite, you can spin up a shell (with dependencies) for testing by running the `docker-shell` executable in the `bin` directory:
@@ -90,5 +94,3 @@ Running the tests is as simple as `bundle exec rspec`.
 ### Running your own instance of Parties for All
 
 If you want to host your own instance for privacy reasons (or whatever other reasons), take a look at the infrastructure folder in the repository. You can spin up your own copy of that infrastructure with Terraform on your personal AWS account. Work to make setup more automated and require less manual input is underway.
-
-shay is testing deploys

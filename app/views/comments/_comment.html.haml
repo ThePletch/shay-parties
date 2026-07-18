@@ -23,7 +23,7 @@
         .float-end
           .btn-group
             - if comment.deletable_by?(@authenticated_user)
-              = link_to t("comment.actions.undelete"), undelete_comment_path(comment, guest_guid: params[:guest_guid]), method: :put, class: "undelete-button btn btn-sm btn-danger", remote: false
+              = button_to t("comment.actions.undelete"), undelete_comment_path(comment, guest_guid: params[:guest_guid]), method: :put, class: "undelete-button btn btn-sm btn-danger", remote: false
     - else
       .comment-body.body{id: "comment-#{comment.id}-body"}
         = comment.rendered_body
@@ -40,7 +40,7 @@
             - if comment.editable_by?(@authenticated_user)
               %a.edit-button.btn.btn-sm.btn-primary{id: "comment-#{comment.id}-edit-button", data: {id: comment.id}}= t('comment.actions.edit')
             - if comment.deletable_by?(@authenticated_user)
-              = link_to t("comment.actions.delete"), comment_path(comment, guest_guid: params[:guest_guid]), data: { confirm: t('comment.actions.confirm_delete') }, method: :delete, class: "btn btn-sm btn-danger delete-button", remote: false
+              = button_to t("comment.actions.delete"), comment_path(comment, guest_guid: params[:guest_guid]), method: :delete, data: { confirm: t('comment.actions.confirm_delete') },  class: "btn btn-sm btn-danger delete-button", remote: false
         .float-start
           %a.btn.btn-sm.btn-primary.reply-button{data: {id: comment.id}}= t('comment.actions.reply')
     .clearfix

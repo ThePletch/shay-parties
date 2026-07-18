@@ -1,4 +1,3 @@
-# TODO pull environment into workflow input
 name: Deploy
 on:
   workflow_dispatch:
@@ -8,11 +7,19 @@ on:
         type: choice
         # manual deploys to prod will be limited to master by environment rules
         options: [production, staging]
+      createdb:
+        required: true
+        type: boolean
+        default: false
   workflow_call:
     inputs:
       environment:
         required: true
         type: string
+      createdb:
+        required: false
+        type: boolean
+        default: false
     secrets:
       AWS_ECR_ROLE:
         required: true
@@ -24,56 +31,44 @@ on:
         required: true
       AWS_ECS_SERVICE:
         required: true
-      DATABASE_USERNAME:
-        required: true
-      DATABASE_PASSWORD:
-        required: true
-      DATABASE_HOST:
-        required: true
-      DATABASE_PORT:
-        required: true
-      DATABASE_NAME:
-        required: true
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     permissions:
       id-token: write
       contents: read
+      actions: write
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v6
       with:
-        role-to-assume: ${{ secrets.AWS_ECR_ROLE }}
-        # not a secret, but you can only configure secrets with the Github Terraform provider,
-        # not environment variables.
-        aws-region: ${{ secrets.AWS_REGION }}
+        role-to-assume: ${{ vars.AWS_ECR_ROLE }}
+        aws-region: ${{ vars.AWS_REGION }}
     - name: Log in to AWS ECR
       id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      uses: aws-actions/amazon-ecr-login@v2
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v4
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v4
     - name: Docker meta
       id: meta
-      uses: docker/metadata-action@v4
+      uses: docker/metadata-action@v6
       with:
         # list of Docker images to use as base name for tags
         images: |
-          ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}
+          ${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_REPOSITORY }}
         # generate Docker tags based on the following events/attributes
         tags: |
           type=ref,event=branch
           type=ref,event=pr
           type=sha,format=long
           type=raw,value=latest
-    # TODO split out bundle install into separate step that caches in GHA cache,
-    # currently it's not cached at all due to multi-stage builds
+    # BuildKit cache mounts in the Dockerfile cache Bundler/npm downloads; GHA + registry cache persist build cache.
     - name: Build and push
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         push: true
@@ -81,34 +76,129 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         build-args: |
           PORT=3030
-          ENVIRONMENT=production
+          ENVIRONMENT=${{ inputs.environment }}
+        secrets: |
+          CREDENTIALS_KEY=${{ secrets.RAILS_MASTER_KEY }}
         cache-from: |
-          type=gha
-          type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
-        cache-to: |
-          type=gha
-        target: server-shrinkwrapped
-    # TODO split this into a separate dependent job
+          type=gha,scope=app-runtime
+          type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_REPOSITORY }}:latest
+        cache-to: type=gha,scope=app-runtime,mode=max
+        target: runtime
+    # Lambda rejects buildx's default provenance attestations (OCI index at :latest).
+    - name: Build and push image transform Lambda
+      uses: docker/build-push-action@v7
+      with:
+        context: infrastructure/lambda/image_transform
+        push: true
+        pull: true
+        platforms: linux/arm64
+        tags: ${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_IMAGE_TRANSFORM_REPOSITORY }}:latest
+        provenance: false
+        sbom: false
+        cache-from: type=gha,scope=image-transform-lambda
+        cache-to: type=gha,scope=image-transform-lambda,mode=max
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    needs: [build]
+    outputs:
+      task-definition-arn: ${{ steps.trigger-deploy.outputs.task-definition-arn }}
+      network-config: ${{ steps.trigger-deploy.outputs.network-config }}
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v6
+      with:
+        role-to-assume: ${{ vars.AWS_ECR_ROLE }}
+        aws-region: ${{ vars.AWS_REGION }}
+        mask-aws-account-id: false
     - name: Trigger deploy of ECS service
+      id: trigger-deploy
       env:
-        CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
-        SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
+        CLUSTER: ${{ vars.AWS_ECS_CLUSTER }}
+        SERVICE: ${{ vars.AWS_ECS_SERVICE }}
+        AWS_REGION: ${{ vars.AWS_REGION }}
       run: |
-        aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
-    # This step assumes that the database is accessible from the public internet.
+        aws ecs update-service --cluster $CLUSTER \
+          --service $SERVICE \
+          --force-new-deployment  \
+          > service-info.json
+        echo "task-definition-arn=$(jq '.service.taskDefinition' service-info.json -r)" >> "$GITHUB_OUTPUT"
+
+        {
+          echo 'network-config<<EOF'
+          jq '.service.networkConfiguration' service-info.json -r
+          echo 'EOF'
+        } >> "$GITHUB_OUTPUT"
+  migrate:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    needs: [deploy]
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v6
+      with:
+        role-to-assume: ${{ vars.AWS_ECR_ROLE }}
+        aws-region: ${{ vars.AWS_REGION }}
+    - name: Create database
+      if: inputs.createdb
+      env:
+        AWS_REGION: ${{ vars.AWS_REGION }}
+        TASK_NETWORK_CONFIG: ${{ needs.deploy.outputs.network-config }}
+        CONTAINER_OVERRIDES: >
+          {
+            "containerOverrides": [
+              {
+                "name": "rails",
+                "command": [
+                  "bundle",
+                  "exec",
+                  "rails",
+                  "db:setup"
+                ]
+              }
+            ]
+          }
+      run: |
+        # doesn't wait for task completion before exiting - we can use `aws ecs wait` if we need to do
+        # post-migration tasks in the future.
+        aws ecs run-task \
+          --cluster ${{ vars.AWS_ECS_CLUSTER }} \
+          --launch-type FARGATE \
+          --task-definition ${{ needs.deploy.outputs.task-definition-arn }} \
+          --network-configuration "$TASK_NETWORK_CONFIG" \
+          --overrides "$CONTAINER_OVERRIDES"
+    # heavily copypasted - find a way to just switch the base rails command?
     - name: Run migrations
+      if: ${{ ! inputs.createdb }}
       env:
-        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-        ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+        AWS_REGION: ${{ vars.AWS_REGION }}
+        TASK_NETWORK_CONFIG: ${{ needs.deploy.outputs.network-config }}
+        CONTAINER_OVERRIDES: >
+          {
+            "containerOverrides": [
+              {
+                "name": "rails",
+                "command": [
+                  "bundle",
+                  "exec",
+                  "rails",
+                  "db:migrate"
+                ]
+              }
+            ]
+          }
       run: |
-        docker run \
-          --rm \
-          -e RAILS_ENV=production \
-          -e SECRET_KEY_BASE_DUMMY=1 \
-          --env-file <(printenv | grep DATABASE_) \
-          $ECR_IMAGE \
-          bundle exec rails db:migrate
+        # doesn't wait for task completion before exiting - we can use `aws ecs wait` if we need to do
+        # post-migration tasks in the future.
+        aws ecs run-task \
+          --cluster ${{ vars.AWS_ECS_CLUSTER }} \
+          --launch-type FARGATE \
+          --task-definition ${{ needs.deploy.outputs.task-definition-arn }} \
+          --network-configuration "$TASK_NETWORK_CONFIG" \
+          --overrides "$CONTAINER_OVERRIDES"

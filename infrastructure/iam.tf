@@ -7,11 +7,16 @@ data "tls_certificate" "github" {
   url = local.github_oidc_url
 }
 
-resource "aws_iam_openid_connect_provider" "github" {
-  url = local.github_oidc_url
+# # uncomment to set up initial OIDC - shared across all of your configs with GH access, so only do this once
+# resource "aws_iam_openid_connect_provider" "github" {
+#   url = local.github_oidc_url
 
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = data.tls_certificate.github.certificates.*.sha1_fingerprint
+#   client_id_list  = ["sts.amazonaws.com"]
+#   thumbprint_list = data.tls_certificate.github.certificates.*.sha1_fingerprint
+# }
+
+data "aws_iam_openid_connect_provider" "github" {
+  url = local.github_oidc_url
 }
 
 data "aws_iam_policy_document" "ecs_assume_role" {
@@ -31,7 +36,7 @@ data "aws_iam_policy_document" "github_assume_role" {
 
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github.arn]
+      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
     }
 
     condition {
@@ -60,6 +65,23 @@ data "aws_iam_policy_document" "ecs_logs" {
   }
 }
 
+data "aws_iam_policy_document" "ecs_task_execution_secrets" {
+  statement {
+    actions = [
+      # all read-only actions that can be scoped to individual params, e.g. GetParameterByPath
+      "ssm:GetParameter*",
+    ]
+    resources = [for secret in aws_ssm_parameter.application : secret.arn]
+  }
+
+  statement {
+    actions = [
+      "ssm:DescribeParameters",
+    ]
+    resources = ["*"]
+  }
+}
+
 data "aws_iam_policy_document" "ecs_deploy" {
   statement {
     actions = [
@@ -71,7 +93,10 @@ data "aws_iam_policy_document" "ecs_deploy" {
       "ecr:PutImage",
       "ecr:UploadLayerPart",
     ]
-    resources = [aws_ecr_repository.main.arn]
+    resources = [
+      aws_ecr_repository.main.arn,
+      aws_ecr_repository.image_transform_lambda.arn,
+    ]
   }
 
   # Token is scoped to permissions defined in the rest of this policy
@@ -85,11 +110,22 @@ data "aws_iam_policy_document" "ecs_deploy" {
     # i hate that aws_ecs_service exposes the ARN but not under 'arn'
     resources = [aws_ecs_service.main.id]
   }
-}
 
-data "aws_s3_bucket" "activestorage" {
-  provider = aws.bucket
-  bucket   = var.activestorage.s3_bucket
+  statement {
+    actions = ["ecs:RunTask"]
+    # we need to wildcard this or we'd need to sync terraform to the
+    # current revision during every single deploy
+    resources = ["${aws_ecs_task_definition.main.arn_without_revision}:*"]
+  }
+
+  # required permission for running task definitions (avoids privilege escalation to ECS task's role permissions)
+  statement {
+    actions = ["iam:PassRole"]
+    resources = [
+      aws_ecs_task_definition.main.task_role_arn,
+      aws_ecs_task_definition.main.execution_role_arn
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "service_actions" {
@@ -102,8 +138,8 @@ data "aws_iam_policy_document" "service_actions" {
     ]
 
     resources = [
-      data.aws_s3_bucket.activestorage.arn,
-      "${data.aws_s3_bucket.activestorage.arn}/*",
+      aws_s3_bucket.activestorage.arn,
+      "${aws_s3_bucket.activestorage.arn}/*",
     ]
   }
 }
@@ -111,21 +147,21 @@ data "aws_iam_policy_document" "service_actions" {
 resource "aws_iam_role" "deploy" {
   name               = "${var.name}-deploy"
   assume_role_policy = data.aws_iam_policy_document.github_assume_role.json
+}
 
-  inline_policy {
-    name   = "deploy"
-    policy = data.aws_iam_policy_document.ecs_deploy.json
-  }
+resource "aws_iam_role_policy" "deploy" {
+  role = aws_iam_role.deploy.name
+  policy = data.aws_iam_policy_document.ecs_deploy.json
 }
 
 resource "aws_iam_role" "task_execution" {
   name               = "${var.name}-task-execution"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
+}
 
-  inline_policy {
-    name   = "logs"
-    policy = data.aws_iam_policy_document.ecs_logs.json
-  }
+resource "aws_iam_role_policy" "task_execution" {
+  role = aws_iam_role.task_execution.name
+  policy = data.aws_iam_policy_document.ecs_logs.json
 }
 
 resource "aws_iam_role_policy_attachment" "task_execution" {
@@ -133,13 +169,17 @@ resource "aws_iam_role_policy_attachment" "task_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy" "task_execution_secrets" {
+  role   = aws_iam_role.task_execution.name
+  policy = data.aws_iam_policy_document.ecs_task_execution_secrets.json
+}
+
 resource "aws_iam_role" "task" {
   name               = "${var.name}-task"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
+}
 
-  inline_policy {
-    name   = "service"
-    policy = data.aws_iam_policy_document.service_actions.json
-  }
-
+resource "aws_iam_role_policy" "task" {
+  role = aws_iam_role.task.name
+  policy = data.aws_iam_policy_document.service_actions.json
 }

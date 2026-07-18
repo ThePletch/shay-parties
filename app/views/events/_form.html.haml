@@ -1,3 +1,5 @@
+= vite_typescript_tag 'entrypoints/events/form'
+
 - # svg config for info circle
 %svg.d-none{xmlns: "http://www.w3.org/2000/svg"}
   %symbol#info-fill{viewBox: "0 0 16 16", fill: 'currentColor'}
@@ -14,7 +16,7 @@
         %div= t('event.form.header_photo_crop_prompt')
       .hero.border-top
         .hero-image
-          %img#photo-preview{src: event.photo.attached? ? rails_storage_redirect_path(event.photo) : image_path('default_event_image.jpg'), data: {initial_y_offset: event.photo_crop_y_offset}}
+          %img#photo-preview{src: event.photo.attached? ? rails_storage_redirect_path(event.photo) : vite_asset_path('images/default_event_image.jpg'), data: {initial_y_offset: event.photo_crop_y_offset}}
         .mx-2
           .hero-title
             %h1.title.display-4#title-preview{data: {default: t('event.title_placeholder')}}
@@ -27,11 +29,11 @@
   = form.text_field :title, floating: true
   = form.form_group(class: 'mt-3 d-lg-flex') do
     .flex-lg-grow-1
-      = form.text_field :start_time, class: 'datetimepicker', value: event.start_time_str, floating: true
+      = form.text_field :start_time, class: 'datetimepicker', value: event.start_time, floating: true
     .align-items-center.text-center.mx-3
       %em.col= "…#{t('event.show.time_separator')}…"
     .flex-lg-grow-1
-      = form.text_field :end_time, class: 'datetimepicker', value: event.end_time_str, floating: true
+      = form.text_field :end_time, class: 'datetimepicker', value: event.end_time, floating: true
   .row
     .flex-grow-0.col-lg-6
       .input-group

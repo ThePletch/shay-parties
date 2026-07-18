@@ -1,0 +1,1 @@
+export type MaybeJQ<T> = T | JQuery<T>;

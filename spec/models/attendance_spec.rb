@@ -45,20 +45,21 @@ describe Attendance do
 
   it "does not allow plus ones beyond event limit" do
     event = FactoryBot.create(:event, plus_one_max: 1)
-    attendance = FactoryBot.create(:attendance, event: event)
-    within_limit_attendance = FactoryBot.build(:guest_attendance, event: event, parent_attendance: attendance)
-    expect(within_limit_attendance).to be_valid
-    within_limit_attendance.save!
+    attendance = FactoryBot.build(:attendance, event: event, plus_ones: [FactoryBot.build(:guest_attendance, event: event)])
+    expect(attendance).to be_valid
+    attendance.save!
 
-    beyond_limit_attendance = FactoryBot.build(:guest_attendance, event: event, parent_attendance: attendance)
+    beyond_limit_attendance = FactoryBot.build(:attendance, event: event, plus_ones: [
+      FactoryBot.build(:guest_attendance, event: event),
+      FactoryBot.build(:guest_attendance, event: event, parent_attendance: attendance),
+    ])
     expect(beyond_limit_attendance).not_to be_valid
   end
 
   it "rejects plus ones for events with plus-ones disabled" do
     event = FactoryBot.create(:event, plus_one_max: 0)
-    attendance = FactoryBot.create(:attendance, event: event)
-    within_limit_attendance = FactoryBot.build(:guest_attendance, event: event, parent_attendance: attendance)
-    expect(within_limit_attendance).not_to be_valid
+    attendance = FactoryBot.build(:attendance, event: event, plus_ones: [FactoryBot.create(:guest_attendance, event: event)])
+    expect(attendance).not_to be_valid
   end
 
   it "deletes poll responses for its event when destroyed" do

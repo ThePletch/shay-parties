@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "~>24"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "@rails/activestorage": "^8.1.300",
+    "bootstrap": "^5.3.8",
+    "flatpickr": "^4.6.13",
+    "jquery": "^3.7.1",
+    "vite-plugin-ruby": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
+    "@types/jquery": "^3.5.33",
+    "@types/node": "^25.5.2",
+    "@types/rails__activestorage": "^8.0.1",
+    "@vitest/coverage-v8": "^4.1.8",
+    "jsdom": "^29.1.1",
+    "sass": "^1.97.1",
+    "sass-embedded": "^1.97.1",
+    "typescript": "^6.0.2",
+    "vite": "^7.3.0",
+    "vitest": "^4.1.8"
+  }
+}

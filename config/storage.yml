@@ -6,6 +6,9 @@ test:
   root: <%= Rails.root.join("storage") %>
 amazon:
   service: S3
-  # todo make this dynamic
-  region: "us-east-1"
+  region: <%= ENV.fetch("ACTIVE_STORAGE_S3_REGION", "us-east-1") %>
   bucket: <%= ENV["ACTIVE_STORAGE_S3_BUCKET"] %>
+  # IPv6-only ECS tasks cannot reach the default IPv4 S3 hostname.
+  use_dualstack_endpoint: true
+  http_open_timeout: 5
+  http_read_timeout: 60

@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.3"
+  required_version = ">= 1.5"
 
   backend "s3" {
     encrypt = "true"
@@ -8,11 +8,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~> 6.0"
     }
     github = {
       source  = "integrations/github"
-      version = "~> 5.0"
+      version = "~> 6.0"
     }
     local = {
       source  = "hashicorp/local"
@@ -35,7 +35,7 @@ provider "aws" {
 
 provider "aws" {
   alias  = "bucket"
-  region = var.activestorage.region
+  region = "us-east-2"
 }
 
 provider "github" {}
@@ -49,5 +49,5 @@ data "aws_region" "current" {}
 data "local_sensitive_file" "master_key" {
   # assumes you're running from the `infrastructure/` directory,
   # since we can't look up the project root
-  filename = "../config/credentials/production.key"
+  filename = "../config/credentials/${var.environment}.key"
 }
