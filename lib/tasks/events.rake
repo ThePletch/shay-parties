@@ -6,12 +6,11 @@ namespace :events do
     queued = 0
     skipped = 0
 
-    Event.with_attached_photo.find_each do |event|
+    Event.with_attached_photo.joins(:photo_attachment).find_each do |event|
       if event.landing_page_photo_ready?
         skipped += 1
         next
       end
-
       event.photo.blob.preprocessed(event.landing_page_photo_transformations)
       queued += 1
     end
