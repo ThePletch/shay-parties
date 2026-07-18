@@ -6,6 +6,8 @@ locals {
     AWS_ECS_CLUSTER    = aws_ecs_cluster.main.name
     AWS_ECS_SERVICE    = aws_ecs_service.main.name
     AWS_REGION         = data.aws_region.current.region
+    # Empty until create_image_transform_lambda is true; deploy workflow skips the update step when blank.
+    AWS_IMAGE_TRANSFORM_LAMBDA = try(aws_lambda_function.image_transform[0].function_name, "")
   }
 
   plaintext_secrets = {

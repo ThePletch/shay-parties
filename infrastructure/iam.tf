@@ -126,6 +126,15 @@ data "aws_iam_policy_document" "ecs_deploy" {
       aws_ecs_task_definition.main.execution_role_arn
     ]
   }
+
+  dynamic "statement" {
+    for_each = var.create_image_transform_lambda ? [1] : []
+
+    content {
+      actions   = ["lambda:UpdateFunctionCode"]
+      resources = [aws_lambda_function.image_transform[0].arn]
+    }
+  }
 }
 
 data "aws_iam_policy_document" "service_actions" {

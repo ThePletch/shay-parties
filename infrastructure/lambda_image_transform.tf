@@ -61,7 +61,7 @@ resource "aws_lambda_function" "image_transform" {
     command = ["handler.lambda_handler"]
   }
 
-  # Deploy workflows push new :latest digests after Terraform creates the function.
+  # Deploy workflow owns image updates via UpdateFunctionCode after each ECR push.
   lifecycle {
     ignore_changes = [
       image_uri,

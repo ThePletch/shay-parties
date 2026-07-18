@@ -39,6 +39,8 @@ jobs:
       id-token: write
       contents: read
       actions: write
+    outputs:
+      lambda-image-uri: ${{ steps.lambda-image-uri.outputs.uri }}
     steps:
     - uses: actions/checkout@v6
     - name: Configure AWS credentials
@@ -86,6 +88,7 @@ jobs:
         target: runtime
     # Lambda rejects buildx's default provenance attestations (OCI index at :latest).
     - name: Build and push image transform Lambda
+      id: build-lambda
       uses: docker/build-push-action@v7
       with:
         context: infrastructure/lambda/image_transform
@@ -97,6 +100,10 @@ jobs:
         sbom: false
         cache-from: type=gha,scope=image-transform-lambda
         cache-to: type=gha,scope=image-transform-lambda,mode=max
+    - name: Record Lambda image URI
+      id: lambda-image-uri
+      run: |
+        echo "uri=${{ steps.login-ecr.outputs.registry }}/${{ vars.AWS_ECR_IMAGE_TRANSFORM_REPOSITORY }}@${{ steps.build-lambda.outputs.digest }}" >> "$GITHUB_OUTPUT"
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
@@ -132,6 +139,15 @@ jobs:
           jq '.service.networkConfiguration' service-info.json -r
           echo 'EOF'
         } >> "$GITHUB_OUTPUT"
+    # Pushing a new :latest tag to ECR does not update Lambda; it pins the digest from Create/UpdateFunctionCode.
+    - name: Deploy image transform Lambda
+      if: ${{ vars.AWS_IMAGE_TRANSFORM_LAMBDA != '' }}
+      env:
+        AWS_REGION: ${{ vars.AWS_REGION }}
+      run: |
+        aws lambda update-function-code \
+          --function-name "${{ vars.AWS_IMAGE_TRANSFORM_LAMBDA }}" \
+          --image-uri "${{ needs.build.outputs.lambda-image-uri }}"
   migrate:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
