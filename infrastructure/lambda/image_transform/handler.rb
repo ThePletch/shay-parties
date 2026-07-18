@@ -40,18 +40,19 @@ module ImageTransform
 
   def build_operations(transformations)
     transformations.each_with_object([]) do |(name, argument), list|
-      next if argument.blank?
+      next if argument.nil? || argument == ""
 
       list << [name.to_sym, argument]
     end
   end
 
   def output_format(transformations, content_type)
-    transformations["format"]&.to_sym || default_format(content_type)
+    format = transformations["format"]
+    format ? format.to_sym : default_format(content_type)
   end
 
   def default_format(content_type)
-    if content_type.in?(%w[image/png image/gif])
+    if %w[image/png image/gif].include?(content_type)
       :png
     else
       :jpg
