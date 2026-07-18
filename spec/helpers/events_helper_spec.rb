@@ -9,7 +9,7 @@ RSpec.describe EventsHelper, type: :helper do
     it "renders the default image when no photo is attached" do
       html = helper.event_header_image_tag(event)
 
-      expect(html).to include("default_event_image.jpg")
+      expect(html).to include(helper.vite_asset_path("images/default_event_image.jpg"))
       expect(html).to include('class="hero-photo"')
     end
 
