@@ -10,6 +10,7 @@ es:
     created_failed: No se pudo crear el comentario.
     rejection:
       unauthenticated: Se necesita estar conectado o autenticar como invitado para publicar un comentario.
+      unconfirmed: Confirma tu correo electrónico antes de publicar comentarios.
     view:
       deleted: "[borrado]"
       deleted_by: Borrado por %{editor}

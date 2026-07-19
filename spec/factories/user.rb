@@ -4,5 +4,11 @@ FactoryBot.define do
     sequence(:name) {|x| "User #{x}"}
     password { "wordpass" }
     password_confirmation { "wordpass" }
+    confirmed_at { Time.current }
+
+    trait :unconfirmed do
+      confirmed_at { nil }
+      after(:build) { |user| user.skip_confirmation_notification! }
+    end
   end
 end

@@ -9,6 +9,13 @@ en:
     show: Show
     delete: Delete
     confirm: "Are you sure?"
+  turnstile:
+    failed: Captcha verification failed. Please try again.
+  user:
+    unconfirmed_banner: Please confirm your email address to organize events and post comments.
+    resend_confirmation: Resend confirmation email
+    rejection:
+      unconfirmed: Please confirm your email address before organizing an event.
   navbar:
     home: Home
     host:

@@ -9,6 +9,13 @@ es:
     show: Mirar
     delete: Borrar
     confirm: "¿Está usted seguro?"
+  turnstile:
+    failed: La verificación captcha falló. Inténtalo de nuevo.
+  user:
+    unconfirmed_banner: Confirma tu correo electrónico para organizar eventos y publicar comentarios.
+    resend_confirmation: Reenviar correo de confirmación
+    rejection:
+      unconfirmed: Confirma tu correo electrónico antes de organizar un evento.
   navbar:
     home: Inicio
     host:

@@ -13,6 +13,12 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def require_confirmed_email!
+    return if current_user.confirmed?
+
+    redirect_back fallback_location: root_path, alert: t('user.rejection.unconfirmed')
+  end
+
   def storable_location?
     request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
   end

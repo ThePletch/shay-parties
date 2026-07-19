@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :ical]
+  before_action :require_confirmed_email!, only: [:new, :create]
   before_action :set_event, only: [:show, :ical]
   before_action :set_owned_event, only: [:edit, :update, :destroy]
   before_action :load_prior_addresses, only: [:new, :edit, :create, :update]

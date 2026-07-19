@@ -5,7 +5,7 @@ describe MailingList do
   describe "sync_users" do
     it "links emails to users with matching emails" do
       matching_user = FactoryBot.create(:user, email: 'steve@yes.no')
-      non_matching_user = FactoryBot.create(:user, email: 'steve@yes.biz')
+      FactoryBot.create(:user, email: 'steve@yes.biz')
       mailing_list = FactoryBot.create(:mailing_list, emails: ['steve@yes.no', 'what@test.good'])
       mailing_list.sync_users
 
@@ -20,8 +20,10 @@ describe MailingList do
         mailing_list.sync_users
 
         expect(mailing_list.emails.first.user).to eq matching_user
-        matching_user.update(email: "different@email.com")
-        non_matching_user.update(email: "steve@yes.no")
+        matching_user.skip_reconfirmation!
+        matching_user.update!(email: "different@email.com")
+        non_matching_user.skip_reconfirmation!
+        non_matching_user.update!(email: "steve@yes.no")
         mailing_list.sync_users(force: true)
 
         expect(mailing_list.emails.first.user).to eq non_matching_user
@@ -36,8 +38,10 @@ describe MailingList do
         mailing_list.sync_users
 
         expect(mailing_list.emails.first.user).to eq matching_user
-        matching_user.update(email: "different@email.com")
-        non_matching_user.update(email: "steve@yes.no")
+        matching_user.skip_reconfirmation!
+        matching_user.update!(email: "different@email.com")
+        non_matching_user.skip_reconfirmation!
+        non_matching_user.update!(email: "steve@yes.no")
         mailing_list.sync_users(force: false)
 
         expect(mailing_list.emails.first.user).to eq matching_user

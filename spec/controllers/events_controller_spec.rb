@@ -124,6 +124,21 @@ describe EventsController do
         expect(assigns(:event).start_time).to be_within(1.minute).of(start_time)
       end
 
+      it "blocks unconfirmed users from creating events" do
+        unconfirmed = FactoryBot.create(:user, :unconfirmed)
+        sign_in unconfirmed
+
+        expect {
+          post :create, params: {event: {
+            title: 'foobar',
+            start_time: 10.minutes.ago,
+            end_time: Time.current,
+          }}
+        }.not_to change(Event, :count)
+
+        expect(flash[:alert]).to eq(I18n.t('user.rejection.unconfirmed'))
+      end
+
       # validation spec, specific validation being tested is arbitrary
       it "does not create events that start after they end" do
         end_time = 10.minutes.ago
@@ -138,6 +153,18 @@ describe EventsController do
         expect(assigns(:event)).not_to be_persisted
         expect(assigns(:event)).not_to be_valid
       end
+    end
+  end
+
+  describe "GET new" do
+    it "blocks unconfirmed users" do
+      user = FactoryBot.create(:user, :unconfirmed)
+      sign_in user
+
+      get :new
+
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t('user.rejection.unconfirmed'))
     end
   end
 

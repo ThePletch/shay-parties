@@ -33,10 +33,11 @@
 public/assets
 public/packs
 
-# ignore vendored bundles
-vendor/bundle
-vendor/development
-vendor/production
+# ignore vendored bundles (anywhere in the repo, including Lambda)
+**/vendor/bundle
+**/vendor/development
+**/vendor/production
+**/.bundle
 
 *.DS_Store
 
