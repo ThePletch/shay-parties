@@ -56,6 +56,30 @@ describe Attendance do
     expect(beyond_limit_attendance).not_to be_valid
   end
 
+  it "allows replacing a plus one in the same update when at the limit" do
+    event = FactoryBot.create(:event, plus_one_max: 1)
+    attendance = FactoryBot.create(:attendance, event: event)
+    existing = FactoryBot.create(:guest_attendance, parent_attendance: attendance, event: event)
+    attendance.reload
+
+    result = attendance.update(
+      plus_ones_attributes: {
+        "0" => { id: existing.id, _destroy: "1" },
+        "1" => {
+          event_id: event.id,
+          rsvp_status: "Yes",
+          attendee_type: "Guest",
+          attendee_attributes: { name: "New Plus One", email: "new-plus-one@example.com" },
+        },
+      }
+    )
+
+    expect(result).to be true
+    expect(attendance.reload.plus_ones.count).to eq 1
+    expect(attendance.plus_ones.first.attendee.name).to eq "New Plus One"
+    expect(Attendance.find_by(id: existing.id)).to be_nil
+  end
+
   it "rejects plus ones for events with plus-ones disabled" do
     event = FactoryBot.create(:event, plus_one_max: 0)
     attendance = FactoryBot.build(:attendance, event: event, plus_ones: [FactoryBot.create(:guest_attendance, event: event)])
