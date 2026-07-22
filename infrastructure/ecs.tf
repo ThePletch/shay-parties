@@ -118,6 +118,12 @@ resource "aws_ecs_service" "main" {
     capacity_provider = local.capacity_provider
     weight            = 100
   }
+
+  lifecycle {
+    ignore_changes = [
+      desired_count
+    ]
+  }
 }
 
 resource "random_string" "secret_key_base" {
