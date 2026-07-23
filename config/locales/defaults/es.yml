@@ -1,14 +1,14 @@
 es:
-  still_translating: ¡Lo siento! Esta página todavía se está traduciendo. Clic aquí para cambiar a inglés.
+  still_translating: ¡Lo siento! Esta página todavía se está traduciendo. Haga clic aquí para cambiar a inglés.
   submit: Enviar
   back: Volver
   cancel: Cancelar
   form:
     edit: Editar
     update: Actualizar
-    show: Mirar
-    delete: Borrar
-    confirm: "¿Está usted seguro?"
+    show: Ver
+    delete: Eliminar
+    confirm: "¿Está seguro?"
   turnstile:
     failed: La verificación captcha falló. Inténtalo de nuevo.
   user:
@@ -19,9 +19,9 @@ es:
   navbar:
     home: Inicio
     host:
-      header: Hospedador
+      header: Anfitrión
       organize: Organizar un Evento
-      my_events: Mis Eventos Hospedados
+      my_events: Mis Eventos
       mailing_lists: Administrar Listas de Correo
     attendee:
       header: Invitado
@@ -33,4 +33,3 @@ es:
       message: Un %{repo_link} por %{personal_link}
       repo_link_msg: servicio libre
       personal_link_msg: Shay Pletcher
-

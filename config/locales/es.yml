@@ -20,4 +20,4 @@ es:
     submit:
       create: 'Crear %{model}'
       update: 'Actualizar %{model}'
-      submit: 'Entregar %{model}'
+      submit: 'Enviar %{model}'

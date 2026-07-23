@@ -214,6 +214,40 @@ describe AttendancesController do
         expect(response).to redirect_to(event_path(@event))
         expect(@attendance.reload.rsvp_status).to eq 'Maybe'
       end
+
+      # Mirrors DynamicListManager form data: mark persisted +1 for destroy, append a new +1 row.
+      it "allows removing and adding a plus-one in the same update at the limit" do
+        @event.update!(plus_one_max: 1)
+        existing = FactoryBot.create(:guest_attendance, parent_attendance: @attendance, event: @event)
+
+        patch :update, params: {
+          id: @attendance.id,
+          attendance: {
+            rsvp_status: "Yes",
+            plus_ones_attributes: {
+              "0" => {
+                id: existing.id,
+                event_id: @event.id,
+                _destroy: "1",
+                attendee_attributes: { id: existing.attendee.id },
+              },
+              "1784725840912" => {
+                event_id: @event.id,
+                _destroy: "0",
+                attendee_attributes: {
+                  name: "New Plus One",
+                  email: "new-plus-one@example.com",
+                },
+              },
+            },
+          },
+        }
+
+        expect(response).to redirect_to(event_path(@event))
+        expect(@attendance.reload.plus_ones.count).to eq 1
+        expect(@attendance.plus_ones.first.attendee.name).to eq "New Plus One"
+        expect(Attendance.find_by(id: existing.id)).to be_nil
+      end
     end
   end
 

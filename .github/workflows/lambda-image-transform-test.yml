@@ -1,0 +1,31 @@
+name: Lambda image transform tests
+
+on:
+  push:
+    paths:
+      - "infrastructure/lambda/image_transform/**"
+      - ".github/workflows/lambda-image-transform-test.yml"
+  pull_request:
+    paths:
+      - "infrastructure/lambda/image_transform/**"
+      - ".github/workflows/lambda-image-transform-test.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infrastructure/lambda/image_transform
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+        working-directory: .
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: infrastructure/lambda/image_transform
+      - name: Run specs
+        run: bundle exec rspec

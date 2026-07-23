@@ -3,37 +3,37 @@ es:
     messages:
       expired: "ha expirado, por favor pida uno nuevo"
       not_found: "no encontrado"
-      already_confirmed: "ya está confirmada, por favor intente ingresar"
+      already_confirmed: "ya está confirmada, por favor intente iniciar sesión"
       not_locked: "no está bloqueada"
       not_saved:
-        one: "1 error evitó que este %{resource} fuera guardado:"
-        other: "%{count} errores evitaron que este %{resource} fuera guardado:"
+        one: "1 error impidió que este %{resource} fuera guardado:"
+        other: "%{count} errores impidieron que este %{resource} fuera guardado:"
 
   devise:
     failure:
-      already_authenticated: 'Ya está dentro del sistema.'
-      unauthenticated: 'Necesita ingresar o registrarse para continuar.'
+      already_authenticated: 'Ya ha iniciado sesión.'
+      unauthenticated: 'Necesita iniciar sesión o registrarse para continuar.'
       unconfirmed: 'Debe confirmar su cuenta para continuar.'
       locked: 'Su cuenta está bloqueada.'
       invalid: 'Correo o contraseña inválidos.'
-      invalid_token: 'Ficha de autenticación invalida.'
-      timeout: 'Su sesión ha expirado, por favor ingrese nuevamente para continuar.'
+      invalid_token: 'Token de autenticación inválido.'
+      timeout: 'Su sesión ha expirado, por favor inicie sesión nuevamente para continuar.'
       inactive: 'Su cuenta aún no ha sido activada.'
     sessions:
-      signed_in: 'Ingreso exitoso.'
-      signed_out: 'Usted ha salido del sistema.'
+      signed_in: 'Ha iniciado sesión correctamente.'
+      signed_out: 'Ha cerrado sesión correctamente.'
     passwords:
       send_instructions: 'Recibirá un correo electrónico con instrucciones sobre cómo reiniciar su contraseña en unos minutos.'
-      updated: 'Su contraseña fue cambiada exitosamente y ha sido ingresado al sistema.'
+      updated: 'Su contraseña fue cambiada exitosamente y ha iniciado sesión.'
       updated_not_active: 'Su contraseña se cambió exitosamente.'
       send_paranoid_instructions: "Si su correo electrónico existe en nuestra base de datos, usted recibirá un enlace para reiniciar su contraseña en unos minutos."
     confirmations:
       send_instructions: 'Usted recibirá un correo electrónico con instrucciones sobre cómo confirmar su cuenta en unos minutos.'
       send_paranoid_instructions: 'Si su correo electrónico existe en nuestra base de datos, usted recibirá un correo con instrucciones sobre cómo confirmar su cuenta en unos minutos.'
-      confirmed: 'Su cuenta fue confirmada exitosamente, usted ha sido ingresado al sistema.'
+      confirmed: 'Su cuenta fue confirmada exitosamente y ha iniciado sesión.'
     registrations:
-      signed_up: '¡Bienvenido! Ha ingresado al sistema exitosamente.'
-      inactive_signed_up: 'Se ha registrado exitosamente; sin embargo, no lo hemos podido ingresar debido a que su cuenta está %{reason}.'
+      signed_up: '¡Bienvenido! Se ha registrado exitosamente.'
+      inactive_signed_up: 'Se ha registrado exitosamente; sin embargo, no hemos podido iniciar su sesión debido a que su cuenta está %{reason}.'
       updated: 'Usted actualizó su cuenta exitosamente.'
       destroyed: '¡Hasta luego! Su cuenta fue cancelada con éxito, esperamos verle de nuevo pronto. Gracias.'
       reasons:
@@ -47,10 +47,10 @@ es:
       new_to_login: "...o iniciar sesión"
     unlocks:
       send_instructions: 'Recibirá un correo electrónico con instrucciones sobre cómo desbloquear su cuenta en unos minutos.'
-      unlocked: 'Su cuenta fue desbloqueada con éxito, usted ha sido ingresado al sistema.'
+      unlocked: 'Su cuenta fue desbloqueada con éxito. Por favor inicie sesión para continuar.'
       send_paranoid_instructions: 'Si su cuenta existe, usted recibirá un correo electrónico con instrucciones sobre cómo desbloquear su cuenta en unos minutos.'
     omniauth_callbacks:
-      success: 'Exitosamente autorizado desde la cuenta %{kind}.'
+      success: 'Autorizado exitosamente desde la cuenta %{kind}.'
       failure: 'No se le pudo autorizar en %{kind} debido a "%{reason}".'
     mailer:
       confirmation_instructions:

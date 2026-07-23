@@ -19,39 +19,39 @@ es:
             rsvp_status:
               inclusion: No es un RSVP válido.
             attendance_id:
-              parent_event_is_different: Este RSVP es un +1, pero no está apuntado a lo mismo evento. Esta es una problema tecnico.
+              parent_event_is_different: Este RSVP es un +1, pero no está apuntado al mismo evento. Este es un problema técnico.
               too_many_plus_ones: Ha intentado invitar más +1s de los que el evento permite.
             attendee_id:
               email_already_rsvped: Ya existe un RSVP de su dirección de email.
             attendee_type:
-              exclusion: Usuarios autenticados no pueden ser +1s.
+              exclusion: Los usuarios autenticados no pueden ser +1s.
   attendance:
     plus_one: "+1"
     created: RSVP exitoso.
-    created_with_link_html: "RSVP exitoso. Marcar este enlace para cambiar su RSVP más tarde: %{link}"
+    created_with_link_html: "RSVP exitoso. Guarde este enlace para cambiar su RSVP más tarde: %{link}"
     destroyed: RSVP eliminado.
-    destroyed_failed: No pudo eliminar RSVP.
+    destroyed_failed: No pudo eliminar el RSVP.
     updated: RSVP actualizado.
     rejection:
-      unauthenticated: Se necesita estar conectado o autenticar como invitado para administrar su RSVP.
-      unauthorized_removal: No se puede eliminar un RSVP a menos que está su RSVP o su evento.
+      unauthenticated: Se necesita iniciar sesión o autenticarse como invitado para administrar su RSVP.
+      unauthorized_removal: No se puede eliminar un RSVP a menos que sea su RSVP o su evento.
     status:
       'Yes': "Sí"
       'Maybe': Quizás
       'No': "No"
       'No RSVP': No RSVP
     is_guest_account: ""
-    is_plus_one: (Plus)
-    is_host: (Hospedador)
+    is_plus_one: (+1)
+    is_host: (Anfitrión)
     is_verified: (Usuario verificado)
-    email_hidden: Email ocultado de invitados
+    email_hidden: Email oculto de invitados
     dialog:
-      remove_attendance: "Quita el RSVP y respuestas de encuesta para %{name}?"
+      remove_attendance: "¿Eliminar el RSVP y las respuestas de encuesta de %{name}?"
     form:
-      add_plus_one: Agregar +1
-      plus_ones_limit_prompt: "Se puede invitar hasta %{count} +1(s)."
-      prompt_guest: RSVP como cuenta temporal
-      can_change_later: Se podrá cambiar a su RSVP más tarde.
+      add_plus_one: Añadir +1
+      plus_ones_limit_prompt: "Puede invitar hasta %{count} +1(s)."
+      prompt_guest: RSVP como invitado
+      can_change_later: Podrá cambiar su RSVP más tarde.
       sign_in_alt: ...o iniciar sesión.
       labels:
         name: "NOMBRE:"
