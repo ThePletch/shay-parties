@@ -5,23 +5,23 @@ es:
         one: Encuesta
         other: Encuestas
   poll:
-    created: Encuesta creado exitosamente.
-    updated: Encuesta actualizado exitosamente.
-    destroyed: Encuesta era eliminado.
+    created: Encuesta creada exitosamente.
+    updated: Encuesta actualizada exitosamente.
+    destroyed: Encuesta eliminada.
     add_prompt: Añadir Encuesta
     form:
       errors_msg:
-        one: "Un errór prohibió que se guardara esta encuesta:"
-        other: "%{count} errores prohibieron que se guardara esta encuesta:"
+        one: "Un error impidió que se guardara esta encuesta:"
+        other: "%{count} errores impidieron que se guardara esta encuesta:"
       add_option: Añadir una opción
       destroy: Eliminar
-      confirm_destroy: ¿Está seguro que quiere eliminar a esta encuesta?
+      confirm_destroy: ¿Está seguro que quiere eliminar esta encuesta?
       title:
-        edit: Editar a %{name}
+        edit: Editar %{name}
         new: Encuesta Nueva
       header:
-        edit: Editando a %{name}
+        edit: Editando %{name}
         new: Encuesta Nueva
     rejection:
-      unauthenticated_html: Debe %{sign_in_link} o RSVP como cuenta temporal para responder a una encuesta.
+      unauthenticated_html: Debe %{sign_in_link} o RSVP como invitado para responder a una encuesta.
       unauthenticated_sign_in_msg: iniciar sesión

@@ -21,31 +21,31 @@ es:
               blank: Hora final no puede estar en blanco.
               ends_before_start: Hora final debe ser después de la hora de inicio.
   event:
-    created: Evento creado. Para invitar gente a su evento, envíase el enlace para esta página junto con su invitación.
+    created: Evento creado. Para invitar gente a su evento, envíeles el enlace de esta página junto con su invitación.
     updated: Evento actualizado exitosamente.
     destroyed: Evento eliminado exitosamente.
     add_to_gcal: 📅 Añadir a Google Calendar
-    download_ics: 📅 Descargar como una ficha (.ics)
+    download_ics: 📅 Descargar como un archivo (.ics)
     title_placeholder: Mi Evento Divertido
     form:
       title:
-        edit: "Editar a %{title}"
+        edit: "Editar %{title}"
         new: Evento Nuevo
       header:
-        edit: "Editando a %{title}"
+        edit: "Editando %{title}"
         new: Evento Nuevo
-      show_event_link: Mira a Evento
+      show_event_link: Ver Evento
       preview_label: Haga clic para ver un avance del encabezado de su evento.
       testing_help:
-        Eventos que requieren pruebas de COVID-19 tendrá un aviso que informará a los invitados sobre el requisito de la
+        Los eventos que requieren pruebas de COVID-19 tendrán un aviso que informará a los invitados sobre el requisito de la
         prueba. Asegúrese de explicar cómo enviarle evidencia de una prueba negativa en la descripción del evento.
       header_photo_help:
-        Fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px).
-        Abra el avance de evento a la cima de la página para ajustar cómo su imágen de encabezado aparecerá.
+        Las fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px).
+        Abra el avance del evento en la parte superior de la página para ajustar cómo aparecerá su imagen de encabezado.
       header_photo_crop_prompt: Arrastre la imagen para cambiar cómo se recortará su foto.
-      description_uses_markdown_html: Se puede formatear la descripción del evento con %{link} para poner el texto en negrita, agregar enlaces, o organizar cosas en viñetas.
+      description_uses_markdown_html: Puede formatear la descripción del evento con %{link} para poner el texto en negrita, añadir enlaces, o organizar cosas en viñetas.
       description_uses_markdown_name: Markdown
-      plus_ones_prompt: ¿Acompañantes?
+      plus_ones_prompt: ¿Permitir +1s?
       plus_ones_unlimited: Ilimitados
     rsvp_list:
       headers:
@@ -56,31 +56,31 @@ es:
       host_email_collection_header: Emails
     index:
       self: Sus Eventos
-      hosted_by: "Hospedado por %{name}"
+      hosted_by: "Organizado por %{name}"
       attending:
         title: Eventos con su RSVP
-        auth_required: Se necesita estar autenticado para ver su historia de RSVP.
+        auth_required: Se necesita estar autenticado para ver su historial de RSVP.
       category:
         upcoming: Próximo
         past: Pasado
       labels:
         title: Título
         attendees: Asistentes
-        going: Yendo
+        going: Asiste
         maybe: Quizás
       zero_state:
         message: Parece que no hay eventos aquí.
-        click_to_make: Intente presionar el botón de abajo para organizar un nuevo evento.
-        past_prompt: Quería mirar a %{past_link} en su lugar?
+        click_to_make: Intente hacer clic en el botón de abajo para organizar un nuevo evento.
+        past_prompt: ¿Quería ver %{past_link} en su lugar?
         past_events: eventos pasados
-        upcoming_prompt: Intente mirar a %{upcoming_link} en su lugar.
+        upcoming_prompt: Intente ver %{upcoming_link} en su lugar.
         upcoming_events: eventos próximos
       new_button:
-        self: Organiza un evento nuevo
+        self: Organizar un evento nuevo
     show:
-      time_separator: hace
-      hosted_by_other: Hospedado por %{name}
-      hosted_by_you: Hospedado por usted
+      time_separator: hasta
+      hosted_by_other: Organizado por %{name}
+      hosted_by_you: Organizado por usted
       requires_testing:
         Se debe mostrar una foto de una prueba rápida de COVID negativa
-        de las últimas 24 horas parar poder entrar a este evento.
+        de las últimas 24 horas para poder entrar a este evento.

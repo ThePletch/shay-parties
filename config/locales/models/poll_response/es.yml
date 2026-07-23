@@ -6,11 +6,11 @@ es:
     updated: Actualizó la respuesta.
     updated_automaybe: Actualizó la respuesta. Marcó automáticamente su RSVP como 'Quizás'.
     updated_failed: No pudo actualizar la respuesta.
-    destroyed: Respuesta despejado.
-    destroyed_failed: No pudo despejar la respuesta.
+    destroyed: Respuesta limpiada.
+    destroyed_failed: No pudo limpiar la respuesta.
     rejection:
-      unauthenticated: Debe ser autenticado como usuario o como cuenta temporal para responder a encuestas.
+      unauthenticated: Debe autenticarse como usuario o como invitado para responder a encuestas.
     form:
       update: Actualizar Respuesta
       create: Responder
-      destroy: Despejar Respuesta
+      destroy: Limpiar Respuesta
