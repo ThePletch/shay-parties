@@ -28,6 +28,7 @@ describe Users::RegistrationsController, type: :controller do
       user = User.find_by!(email: "newuser@example.com")
       expect(user).not_to be_confirmed
       expect(user.name).to eq("New User")
+      expect(flash[:notice]).to be_nil
     end
 
     it "rejects registration when Turnstile verification fails" do

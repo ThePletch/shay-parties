@@ -8,6 +8,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
     self.resource.strict_loading!(false)
   end
 
+  # Unconfirmed users already see the persistent confirmation banner;
+  # skip Devise's "Welcome! You have signed up" notice to avoid two flashes.
+  def after_sign_up_path_for(resource)
+    flash.delete(:notice) unless resource.confirmed?
+    super
+  end
+
   private
 
   def verify_turnstile
