@@ -14,6 +14,6 @@ es:
         email: Email
         name: Nombre
         password: Contraseña
-        password_confirmation: Contraseña confirmación
+        password_confirmation: Confirmación de contraseña
         current_password: Contraseña actual
-        remember_me: Recuerdame
+        remember_me: Recuérdame

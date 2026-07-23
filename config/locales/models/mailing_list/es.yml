@@ -1,9 +1,9 @@
 es:
   mailing_list:
-    created: Lista de correo creado exitosamente.
-    updated: Lista de correo actualizado exitosamente.
-    destroyed: Lista de correo eliminado exitosamente.
-    synced: Usuarios sincronizado a la lista de correo.
+    created: Lista de correo creada exitosamente.
+    updated: Lista de correo actualizada exitosamente.
+    destroyed: Lista de correo eliminada exitosamente.
+    synced: Usuarios sincronizados a la lista de correo.
     index:
       title: Listas de Correo
       header: Listas de Correo
@@ -16,24 +16,24 @@ es:
         email: Email
         user: Usuario
       no_user: Sin Usuario
-      copypastable: Lista Copiapegable
+      copypastable: Lista para copiar
       manage: Administrar Lista
       sync: Sincronizar Usuarios
       filters:
         exclude_no_for: "Excluir 'No' RSVPs de:"
         attendees: "Asistentes de:"
         button: Filtrar
-        clear: Despejar Filtros
+        clear: Limpiar Filtros
     form:
       delete: Eliminar lista de correo
       confirm_delete: ¿Está seguro que quiere eliminar esta lista?
       errors_msg:
-        one: "Un errór prohibió que se guardara esta lista de correo:"
-        other: "%{count} errores prohibieron que se guardara esta lista de correo:"
+        one: "Un error impidió que se guardara esta lista de correo:"
+        other: "%{count} errores impidieron que se guardara esta lista de correo:"
       add_email: Añadir un Email
       title:
-        edit: Editar a %{name}
+        edit: Editar %{name}
         new: Lista de Correo Nueva
       header:
-        edit: Editando a %{name}
+        edit: Editando %{name}
         new: Lista de Correo Nueva
