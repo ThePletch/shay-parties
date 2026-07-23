@@ -3,6 +3,7 @@ class CommentsController < ApplicationController
   before_action :set_event, only: [:create]
   before_action :set_parent, only: [:create_reply]
   before_action :set_manageable_comment, only: [:update, :destroy, :undelete]
+  before_action :require_confirmed_email_for_comment_body!, only: [:create, :create_reply, :update]
 
   # TODO event owners should not have global edit permissions
   def update
@@ -68,6 +69,24 @@ class CommentsController < ApplicationController
     unless @authenticated_user
       redirect_to new_user_session_path, alert: t('comment.rejection.unauthenticated')
       return
+    end
+  end
+
+  # Guests may comment after RSVP; full accounts must confirm email first.
+  # Host soft-delete/undelete of others' comments is not gated here.
+  def require_confirmed_email_for_comment_body!
+    return if @authenticated_user.guest?
+    return if @authenticated_user.confirmed?
+
+    redirect_to event_path_for_comment_rejection, alert: t('comment.rejection.unconfirmed')
+  end
+
+  def event_path_for_comment_rejection
+    event = @event || @parent_comment&.event || @comment&.event
+    if event
+      event_path(event, guest_guid: params[:guest_guid])
+    else
+      root_path
     end
   end
 

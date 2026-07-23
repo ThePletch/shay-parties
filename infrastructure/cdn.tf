@@ -73,11 +73,6 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 }
 
-moved {
-  from = aws_route53_record.cdn
-  to = aws_route53_record.cdn_aliases["aws2.partiesforall.events"]
-}
-
 resource "aws_route53_record" "cdn_aliases" {
   for_each = toset(local.aliases_with_main)
   zone_id = data.aws_route53_zone.root_domain.zone_id

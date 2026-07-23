@@ -16,14 +16,16 @@ locals {
 
   # Sensitive application environment variables stored in secured AWS SSM Parameters
   application_sensitive_env_vars = {
-    RAILS_MASTER_KEY  = data.local_sensitive_file.master_key.content
-    DATABASE_USERNAME = var.database.username
-    DATABASE_PASSWORD = var.database.password
-    DATABASE_HOST     = var.database.host
-    DATABASE_NAME     = var.database.database
-    DATABASE_PORT     = tostring(var.database.port)
-    SES_SMTP_USERNAME = var.smtp.username
-    SES_SMTP_PASSWORD = var.smtp.password
+    RAILS_MASTER_KEY     = data.local_sensitive_file.master_key.content
+    DATABASE_USERNAME    = var.database.username
+    DATABASE_PASSWORD    = var.database.password
+    DATABASE_HOST        = var.database.host
+    DATABASE_NAME        = var.database.database
+    DATABASE_PORT        = tostring(var.database.port)
+    SES_SMTP_USERNAME    = var.smtp.username
+    SES_SMTP_PASSWORD    = var.smtp.password
+    TURNSTILE_SITE_KEY   = var.turnstile.site_key
+    TURNSTILE_SECRET_KEY = var.turnstile.secret_key
   }
 
   capacity_provider = "FARGATE_SPOT"
@@ -115,6 +117,12 @@ resource "aws_ecs_service" "main" {
     base              = 1
     capacity_provider = local.capacity_provider
     weight            = 100
+  }
+
+  lifecycle {
+    ignore_changes = [
+      desired_count
+    ]
   }
 }
 

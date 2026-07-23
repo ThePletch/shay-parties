@@ -13,6 +13,7 @@
     = vite_typescript_tag 'application'
   %body
     = render 'partials/navbar'
+    = render 'partials/unconfirmed_email_banner'
     - if notice
       .alert.alert-info= notice
     - if alert

@@ -5,6 +5,10 @@
   = f.text_field :name, autocomplete: "name", floating: true
   = f.password_field :password, autocomplete: "off", floating: true, help: (@minimum_password_length ? "(#{t('devise.registrations.minimum_password_length', length: @minimum_password_length)})" : "")
   = f.password_field :password_confirmation, autocomplete: "off", floating: true
+  - if Cloudflare::Turnstile.enabled?
+    .mb-3
+      %script{src: "https://challenges.cloudflare.com/turnstile/v0/api.js", async: true, defer: true}
+      .cf-turnstile{"data-sitekey" => Cloudflare::Turnstile.site_key}
   .form-group
     = f.submit t('devise.registrations.new'), class: 'btn btn-primary'
     = link_to t('devise.registrations.new_to_login'), new_session_path(resource_name), class: 'btn btn-link text-decoration-none'

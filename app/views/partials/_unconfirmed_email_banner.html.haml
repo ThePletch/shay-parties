@@ -1,0 +1,8 @@
+- if user_signed_in? && !current_user.confirmed?
+  .alert.alert-warning.mb-0.rounded-0.text-center
+    = t('user.unconfirmed_banner')
+    = button_to t('user.resend_confirmation'),
+      user_confirmation_path,
+      params: { user: { email: current_user.email } },
+      class: 'btn btn-sm btn-outline-dark ms-2',
+      form: { class: 'd-inline' }

@@ -10,6 +10,7 @@ en:
     created_failed: Failed to create comment.
     rejection:
       unauthenticated: "You must log in or RSVP as a guest to create a comment."
+      unconfirmed: "Please confirm your email address before posting comments."
     view:
       deleted: "[deleted]"
       deleted_by: Deleted by %{editor}

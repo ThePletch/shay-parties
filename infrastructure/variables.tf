@@ -41,6 +41,15 @@ variable "smtp" {
   description = "Credentials for SMTP server to use for email. Assumes SES."
 }
 
+variable "turnstile" {
+  type = object({
+    site_key   = string
+    secret_key = string
+  })
+  sensitive   = true
+  description = "Cloudflare Turnstile site and secret keys for signup captcha"
+}
+
 variable "internal_port" {
   type        = number
   default     = 3030
