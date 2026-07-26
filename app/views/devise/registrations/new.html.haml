@@ -1,6 +1,6 @@
 %h2.title= t('devise.registrations.new')
 = bootstrap_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-  = devise_error_messages!
+  = render "devise/shared/error_messages", resource: resource
   = f.email_field :email, autofocus: true, autocomplete: "email", floating: true
   = f.text_field :name, autocomplete: "name", floating: true
   = f.password_field :password, autocomplete: "off", floating: true, help: (@minimum_password_length ? "(#{t('devise.registrations.minimum_password_length', length: @minimum_password_length)})" : "")

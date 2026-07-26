@@ -109,6 +109,8 @@ services:
     - *ssh-keys
     command: bundle exec vite dev
     depends_on:
+      bundle-installer:
+        condition: service_completed_successfully
       npm-installer:
         condition: service_completed_successfully
   api-dev-shell: &shell
