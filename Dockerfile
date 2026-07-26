@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # BuildKit cache mounts speed up CI/production rebuilds; enable with DOCKER_BUILDKIT=1 (default in Buildx).
-ARG RUBY_NODE_IMAGE=timbru31/ruby-node:3.5-slim-24@sha256:f02a381f5875c0730867a5fe85c16b5ece414ad0a5215bd2838eb34a3f21ccae
+ARG RUBY_NODE_IMAGE=timbru31/ruby-node:3.4-slim-24@sha256:1af1e4a56d1a4570be4fee514c8ace1898fd4d6e10ca3eda7d787a2e4840f247
 
 FROM ${RUBY_NODE_IMAGE} AS baseline
 
