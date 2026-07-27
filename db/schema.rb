@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_18_235206) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_27_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,6 +70,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_18_235206) do
     t.index ["attendee_id"], name: "index_attendances_on_attendee_id"
     t.index ["event_id", "attendee_id", "attendee_type"], name: "index_attendances_on_event_id_and_attendee_id_and_attendee_type", unique: true
     t.index ["event_id"], name: "index_attendances_on_event_id"
+  end
+
+  create_table "banned_emails", force: :cascade do |t|
+    t.string "email", null: false
+    t.string "reason"
+    t.bigint "banned_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["banned_by_id"], name: "index_banned_emails_on_banned_by_id"
+    t.index ["email"], name: "index_banned_emails_on_email", unique: true
   end
 
   create_table "comments", force: :cascade do |t|
@@ -207,6 +217,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_18_235206) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attendances", "attendances"
+  add_foreign_key "banned_emails", "users", column: "banned_by_id"
   add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "events", "addresses"
   add_foreign_key "events", "users"

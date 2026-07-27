@@ -27,10 +27,107 @@ en:
       header: Attendee
       rsvped_events: RSVPed Events
     profile: My Profile
+    admin:
+      users: Admin
     log_out: Log out
     log_in: Log in
     byline:
       message: A %{repo_link} by %{personal_link}
       repo_link_msg: free service
       personal_link_msg: Shay Pletcher
+  admin:
+    rejection:
+      not_admin: You must be an admin to access that page.
+    users:
+      roles:
+        user: user
+        admin: admin
+        superadmin: superadmin
+        suspended: suspended
+        banned: banned
+      actions:
+        suspend: Suspend
+        unsuspend: Unsuspend
+        ban: Ban
+        unban: Unban
+        promote: Promote to admin
+        demote: Demote to user
+      confirm:
+        suspend: Suspend this user? They will not be able to sign in.
+        unsuspend: Restore this user to a normal account?
+        ban: Ban this user and denylist their email?
+        unban: Unban this user and remove their email from the denylist?
+        promote: Promote this user to admin?
+        demote: Demote this admin to a regular user?
+      flash:
+        suspend: User suspended.
+        unsuspend: User unsuspended.
+        ban: User banned.
+        unban: User unbanned.
+        promote: User promoted to admin.
+        demote: User demoted to user.
+      errors:
+        actor_not_admin: Only admins can moderate users.
+        cannot_moderate_self: You cannot moderate your own account.
+        cannot_moderate_superadmin: Superadmins cannot be moderated in the UI.
+        cannot_demote_superadmin: Superadmins cannot be demoted in the UI.
+        must_demote_admin_first: Demote this admin to a user before suspending or banning them.
+        not_moderatable: Only regular users can be suspended or banned.
+        not_suspended: This user is not suspended.
+        not_banned: This user is not banned.
+        not_promotable: Only regular users can be promoted to admin.
+        not_demotable: Only admins can be demoted.
+      index:
+        title: Users
+        header: Users
+        search_label: Search
+        search_placeholder: Name or email
+        search_button: Search
+        clear_filters: Clear filters
+        role_label: Role
+        role_all: All
+        confirmed_label: Confirmed
+        confirmed_any: Any
+        confirmed_yes: Yes
+        confirmed_no: No
+        result_count:
+          one: "%{count} user"
+          other: "%{count} users"
+        headings:
+          name: Name
+          email: Email
+          role: Role
+          confirmed: Confirmed
+          joined: Joined
+          last_sign_in: Last sign-in
+        never: "—"
+        empty: No users match these filters.
+        pagination_label: Pagination
+        prev: Previous
+        next: Next
+        page_status: Page %{page} of %{total}
+      show:
+        back: Back to users
+        account_heading: Account
+        activity_heading: Activity
+        denylist_heading: Denylist
+        actions_heading: Actions
+        ban_reason_label: Reason (optional)
+        ban_reason_placeholder: Why is this user being banned?
+        superadmin_immutable: Superadmins cannot be demoted, suspended, or banned in the UI.
+        cannot_moderate_self: You cannot suspend, ban, promote, or demote your own account.
+        fields:
+          role: Role
+          confirmed: Confirmed
+          joined: Joined
+          sign_in_count: Sign-ins
+          last_sign_in: Last sign-in
+          unconfirmed_email: Unconfirmed email
+          events_hosted: Events hosted
+          comments: Comments
+          rsvps: RSVPs
+          denylisted_email: Email
+          banned_at: Banned on
+          banned_by: Banned by
+          reason: Reason
 

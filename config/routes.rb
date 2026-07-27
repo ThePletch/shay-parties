@@ -49,6 +49,19 @@ Rails.application.routes.draw do
       end
     end
 
+    namespace :admin do
+      resources :users, only: [:index, :show] do
+        member do
+          post :suspend
+          post :unsuspend
+          post :ban
+          post :unban
+          post :promote
+          post :demote
+        end
+      end
+    end
+
     root "home#index"
   end
 end

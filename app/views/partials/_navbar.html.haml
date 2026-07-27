@@ -25,6 +25,8 @@
             .dropdown-menu{aria: {labelledBy: 'attendee-dropdown'}}
               = link_to t('navbar.attendee.rsvped_events'), rsvped_events_path, class: 'dropdown-item'
           %li.nav-item= link_to t('navbar.profile'), edit_user_registration_path, class: "nav-link"
+          - if current_user.admin?
+            %li.nav-item= link_to t('navbar.admin.users'), admin_users_path, class: "nav-link"
           %li.nav-item= button_to t('navbar.log_out'), destroy_user_session_path, method: :delete, class: "nav-link btn btn-link"
         - else
           %li.nav-item= link_to t('navbar.log_in'), new_user_session_path(locale: I18n.locale), class: "nav-link"

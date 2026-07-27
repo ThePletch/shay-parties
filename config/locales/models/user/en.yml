@@ -17,3 +17,11 @@ en:
         password_confirmation: Confirm password
         current_password: Current password
         remember_me: Remember me
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              banned: has been banned from registering
+            unconfirmed_email:
+              banned: has been banned from registering
