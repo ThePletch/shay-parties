@@ -59,6 +59,16 @@
         %tr
           %th= t('admin.users.show.fields.rsvps')
           %td= @user.attendances.count
+        %tr
+          %th= t('admin.users.show.fields.invite_sending')
+          %td
+            - if @user.invite_send_restricted?
+              = t('admin.users.show.invite_restricted', reason: t("admin.users.invite_restriction_reasons.#{@user.invite_send_restriction_reason}"), at: l(@user.invite_send_restricted_at, format: :long))
+            - else
+              = t('admin.users.show.invite_allowed')
+        %tr
+          %th= t('admin.users.show.fields.hard_bounces')
+          %td= t('admin.users.show.hard_bounce_count', count: @user.hard_bounce_strikes, allowance: User::HARD_BOUNCE_ALLOWANCE)
 
     - if @banned_email
       %h2.h4= t('admin.users.show.denylist_heading')
@@ -105,6 +115,9 @@
 
       - if @user.role == 'admin' && @user != current_user
         = button_to t('admin.users.actions.demote'), demote_admin_user_path(@user), method: :post, class: 'btn btn-secondary', data: { confirm: t('admin.users.confirm.demote') }
+
+      - if @user.invite_send_restricted?
+        = button_to t('admin.users.actions.clear_invite_restriction'), clear_invite_restriction_admin_user_path(@user), method: :post, class: 'btn btn-outline-warning', data: { confirm: t('admin.users.confirm.clear_invite_restriction') }
 
       - if @user.superadmin?
         %p.text-muted.mb-0= t('admin.users.show.superadmin_immutable')

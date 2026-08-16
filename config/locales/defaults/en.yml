@@ -12,10 +12,64 @@ en:
   turnstile:
     failed: Captcha verification failed. Please try again.
   user:
-    unconfirmed_banner: Please confirm your email address to organize events and post comments.
+    unconfirmed_banner: Please confirm your email address to organize events, send invites, and post comments.
     resend_confirmation: Resend confirmation email
     rejection:
       unconfirmed: Please confirm your email address before organizing an event.
+  invite:
+    actions:
+      send: Send invites
+    sent:
+      one: Sent %{count} invite.
+      other: Sent %{count} invites.
+    rejection:
+      unconfirmed: Please confirm your email address before sending invites.
+      restricted: Your invite sending is restricted pending review. Contact an admin if you think this is a mistake.
+      not_owner: Only the event host can send invites.
+      no_recipients: Add at least one recipient email.
+      batch_too_large: You can send at most %{limit} invites at once.
+      over_quota: That would exceed your limit of %{limit} invites per 24 hours. You have %{remaining} remaining.
+      invalid_emails: "These addresses are not valid emails: %{emails}"
+    form:
+      title: "Invite guests — %{title}"
+      header: "Invite guests to %{title}"
+      back: Back to event
+      quota: You can send %{remaining} more invites in the next 24 hours (limit %{limit}).
+      message_label: Message
+      message_help: This note is included in the email. The event link is always added automatically.
+      recipients_label: Recipients
+      name_placeholder: Name
+      email_placeholder: Email
+      include: Include
+      add_recipient: Add recipient
+      preview: Preview
+      send: Send invites
+    preview:
+      heading: Preview
+      placeholder: Enter a name and email to preview the first recipient's invite.
+      need_recipient: Enter at least one email address to preview.
+  event_invite_mailer:
+    invite:
+      subject: "You're invited to %{title} (hosted by %{host})"
+      greeting: "Hi %{name},"
+      friend: there
+      cta: "View %{title}"
+  invite_delivery_mailer:
+    bounce_warning:
+      subject: An invite you sent could not be delivered
+      hello: "Hi %{name},"
+      body: "An invite to %{email} bounced. You have %{remaining} of %{allowance} hard-bounce strikes remaining before invite sending is restricted."
+    restricted:
+      subject: Invite sending is restricted on your account
+      hello: "Hi %{name},"
+      body_bounce_limit: Invite sending on your account is restricted because too many invites hard-bounced. An admin will review this.
+      body_complaint: Invite sending on your account is restricted because a recipient marked an invite as spam. An admin will review this.
+  admin_moderation_mailer:
+    invite_send_restricted:
+      subject: "Invite sending restricted for %{name}"
+      hello: "Hi %{name},"
+      body_bounce_limit: "%{name} (%{email}) is restricted from sending invites after reaching the hard-bounce limit. Review their account:"
+      body_complaint: "%{name} (%{email}) is restricted from sending invites after a spam complaint. Review their account:"
   navbar:
     home: Home
     host:
@@ -52,6 +106,7 @@ en:
         unban: Unban
         promote: Promote to admin
         demote: Demote to user
+        clear_invite_restriction: Clear invite-send restriction
       confirm:
         suspend: Suspend this user? They will not be able to sign in.
         unsuspend: Restore this user to a normal account?
@@ -59,6 +114,7 @@ en:
         unban: Unban this user and remove their email from the denylist?
         promote: Promote this user to admin?
         demote: Demote this admin to a regular user?
+        clear_invite_restriction: Clear this user's invite-send restriction and reset bounce strikes?
       flash:
         suspend: User suspended.
         unsuspend: User unsuspended.
@@ -66,6 +122,7 @@ en:
         unban: User unbanned.
         promote: User promoted to admin.
         demote: User demoted to user.
+        clear_invite_restriction: Invite-send restriction cleared.
       errors:
         actor_not_admin: Only admins can moderate users.
         cannot_moderate_self: You cannot moderate your own account.
@@ -77,6 +134,10 @@ en:
         not_banned: This user is not banned.
         not_promotable: Only regular users can be promoted to admin.
         not_demotable: Only admins can be demoted.
+        not_invite_restricted: This user is not restricted from sending invites.
+      invite_restriction_reasons:
+        bounce_limit: too many hard bounces
+        complaint: spam complaint
       index:
         title: Users
         header: Users
@@ -116,6 +177,9 @@ en:
         ban_reason_placeholder: Why is this user being banned?
         superadmin_immutable: Superadmins cannot be demoted, suspended, or banned in the UI.
         cannot_moderate_self: You cannot suspend, ban, promote, or demote your own account.
+        invite_restricted: Restricted (%{reason}) since %{at}
+        invite_allowed: Allowed
+        hard_bounce_count: "%{count} / %{allowance}"
         fields:
           role: Role
           confirmed: Confirmed
@@ -126,6 +190,8 @@ en:
           events_hosted: Events hosted
           comments: Comments
           rsvps: RSVPs
+          invite_sending: Invite sending
+          hard_bounces: Hard bounces
           denylisted_email: Email
           banned_at: Banned on
           banned_by: Banned by
