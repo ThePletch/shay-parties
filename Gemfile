@@ -39,7 +39,7 @@ gem 'aws-sdk-lambda', '~> 1.100', require: false
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:windows, :jruby]
 
-gem "icalendar", "~> 2.7"
+gem "icalendar", "~> 2.12"
 
 gem "add_to_calendar", "~> 0.3.0"
 
