@@ -38,7 +38,7 @@ describe Users::RegistrationsController, type: :controller do
         post :create, params: valid_params
       }.not_to change(User, :count)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(assigns(:user).errors[:base]).to include(I18n.t("turnstile.failed"))
     end
 
