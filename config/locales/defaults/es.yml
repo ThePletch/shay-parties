@@ -27,9 +27,106 @@ es:
       header: Invitado
       rsvped_events: Eventos con RSVP
     profile: Mi Perfil
+    admin:
+      users: Admin
     log_out: Cerrar sesión
     log_in: Iniciar sesión
     byline:
       message: Un %{repo_link} por %{personal_link}
       repo_link_msg: servicio libre
       personal_link_msg: Shay Pletcher
+  admin:
+    rejection:
+      not_admin: Debes ser administrador para acceder a esa página.
+    users:
+      roles:
+        user: usuario
+        admin: admin
+        superadmin: superadmin
+        suspended: suspendido
+        banned: prohibido
+      actions:
+        suspend: Suspender
+        unsuspend: Quitar suspensión
+        ban: Prohibir
+        unban: Quitar prohibición
+        promote: Ascender a admin
+        demote: Degradar a usuario
+      confirm:
+        suspend: ¿Suspender a este usuario? No podrá iniciar sesión.
+        unsuspend: ¿Restaurar esta cuenta a un usuario normal?
+        ban: ¿Prohibir a este usuario y denegar su correo?
+        unban: ¿Quitar la prohibición y eliminar su correo de la lista de denegados?
+        promote: ¿Ascender a este usuario a admin?
+        demote: ¿Degradar a este admin a usuario normal?
+      flash:
+        suspend: Usuario suspendido.
+        unsuspend: Suspensión quitada.
+        ban: Usuario prohibido.
+        unban: Prohibición quitada.
+        promote: Usuario ascendido a admin.
+        demote: Usuario degradado a usuario.
+      errors:
+        actor_not_admin: Solo los administradores pueden moderar usuarios.
+        cannot_moderate_self: No puedes moderar tu propia cuenta.
+        cannot_moderate_superadmin: Los superadmins no se pueden moderar desde la interfaz.
+        cannot_demote_superadmin: Los superadmins no se pueden degradar desde la interfaz.
+        must_demote_admin_first: Degrada a este admin a usuario antes de suspenderlo o prohibirlo.
+        not_moderatable: Solo se pueden suspender o prohibir usuarios normales.
+        not_suspended: Este usuario no está suspendido.
+        not_banned: Este usuario no está prohibido.
+        not_promotable: Solo se pueden ascender usuarios normales a admin.
+        not_demotable: Solo se pueden degradar admins.
+      index:
+        title: Usuarios
+        header: Usuarios
+        search_label: Buscar
+        search_placeholder: Nombre o correo
+        search_button: Buscar
+        clear_filters: Borrar filtros
+        role_label: Rol
+        role_all: Todos
+        confirmed_label: Confirmado
+        confirmed_any: Cualquiera
+        confirmed_yes: Sí
+        confirmed_no: No
+        result_count:
+          one: "%{count} usuario"
+          other: "%{count} usuarios"
+        headings:
+          name: Nombre
+          email: Correo
+          role: Rol
+          confirmed: Confirmado
+          joined: Se unió
+          last_sign_in: Último acceso
+        never: "—"
+        empty: Ningún usuario coincide con estos filtros.
+        pagination_label: Paginación
+        prev: Anterior
+        next: Siguiente
+        page_status: Página %{page} de %{total}
+      show:
+        back: Volver a usuarios
+        account_heading: Cuenta
+        activity_heading: Actividad
+        denylist_heading: Lista de denegados
+        actions_heading: Acciones
+        ban_reason_label: Motivo (opcional)
+        ban_reason_placeholder: ¿Por qué se prohíbe a este usuario?
+        superadmin_immutable: Los superadmins no se pueden degradar, suspender ni prohibir desde la interfaz.
+        cannot_moderate_self: No puedes suspender, prohibir, ascender ni degradar tu propia cuenta.
+        fields:
+          role: Rol
+          confirmed: Confirmado
+          joined: Se unió
+          sign_in_count: Accesos
+          last_sign_in: Último acceso
+          unconfirmed_email: Correo sin confirmar
+          events_hosted: Eventos organizados
+          comments: Comentarios
+          rsvps: RSVPs
+          denylisted_email: Correo
+          banned_at: Prohibido el
+          banned_by: Prohibido por
+          reason: Motivo

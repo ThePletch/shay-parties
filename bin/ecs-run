@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+# Run a one-off Fargate task using the cluster's service network + task definition.
+set -euo pipefail
+
+function usage() {
+  >&2 echo "Usage: $0 <cluster> [--] <command...>"
+  >&2 echo "       e.g. $0 my-ecs-cluster bundle exec rails 'users:make_superadmin[you@example.com]'"
+}
+
+if [ $# -lt 2 ]; then
+  usage
+  exit 1
+fi
+
+cluster="$1"
+shift
+if [ "${1:-}" = "--" ]; then
+  shift
+fi
+if [ $# -lt 1 ]; then
+  usage
+  exit 1
+fi
+
+container_name="rails"
+
+service_arns=$(aws ecs list-services --cluster "$cluster" --query 'serviceArns[]' --output text)
+if [ -z "$service_arns" ] || [ "$service_arns" = "None" ]; then
+  >&2 echo "No services found on cluster $cluster"
+  exit 1
+fi
+
+# Prefer the *-main service when a cluster has more than one.
+service=""
+service_count=0
+for arn in $service_arns; do
+  service_count=$((service_count + 1))
+  name="${arn##*/}"
+  if [[ "$name" == *-main ]]; then
+    service="$arn"
+  fi
+done
+if [ "$service_count" -eq 1 ]; then
+  service="$service_arns"
+fi
+if [ -z "$service" ]; then
+  >&2 echo "Could not pick a service on $cluster (expected one service, or a *-main service):"
+  >&2 echo "$service_arns"
+  exit 1
+fi
+
+service_json=$(aws ecs describe-services --cluster "$cluster" --services "$service")
+task_definition=$(jq -r '.services[0].taskDefinition' <<< "$service_json")
+network=$(jq -c '.services[0].networkConfiguration' <<< "$service_json")
+overrides=$(jq -nc --arg name "$container_name" --args '{
+  containerOverrides: [{ name: $name, command: $ARGS.positional }]
+}' -- "$@")
+
+echo "Running on $cluster ($service)"
+echo "  task definition: $task_definition"
+echo "  command: $*"
+
+result=$(aws ecs run-task \
+  --cluster "$cluster" \
+  --launch-type FARGATE \
+  --task-definition "$task_definition" \
+  --network-configuration "$network" \
+  --overrides "$overrides")
+
+failure=$(jq -r '.failures[0].reason // empty' <<< "$result")
+if [ -n "$failure" ]; then
+  >&2 echo "Failed to start task: $failure"
+  jq '.failures' <<< "$result" >&2
+  exit 1
+fi
+
+task_arn=$(jq -r '.tasks[0].taskArn' <<< "$result")
+echo "Started $task_arn"
+echo "Waiting for task to stop..."
+aws ecs wait tasks-stopped --cluster "$cluster" --tasks "$task_arn"
+
+exit_code=$(aws ecs describe-tasks \
+  --cluster "$cluster" \
+  --tasks "$task_arn" \
+  --query "tasks[0].containers[?name==\`${container_name}\`].exitCode | [0]" \
+  --output text)
+
+log_group=$(aws ecs describe-task-definition \
+  --task-definition "$task_definition" \
+  --query "taskDefinition.containerDefinitions[?name==\`${container_name}\`].logConfiguration.options.\"awslogs-group\" | [0]" \
+  --output text)
+log_prefix=$(aws ecs describe-task-definition \
+  --task-definition "$task_definition" \
+  --query "taskDefinition.containerDefinitions[?name==\`${container_name}\`].logConfiguration.options.\"awslogs-stream-prefix\" | [0]" \
+  --output text)
+task_id="${task_arn##*/}"
+stream="${log_prefix}/${container_name}/${task_id}"
+
+if [ -n "$log_group" ] && [ "$log_group" != "None" ]; then
+  echo "--- logs ($log_group / $stream) ---"
+  for _ in $(seq 1 10); do
+    if aws logs get-log-events \
+      --log-group-name "$log_group" \
+      --log-stream-name "$stream" \
+      --query 'events[*].message' \
+      --output text 2>/dev/null; then
+      break
+    fi
+    sleep 2
+  done
+fi
+
+if [ "$exit_code" != "0" ]; then
+  >&2 echo "Task exited with $exit_code"
+  exit 1
+fi

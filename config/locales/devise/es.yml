@@ -19,6 +19,8 @@ es:
       invalid_token: 'Token de autenticación inválido.'
       timeout: 'Su sesión ha expirado, por favor inicie sesión nuevamente para continuar.'
       inactive: 'Su cuenta aún no ha sido activada.'
+      suspended: 'Su cuenta ha sido suspendida.'
+      banned: 'Su cuenta ha sido prohibida.'
     sessions:
       signed_in: 'Ha iniciado sesión correctamente.'
       signed_out: 'Ha cerrado sesión correctamente.'

@@ -1,0 +1,113 @@
+- title @user.name
+= link_to t('admin.users.show.back'), admin_users_path, class: 'btn btn-link px-0'
+
+%h1.title.d-flex.align-items-center.gap-2.flex-wrap
+  = @user.name
+  %span.badge{class: role_badge_class(@user.role)}= t("admin.users.roles.#{@user.role}")
+
+%p.text-muted= @user.email
+
+.row.g-4
+  .col-lg-7
+    %h2.h4= t('admin.users.show.account_heading')
+    %table.table
+      %tbody
+        %tr
+          %th= t('admin.users.show.fields.role')
+          %td= t("admin.users.roles.#{@user.role}")
+        %tr
+          %th= t('admin.users.show.fields.confirmed')
+          %td
+            - if @user.confirmed?
+              = t('admin.users.index.confirmed_yes')
+              - if @user.confirmed_at
+                = "(#{l(@user.confirmed_at.to_date)})"
+            - else
+              = t('admin.users.index.confirmed_no')
+        %tr
+          %th= t('admin.users.show.fields.joined')
+          %td= l(@user.created_at.to_date)
+        %tr
+          %th= t('admin.users.show.fields.sign_in_count')
+          %td= @user.sign_in_count
+        %tr
+          %th= t('admin.users.show.fields.last_sign_in')
+          %td
+            - if @user.last_sign_in_at
+              = l(@user.last_sign_in_at, format: :long)
+              - if @user.last_sign_in_ip.present?
+                = "· #{@user.last_sign_in_ip}"
+            - else
+              = t('admin.users.index.never')
+        %tr
+          %th= t('admin.users.show.fields.unconfirmed_email')
+          %td
+            - if @user.unconfirmed_email.present?
+              = @user.unconfirmed_email
+            - else
+              %span.text-muted —
+
+    %h2.h4= t('admin.users.show.activity_heading')
+    %table.table
+      %tbody
+        %tr
+          %th= t('admin.users.show.fields.events_hosted')
+          %td= @user.managed_events.count
+        %tr
+          %th= t('admin.users.show.fields.comments')
+          %td= @user.comments.count
+        %tr
+          %th= t('admin.users.show.fields.rsvps')
+          %td= @user.attendances.count
+
+    - if @banned_email
+      %h2.h4= t('admin.users.show.denylist_heading')
+      %table.table
+        %tbody
+          %tr
+            %th= t('admin.users.show.fields.denylisted_email')
+            %td= @banned_email.email
+          %tr
+            %th= t('admin.users.show.fields.banned_at')
+            %td= l(@banned_email.created_at.to_date)
+          %tr
+            %th= t('admin.users.show.fields.banned_by')
+            %td
+              - if @banned_email.banned_by
+                = @banned_email.banned_by.name
+              - else
+                %span.text-muted —
+          %tr
+            %th= t('admin.users.show.fields.reason')
+            %td
+              - if @banned_email.reason.present?
+                = @banned_email.reason
+              - else
+                %span.text-muted —
+
+  .col-lg-5
+    %h2.h4= t('admin.users.show.actions_heading')
+    .d-flex.flex-column.gap-2
+      - if @user.role == 'user' && @user != current_user
+        = button_to t('admin.users.actions.suspend'), suspend_admin_user_path(@user), method: :post, class: 'btn btn-warning', data: { confirm: t('admin.users.confirm.suspend') }
+        = form_with url: ban_admin_user_path(@user), method: :post, local: true, class: 'border rounded p-3' do
+          .mb-2
+            %label.form-label{for: 'reason'}= t('admin.users.show.ban_reason_label')
+            = text_field_tag :reason, nil, class: 'form-control', id: 'reason', placeholder: t('admin.users.show.ban_reason_placeholder')
+          = submit_tag t('admin.users.actions.ban'), class: 'btn btn-danger', data: { confirm: t('admin.users.confirm.ban') }
+        = button_to t('admin.users.actions.promote'), promote_admin_user_path(@user), method: :post, class: 'btn btn-primary', data: { confirm: t('admin.users.confirm.promote') }
+
+      - if @user.suspended?
+        = button_to t('admin.users.actions.unsuspend'), unsuspend_admin_user_path(@user), method: :post, class: 'btn btn-success', data: { confirm: t('admin.users.confirm.unsuspend') }
+
+      - if @user.banned?
+        = button_to t('admin.users.actions.unban'), unban_admin_user_path(@user), method: :post, class: 'btn btn-success', data: { confirm: t('admin.users.confirm.unban') }
+
+      - if @user.role == 'admin' && @user != current_user
+        = button_to t('admin.users.actions.demote'), demote_admin_user_path(@user), method: :post, class: 'btn btn-secondary', data: { confirm: t('admin.users.confirm.demote') }
+
+      - if @user.superadmin?
+        %p.text-muted.mb-0= t('admin.users.show.superadmin_immutable')
+
+      - if @user == current_user
+        %p.text-muted.mb-0= t('admin.users.show.cannot_moderate_self')

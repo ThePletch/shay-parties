@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # BuildKit cache mounts speed up CI/production rebuilds; enable with DOCKER_BUILDKIT=1 (default in Buildx).
-ARG RUBY_NODE_IMAGE=timbru31/ruby-node:3.4-slim-24@sha256:1af1e4a56d1a4570be4fee514c8ace1898fd4d6e10ca3eda7d787a2e4840f247
+ARG RUBY_NODE_IMAGE=timbru31/ruby-node:3.4-slim-24@sha256:157ba51811874c2c625a4d84c4d4788caa6d0c545f97cfeacafdcab6803663a7
 
 FROM ${RUBY_NODE_IMAGE} AS baseline
 
@@ -25,6 +25,8 @@ RUN apt-get update \
     build-essential \
     imagemagick \
     libffi-dev \
+    # psych (Ruby 3.4+) needs yaml.h from libyaml
+    libyaml-dev \
     # needed for certain rust native extensions
     libclang-dev \
     vim \
@@ -62,6 +64,7 @@ RUN rm -f /etc/apt/sources.list.d/nodesource.list \
   && apt-get install -y --no-install-recommends \
     libpq5 \
     libffi8 \
+    libyaml-0-2 \
     vim \
   && apt-get purge -y --auto-remove nodejs libffi-dev \
   && rm -rf /var/lib/apt/lists/* \

@@ -38,8 +38,19 @@ describe Users::RegistrationsController, type: :controller do
         post :create, params: valid_params
       }.not_to change(User, :count)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(assigns(:user).errors[:base]).to include(I18n.t("turnstile.failed"))
+    end
+
+    it "rejects registration when the email is denylisted" do
+      allow(Cloudflare::Turnstile).to receive(:verify).and_return(true)
+      BannedEmail.ban!("newuser@example.com")
+
+      expect {
+        post :create, params: valid_params
+      }.not_to change(User, :count)
+
+      expect(assigns(:user).errors[:email]).to be_present
     end
   end
 end

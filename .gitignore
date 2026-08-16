@@ -26,6 +26,9 @@
 # Ignore rspec timing output
 /spec/examples.txt
 
+# ignore playwright output
+.playwright-cli
+
 # ignore SAM builds
 .aws-sam
 
@@ -55,5 +58,4 @@ public/vite*
 /config/master.key
 
 /config/credentials/staging.key
-
 /config/credentials/production.key

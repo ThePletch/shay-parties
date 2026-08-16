@@ -20,4 +20,4 @@ fi
 
 echo "  ...Spinning up a shell configured for $usage..."
 echo ""
-docker compose run --rm ${@:2} "$container_name" /bin/bash
+docker compose run --build --rm ${@:2} "$container_name" /bin/bash

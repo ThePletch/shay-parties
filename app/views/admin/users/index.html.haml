@@ -1,0 +1,64 @@
+- title t('admin.users.index.title')
+%h1.title= t('admin.users.index.header')
+
+= form_with url: admin_users_path, method: :get, local: true, class: 'row g-2 align-items-end mb-3' do
+  .col-md-5
+    %label.form-label{for: 'q'}= t('admin.users.index.search_label')
+    = text_field_tag :q, params[:q], class: 'form-control', id: 'q', placeholder: t('admin.users.index.search_placeholder')
+  .col-md-3
+    %label.form-label{for: 'role'}= t('admin.users.index.role_label')
+    = select_tag :role,
+      options_for_select([[t('admin.users.index.role_all'), '']] + User::ROLES.map { |r| [t("admin.users.roles.#{r}"), r] }, params[:role]),
+      class: 'form-select',
+      id: 'role'
+  .col-md-2
+    %label.form-label{for: 'confirmed'}= t('admin.users.index.confirmed_label')
+    = select_tag :confirmed,
+      options_for_select([[t('admin.users.index.confirmed_any'), ''], [t('admin.users.index.confirmed_yes'), 'yes'], [t('admin.users.index.confirmed_no'), 'no']], params[:confirmed]),
+      class: 'form-select',
+      id: 'confirmed'
+  .col-md-2
+    = submit_tag t('admin.users.index.search_button'), class: 'btn btn-primary w-100'
+    - if params[:q].present? || params[:role].present? || params[:confirmed].present?
+      = link_to t('admin.users.index.clear_filters'), admin_users_path, class: 'btn btn-link btn-sm px-0'
+
+%p.text-muted.small
+  = t('admin.users.index.result_count', count: @total_count)
+
+%table.table
+  %thead
+    %tr
+      %th= t('admin.users.index.headings.name')
+      %th= t('admin.users.index.headings.email')
+      %th= t('admin.users.index.headings.role')
+      %th= t('admin.users.index.headings.confirmed')
+      %th= t('admin.users.index.headings.joined')
+      %th= t('admin.users.index.headings.last_sign_in')
+  %tbody
+    - if @users.any?
+      - @users.each do |user|
+        %tr
+          %td= link_to user.name, admin_user_path(user)
+          %td= user.email
+          %td
+            %span.badge{class: role_badge_class(user.role)}= t("admin.users.roles.#{user.role}")
+          %td= user.confirmed? ? t('admin.users.index.confirmed_yes') : t('admin.users.index.confirmed_no')
+          %td= l(user.created_at.to_date)
+          %td
+            - if user.last_sign_in_at
+              = l(user.last_sign_in_at.to_date)
+            - else
+              = t('admin.users.index.never')
+    - else
+      %tr
+        %td.text-muted{colspan: 6}= t('admin.users.index.empty')
+
+- if @total_pages > 1
+  %nav{'aria-label': t('admin.users.index.pagination_label')}
+    %ul.pagination
+      %li.page-item{class: ('disabled' if @page <= 1)}
+        = link_to t('admin.users.index.prev'), admin_users_path(request.query_parameters.merge(page: @page - 1)), class: 'page-link'
+      %li.page-item.disabled
+        %span.page-link= t('admin.users.index.page_status', page: @page, total: @total_pages)
+      %li.page-item{class: ('disabled' if @page >= @total_pages)}
+        = link_to t('admin.users.index.next'), admin_users_path(request.query_parameters.merge(page: @page + 1)), class: 'page-link'
