@@ -25,6 +25,8 @@ RUN apt-get update \
     build-essential \
     imagemagick \
     libffi-dev \
+    # psych (Ruby 3.4+) needs yaml.h from libyaml
+    libyaml-dev \
     # needed for certain rust native extensions
     libclang-dev \
     vim \
@@ -62,6 +64,7 @@ RUN rm -f /etc/apt/sources.list.d/nodesource.list \
   && apt-get install -y --no-install-recommends \
     libpq5 \
     libffi8 \
+    libyaml-0-2 \
     vim \
   && apt-get purge -y --auto-remove nodejs libffi-dev \
   && rm -rf /var/lib/apt/lists/* \
