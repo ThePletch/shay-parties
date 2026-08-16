@@ -1,5 +1,16 @@
-output "aws_region" {
-  value = data.aws_region.current.region
+output "ses_configuration_set_name" {
+  value = aws_sesv2_configuration_set.invites.configuration_set_name
+}
+
+output "ses_events_sns_topic_arn" {
+  value = aws_sns_topic.ses_events.arn
+}
+
+output "ses_webhook_subscribe_command" {
+  value = <<-EOT
+    After the app is deployed, subscribe SNS to the webhook:
+    aws sns subscribe --region us-east-1 --topic-arn ${aws_sns_topic.ses_events.arn} --protocol https --notification-endpoint https://${local.main_domain}/webhooks/ses
+  EOT
 }
 
 output "ecr_repository_url" {

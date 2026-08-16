@@ -12,6 +12,8 @@ locals {
     ACTIVE_STORAGE_TRANSFORM_LAMBDA = try(aws_lambda_function.image_transform[0].function_name, "")
     PARTIES_FULL_DOMAIN      = local.main_domain
     PARTIES_BASE_DOMAIN      = var.root_domain
+    SES_REGION               = "us-east-1"
+    SES_CONFIGURATION_SET    = aws_sesv2_configuration_set.invites.configuration_set_name
   }
 
   # Sensitive application environment variables stored in secured AWS SSM Parameters

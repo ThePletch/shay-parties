@@ -151,6 +151,14 @@ data "aws_iam_policy_document" "service_actions" {
       "${aws_s3_bucket.activestorage.arn}/*",
     ]
   }
+
+  statement {
+    actions = [
+      "ses:SendEmail",
+      "ses:SendRawEmail",
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role" "deploy" {

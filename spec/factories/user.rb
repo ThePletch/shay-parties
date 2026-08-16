@@ -27,6 +27,11 @@ FactoryBot.define do
     trait :banned do
       role { "banned" }
     end
+
+    trait :invite_send_restricted do
+      invite_send_restricted_at { Time.current }
+      invite_send_restriction_reason { "complaint" }
+    end
   end
 
   factory :banned_email do
