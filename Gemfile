@@ -12,7 +12,7 @@ gem 'rails', '~> 7.0'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.5.3'
 # Use Puma as the app server
-gem 'puma', '~> 6.4'
+gem 'puma', '~> 7.2'
 # Use SCSS for stylesheets
 gem 'haml-rails', '~> 2.0'
 
