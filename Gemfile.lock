@@ -60,10 +60,6 @@ GEM
       activemodel (= 7.2.3)
       activesupport (= 7.2.3)
       timeout (>= 0.4.0)
-    activerecord-cockroachdb-adapter (7.2.2)
-      activerecord (~> 7.2.0)
-      pg (~> 1.5)
-      rgeo-activerecord (~> 7.0.0)
     activestorage (7.2.3)
       actionpack (= 7.2.3)
       activejob (= 7.2.3)
@@ -331,10 +327,6 @@ GEM
     responders (3.2.0)
       actionpack (>= 7.0)
       railties (>= 7.0)
-    rgeo (3.0.1)
-    rgeo-activerecord (7.0.1)
-      activerecord (>= 5.0)
-      rgeo (>= 1.0.0)
     rspec-core (3.13.6)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -401,7 +393,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activerecord-cockroachdb-adapter (~> 7.0, >= 7.0.1)
   add_to_calendar (~> 0.3.0)
   aws-sdk-lambda (~> 1.100)
   aws-sdk-s3 (~> 1.100)
@@ -437,3 +428,6 @@ DEPENDENCIES
 
 RUBY VERSION
   ruby 3.4.10p104
+
+BUNDLED WITH
+  4.0.17
