@@ -3,21 +3,11 @@
 require "rails_helper"
 
 RSpec.describe "users rake tasks" do
-  before(:all) do
-    Rails.application.load_tasks
-  end
-
-  def invoke_make_superadmin(email)
-    task = Rake::Task["users:make_superadmin"]
-    task.reenable
-    task.invoke(email)
-  end
-
   it "promotes a user to superadmin" do
     user = FactoryBot.create(:user, email: "ops@example.com")
 
     expect {
-      invoke_make_superadmin("ops@example.com")
+      invoke_task("users:make_superadmin", "ops@example.com")
     }.to output(/Promoted ops@example.com to superadmin/).to_stdout
 
     expect(user.reload).to be_superadmin
@@ -27,7 +17,7 @@ RSpec.describe "users rake tasks" do
     user = FactoryBot.create(:user, :superadmin, email: "ops@example.com")
 
     expect {
-      invoke_make_superadmin("ops@example.com")
+      invoke_task("users:make_superadmin", "ops@example.com")
     }.to output(/already a superadmin/).to_stdout
 
     expect(user.reload).to be_superadmin
@@ -36,7 +26,7 @@ RSpec.describe "users rake tasks" do
   it "aborts when the user does not exist" do
     expect {
       expect {
-        invoke_make_superadmin("missing@example.com")
+        invoke_task("users:make_superadmin", "missing@example.com")
       }.to raise_error(SystemExit)
     }.to output(/No user found/).to_stderr
   end

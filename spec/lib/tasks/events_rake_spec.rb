@@ -5,16 +5,6 @@ require "rails_helper"
 RSpec.describe "events rake tasks" do
   include ActiveJob::TestHelper
 
-  before(:all) do
-    Rails.application.load_tasks
-  end
-
-  def invoke_task(name)
-    task = Rake::Task[name]
-    task.reenable
-    task.invoke
-  end
-
   def attach_photo!(event)
     event.photo.attach(
       io: file_fixture("test_image.png").open,
