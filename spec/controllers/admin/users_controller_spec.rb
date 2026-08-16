@@ -86,5 +86,15 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(admin.reload.role).to eq("admin")
       expect(flash[:alert]).to eq(I18n.t("admin.users.errors.cannot_moderate_self"))
     end
+
+    it "clears an invite-send restriction" do
+      target.update!(
+        invite_send_restricted_at: Time.current,
+        invite_send_restriction_reason: "bounce_limit"
+      )
+      post :clear_invite_restriction, params: { id: target.to_param }
+      expect(target.reload).not_to be_invite_send_restricted
+      expect(target.bounce_strikes_reset_at).to be_present
+    end
   end
 end

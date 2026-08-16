@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  post "/webhooks/ses", to: "webhooks/ses#create"
+
   scope "(:locale)" do
     devise_for :users,
       controllers: {
@@ -26,6 +28,11 @@ Rails.application.routes.draw do
       end
 
       resources :attendances, only: [:create, :update, :destroy]
+      resources :invites, only: [:new, :create] do
+        collection do
+          post :preview
+        end
+      end
       resources :polls, except: [:index, :show], shallow: true do
         resources :poll_responses, only: [:create, :update, :destroy]
       end
@@ -58,6 +65,7 @@ Rails.application.routes.draw do
           post :unban
           post :promote
           post :demote
+          post :clear_invite_restriction
         end
       end
     end

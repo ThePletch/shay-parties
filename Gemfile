@@ -35,6 +35,8 @@ gem 'commonmarker', '~> 2.5'
 
 gem 'aws-sdk-s3', '~> 1.100', require: false
 gem 'aws-sdk-lambda', '~> 1.100', require: false
+gem 'aws-sdk-sesv2', '~> 1.0', require: false
+gem 'aws-sdk-sns', '~> 1.0', require: false
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:windows, :jruby]

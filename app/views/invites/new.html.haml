@@ -1,0 +1,38 @@
+= vite_typescript_tag 'entrypoints/events/invites'
+- title t('invite.form.title', title: @event.title)
+
+%h1.title= t('invite.form.header', title: @event.title)
+= link_to t('invite.form.back'), event_path(@event), class: 'btn btn-link px-0'
+
+- if current_user.invite_send_restricted?
+  .alert.alert-danger= t('invite.rejection.restricted')
+- else
+  %p.text-muted= t('invite.form.quota', remaining: @quota_remaining, limit: InviteSend::DAILY_LIMIT)
+
+= form_with url: event_invites_path(@event), method: :post, local: true, html: { id: "invite-form", data: { preview_url: preview_event_invites_path(@event) } } do
+  .mb-3
+    %label.form-label{for: "message"}= t("invite.form.message_label")
+    %p.form-text= t("invite.form.message_help")
+    = text_area_tag :message, @message, class: "form-control", rows: 6, id: "message"
+
+  %h2.h5= t("invite.form.recipients_label")
+  #invite-recipients
+    - @recipients.each_with_index do |recipient, index|
+      = render "invites/recipient_fields", index: index, recipient: recipient
+
+  .mb-3
+    = link_to_add_invite_recipient t("invite.form.add_recipient"), class: "btn btn-success", id: "add-invite-recipient"
+
+  - if Cloudflare::Turnstile.enabled?
+    .mb-3
+      %script{src: "https://challenges.cloudflare.com/turnstile/v0/api.js", async: true, defer: true}
+      .cf-turnstile{"data-sitekey" => Cloudflare::Turnstile.site_key}
+
+  .mb-4
+    %button.btn.btn-outline-secondary#invite-preview-button{type: "button"}= t("invite.form.preview")
+    - unless current_user.invite_send_restricted?
+      = submit_tag t("invite.form.send"), class: "btn btn-primary"
+
+%h2.h5.mt-4= t("invite.preview.heading")
+#invite-preview.border.rounded.p-3.bg-light
+  %p.text-muted.mb-0= t("invite.preview.placeholder")

@@ -5,6 +5,8 @@ class User < ApplicationRecord
 
   ROLES = %w[user admin superadmin suspended banned].freeze
   ADMIN_ROLES = %w[admin superadmin].freeze
+  HARD_BOUNCE_ALLOWANCE = 3
+  INVITE_RESTRICTION_REASONS = %w[bounce_limit complaint].freeze
 
   class ModerationError < StandardError; end
 
@@ -29,6 +31,10 @@ class User < ApplicationRecord
   has_many :polls, through: :managed_events
   has_many :answered_polls, through: :poll_responses
   has_many :mailing_lists, dependent: :destroy
+  has_many :invite_sends, dependent: :destroy
+  has_many :email_delivery_events, dependent: :destroy
+
+  scope :admins, -> { where(role: ADMIN_ROLES) }
 
   validate :email_not_denylisted, if: :email_changed?
   validate :unconfirmed_email_not_denylisted, if: :will_save_change_to_unconfirmed_email?
@@ -118,6 +124,44 @@ class User < ApplicationRecord
 
   def make_superadmin!
     update!(role: "superadmin")
+  end
+
+  def invite_send_restricted?
+    invite_send_restricted_at.present?
+  end
+
+  def remaining_invite_quota
+    [InviteSend::DAILY_LIMIT - InviteSend.recent_count_for(self), 0].max
+  end
+
+  def hard_bounce_strikes
+    scope = EmailDeliveryEvent.hard_bounces.where(user_id: id)
+    scope = scope.where("created_at > ?", bounce_strikes_reset_at) if bounce_strikes_reset_at
+    scope.count
+  end
+
+  def remaining_hard_bounce_allowance
+    [HARD_BOUNCE_ALLOWANCE - hard_bounce_strikes, 0].max
+  end
+
+  def restrict_invite_sends!(reason:)
+    return if invite_send_restricted?
+
+    update!(
+      invite_send_restricted_at: Time.current,
+      invite_send_restriction_reason: reason
+    )
+  end
+
+  def clear_invite_send_restriction!(actor:)
+    ensure_actor_is_admin!(actor)
+    raise ModerationError, I18n.t("admin.users.errors.not_invite_restricted") unless invite_send_restricted?
+
+    update!(
+      invite_send_restricted_at: nil,
+      invite_send_restriction_reason: nil,
+      bounce_strikes_reset_at: Time.current
+    )
   end
 
   private

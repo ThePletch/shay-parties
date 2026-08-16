@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_27_000001) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_16_200000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -99,6 +99,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_27_000001) do
     t.index ["parent_id"], name: "index_comments_on_parent_id"
   end
 
+  create_table "email_delivery_events", force: :cascade do |t|
+    t.bigint "invite_send_id"
+    t.bigint "user_id", null: false
+    t.string "recipient_email", null: false
+    t.string "event_type", null: false
+    t.string "bounce_type"
+    t.string "ses_message_id"
+    t.jsonb "raw_payload"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invite_send_id"], name: "index_email_delivery_events_on_invite_send_id"
+    t.index ["ses_message_id", "event_type", "recipient_email"], name: "index_email_delivery_events_dedup", unique: true, where: "(ses_message_id IS NOT NULL)"
+    t.index ["user_id", "event_type", "bounce_type", "created_at"], name: "index_email_delivery_events_on_user_strikes"
+    t.index ["user_id"], name: "index_email_delivery_events_on_user_id"
+  end
+
   create_table "events", force: :cascade do |t|
     t.string "title"
     t.datetime "start_time", precision: nil
@@ -134,6 +150,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_27_000001) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "invite_sends", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.string "recipient_email", null: false
+    t.string "ses_message_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_invite_sends_on_event_id"
+    t.index ["ses_message_id"], name: "index_invite_sends_on_ses_message_id"
+    t.index ["user_id", "created_at"], name: "index_invite_sends_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_invite_sends_on_user_id"
   end
 
   create_table "mailing_list_emails", force: :cascade do |t|
@@ -194,6 +223,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_27_000001) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
+    t.datetime "invite_send_restricted_at"
+    t.string "invite_send_restriction_reason"
+    t.datetime "bounce_strikes_reset_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -219,6 +251,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_27_000001) do
   add_foreign_key "attendances", "attendances"
   add_foreign_key "banned_emails", "users", column: "banned_by_id"
   add_foreign_key "comments", "comments", column: "parent_id"
+  add_foreign_key "email_delivery_events", "invite_sends"
+  add_foreign_key "email_delivery_events", "users"
   add_foreign_key "events", "addresses"
   add_foreign_key "events", "users"
+  add_foreign_key "invite_sends", "events"
+  add_foreign_key "invite_sends", "users"
 end

@@ -12,10 +12,64 @@ es:
   turnstile:
     failed: La verificación captcha falló. Inténtalo de nuevo.
   user:
-    unconfirmed_banner: Confirma tu correo electrónico para organizar eventos y publicar comentarios.
+    unconfirmed_banner: Confirma tu correo electrónico para organizar eventos, enviar invitaciones y publicar comentarios.
     resend_confirmation: Reenviar correo de confirmación
     rejection:
       unconfirmed: Confirma tu correo electrónico antes de organizar un evento.
+  invite:
+    actions:
+      send: Enviar invitaciones
+    sent:
+      one: Se envió %{count} invitación.
+      other: Se enviaron %{count} invitaciones.
+    rejection:
+      unconfirmed: Confirma tu correo electrónico antes de enviar invitaciones.
+      restricted: El envío de invitaciones está restringido a la espera de revisión.
+      not_owner: Solo el anfitrión puede enviar invitaciones.
+      no_recipients: Añade al menos un correo de destinatario.
+      batch_too_large: Puedes enviar como máximo %{limit} invitaciones a la vez.
+      over_quota: Eso superaría el límite de %{limit} invitaciones en 24 horas. Te quedan %{remaining}.
+      invalid_emails: "Estas direcciones no son correos válidos: %{emails}"
+    form:
+      title: "Invitar — %{title}"
+      header: "Invitar a %{title}"
+      back: Volver al evento
+      quota: Puedes enviar %{remaining} invitaciones más en las próximas 24 horas (límite %{limit}).
+      message_label: Mensaje
+      message_help: Esta nota se incluye en el correo. El enlace del evento siempre se añade.
+      recipients_label: Destinatarios
+      name_placeholder: Nombre
+      email_placeholder: Correo
+      include: Incluir
+      add_recipient: Añadir destinatario
+      preview: Vista previa
+      send: Enviar invitaciones
+    preview:
+      heading: Vista previa
+      placeholder: Introduce un nombre y correo para previsualizar la primera invitación.
+      need_recipient: Introduce al menos un correo para previsualizar.
+  event_invite_mailer:
+    invite:
+      subject: "Te invitan a %{title} (organizado por %{host})"
+      greeting: "Hola %{name},"
+      friend: hola
+      cta: "Ver %{title}"
+  invite_delivery_mailer:
+    bounce_warning:
+      subject: Una invitación que enviaste no se pudo entregar
+      hello: "Hola %{name},"
+      body: "Una invitación a %{email} rebotó. Te quedan %{remaining} de %{allowance} rebotes permanentes antes de restringir el envío."
+    restricted:
+      subject: El envío de invitaciones está restringido en tu cuenta
+      hello: "Hola %{name},"
+      body_bounce_limit: El envío de invitaciones está restringido porque demasiadas invitaciones rebotaron. Un admin lo revisará.
+      body_complaint: El envío de invitaciones está restringido porque alguien marcó una invitación como spam. Un admin lo revisará.
+  admin_moderation_mailer:
+    invite_send_restricted:
+      subject: "Envío de invitaciones restringido para %{name}"
+      hello: "Hola %{name},"
+      body_bounce_limit: "%{name} (%{email}) tiene restringido el envío de invitaciones por rebotes permanentes. Revisa su cuenta:"
+      body_complaint: "%{name} (%{email}) tiene restringido el envío de invitaciones por una queja de spam. Revisa su cuenta:"
   navbar:
     home: Inicio
     host:
@@ -52,6 +106,7 @@ es:
         unban: Quitar prohibición
         promote: Ascender a admin
         demote: Degradar a usuario
+        clear_invite_restriction: Quitar restricción de invitaciones
       confirm:
         suspend: ¿Suspender a este usuario? No podrá iniciar sesión.
         unsuspend: ¿Restaurar esta cuenta a un usuario normal?
@@ -59,6 +114,7 @@ es:
         unban: ¿Quitar la prohibición y eliminar su correo de la lista de denegados?
         promote: ¿Ascender a este usuario a admin?
         demote: ¿Degradar a este admin a usuario normal?
+        clear_invite_restriction: ¿Quitar la restricción de invitaciones y reiniciar los rebotes?
       flash:
         suspend: Usuario suspendido.
         unsuspend: Suspensión quitada.
@@ -66,6 +122,7 @@ es:
         unban: Prohibición quitada.
         promote: Usuario ascendido a admin.
         demote: Usuario degradado a usuario.
+        clear_invite_restriction: Restricción de invitaciones quitada.
       errors:
         actor_not_admin: Solo los administradores pueden moderar usuarios.
         cannot_moderate_self: No puedes moderar tu propia cuenta.
@@ -77,6 +134,10 @@ es:
         not_banned: Este usuario no está prohibido.
         not_promotable: Solo se pueden ascender usuarios normales a admin.
         not_demotable: Solo se pueden degradar admins.
+        not_invite_restricted: Este usuario no tiene restringido el envío de invitaciones.
+      invite_restriction_reasons:
+        bounce_limit: demasiados rebotes permanentes
+        complaint: queja de spam
       index:
         title: Usuarios
         header: Usuarios
@@ -116,6 +177,9 @@ es:
         ban_reason_placeholder: ¿Por qué se prohíbe a este usuario?
         superadmin_immutable: Los superadmins no se pueden degradar, suspender ni prohibir desde la interfaz.
         cannot_moderate_self: No puedes suspender, prohibir, ascender ni degradar tu propia cuenta.
+        invite_restricted: Restringido (%{reason}) desde %{at}
+        invite_allowed: Permitido
+        hard_bounce_count: "%{count} / %{allowance}"
         fields:
           role: Rol
           confirmed: Confirmado
@@ -126,6 +190,8 @@ es:
           events_hosted: Eventos organizados
           comments: Comentarios
           rsvps: RSVPs
+          invite_sending: Envío de invitaciones
+          hard_bounces: Rebotes permanentes
           denylisted_email: Correo
           banned_at: Prohibido el
           banned_by: Prohibido por

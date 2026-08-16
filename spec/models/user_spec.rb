@@ -115,4 +115,23 @@ RSpec.describe User do
       expect(BannedEmail.banned?("pending@example.com")).to be(true)
     end
   end
+
+  describe "invite-send restriction" do
+    let(:admin) { FactoryBot.create(:user, :admin) }
+    let(:target) { FactoryBot.create(:user) }
+
+    it "clears restriction and resets bounce strike counting" do
+      target.update!(
+        invite_send_restricted_at: Time.current,
+        invite_send_restriction_reason: "bounce_limit"
+      )
+      FactoryBot.create(:email_delivery_event, user: target, bounce_type: "Permanent")
+
+      expect(target.hard_bounce_strikes).to eq(1)
+      target.clear_invite_send_restriction!(actor: admin)
+
+      expect(target.reload).not_to be_invite_send_restricted
+      expect(target.hard_bounce_strikes).to eq(0)
+    end
+  end
 end
