@@ -1,0 +1,15 @@
+- row_id = "invite_recipient_#{index == 'new_record' ? '_timestamp_' : index}"
+- selected = recipient[:selected].nil? || ActiveModel::Type::Boolean.new.cast(recipient[:selected])
+.row.g-2.mb-2{id: row_id, data: { persisted: "false" }}
+  = hidden_field_tag "recipients[#{index}][_destroy]", 0, class: "destroy"
+  .col-md-4
+    = text_field_tag "recipients[#{index}][name]", recipient[:name], class: "form-control", placeholder: t("invite.form.name_placeholder"), id: "recipients_#{index}_name"
+  .col-md-5
+    = email_field_tag "recipients[#{index}][email]", recipient[:email], class: "form-control", placeholder: t("invite.form.email_placeholder"), id: "recipients_#{index}_email"
+  .col-md-2.d-flex.align-items-center
+    = hidden_field_tag "recipients[#{index}][selected]", "0", id: "recipients_#{index}_selected_hidden"
+    .form-check
+      = check_box_tag "recipients[#{index}][selected]", "1", selected, class: "form-check-input", id: "recipients_#{index}_selected"
+      %label.form-check-label{for: "recipients_#{index}_selected"}= t("invite.form.include")
+  .col-md-1
+    %button.btn.btn-danger.dynamic-list-delete{data: { dynamic_target_id: row_id }, onclick: "return false;"} X

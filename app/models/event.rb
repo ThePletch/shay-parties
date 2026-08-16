@@ -18,6 +18,7 @@ class Event < ApplicationRecord
   # photo for header of event, will be thumbnailed for index view
   has_one_attached :photo
 
+  has_many :invite_sends, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :polls, dependent: :destroy
   belongs_to :address
