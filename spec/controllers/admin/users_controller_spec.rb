@@ -67,6 +67,13 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(target.reload.role).to eq("user")
     end
 
+    it "rejects promoting an unconfirmed user" do
+      unconfirmed = FactoryBot.create(:user, :unconfirmed)
+      post :promote, params: { id: unconfirmed.to_param }
+      expect(unconfirmed.reload.role).to eq("user")
+      expect(flash[:alert]).to eq(I18n.t("admin.users.errors.unconfirmed_email"))
+    end
+
     it "rejects demoting a superadmin" do
       superadmin = FactoryBot.create(:user, :superadmin)
       post :demote, params: { id: superadmin.to_param }

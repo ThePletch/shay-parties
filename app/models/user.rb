@@ -103,6 +103,7 @@ class User < ApplicationRecord
     ensure_actor_is_admin!(actor)
     raise ModerationError, I18n.t("admin.users.errors.cannot_moderate_self") if actor == self
     raise ModerationError, I18n.t("admin.users.errors.not_promotable") unless role == "user"
+    ensure_email_confirmed!
 
     update!(role: "admin")
   end
@@ -117,6 +118,7 @@ class User < ApplicationRecord
   end
 
   def make_superadmin!
+    ensure_email_confirmed!
     update!(role: "superadmin")
   end
 
@@ -142,6 +144,10 @@ class User < ApplicationRecord
     return unless BannedEmail.banned?(unconfirmed_email)
 
     errors.add(:unconfirmed_email, :banned)
+  end
+
+  def ensure_email_confirmed!
+    raise ModerationError, I18n.t("admin.users.errors.unconfirmed_email") unless confirmed?
   end
 
   def ensure_actor_is_admin!(actor)
