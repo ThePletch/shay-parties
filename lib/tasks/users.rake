@@ -15,5 +15,7 @@ namespace :users do
       user.make_superadmin!
       puts "Promoted #{user.email} to superadmin."
     end
+  rescue User::ModerationError => e
+    abort e.message
   end
 end
