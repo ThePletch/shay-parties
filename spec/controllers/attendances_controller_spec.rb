@@ -71,6 +71,39 @@ describe AttendancesController do
         expect(plus_one.reload.parent_attendance).to be_nil
         expect(plus_one.attendee.name).to eq "New Name"
       end
+
+      it "rejects a guest RSVP when Turnstile verification fails" do
+        allow(Cloudflare::Turnstile).to receive(:verify).and_return(false)
+
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {
+            rsvp_status: "Yes",
+            attendee_attributes: {name: "Steve", email: "steve@steve.steve"},
+          },
+          "cf-turnstile-response" => "token",
+        }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(@event.attendances).to be_empty
+        expect(flash[:alert]).to eq I18n.t("turnstile.failed")
+      end
+
+      it "registers a guest attendance when Turnstile verification succeeds" do
+        allow(Cloudflare::Turnstile).to receive(:verify).and_return(true)
+
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {
+            rsvp_status: "Yes",
+            attendee_attributes: {name: "Steve", email: "steve@steve.steve"},
+          },
+          "cf-turnstile-response" => "token",
+        }
+
+        expect(@event.attendances.count).to eq 1
+        expect(response).to redirect_to(event_path(@event, guest_guid: @event.attendances.first.attendee.guid))
+      end
     end
 
     context "with a logged in user" do
@@ -88,6 +121,18 @@ describe AttendancesController do
         user = @event.attendances.first.attendee
         expect(user).to be_a User
         expect(user).to eq @user
+        expect(response).to redirect_to(event_path(@event))
+      end
+
+      it "does not require Turnstile for signed in users" do
+        allow(Cloudflare::Turnstile).to receive(:verify).and_return(false)
+
+        post :create, params: {
+          event_id: @event.id,
+          attendance: {rsvp_status: "Yes"}
+        }
+
+        expect(@event.attendances.count).to eq 1
         expect(response).to redirect_to(event_path(@event))
       end
 
@@ -170,6 +215,21 @@ describe AttendancesController do
           }
           expect(response).to redirect_to(event_path(@event, guest_guid: @guest.guid))
           expect(@attendance.reload.rsvp_status).to eq 'Maybe'
+        end
+
+        it "rejects an update when Turnstile verification fails" do
+          allow(Cloudflare::Turnstile).to receive(:verify).and_return(false)
+
+          patch :update, params: {
+            id: @attendance.id,
+            guest_guid: @guest.guid,
+            attendance: {rsvp_status: 'Maybe'},
+            "cf-turnstile-response" => "token",
+          }
+
+          expect(response).to have_http_status(:unprocessable_content)
+          expect(@attendance.reload.rsvp_status).to eq 'Yes'
+          expect(flash[:alert]).to eq I18n.t("turnstile.failed")
         end
 
         it "does not alter other RSVPs for guests or users" do

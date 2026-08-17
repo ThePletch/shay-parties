@@ -27,5 +27,7 @@
       = link_to_add_fields(t('attendance.form.add_plus_one'), form, :plus_ones, {record_limit: event.plus_one_max, partial: 'attendances/plus_one_form', target: "#plus-ones", locals: { plus_one: form.object.plus_ones.build, event: event }, layout: :inline}, class: 'btn btn-success', id: "add-plus-one")
       - if event.has_plus_one_limit?
         .form-text= t('attendance.form.plus_ones_limit_prompt', count: event.plus_one_max.humanize(locale: I18n.locale))
+  - unless current_user.present? && !current_user.guest?
+    = render 'shared/turnstile'
   .d-grid
     = form.primary('RSVP')

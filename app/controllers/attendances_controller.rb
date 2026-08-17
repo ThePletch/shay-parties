@@ -27,6 +27,8 @@ class AttendancesController < ApplicationController
     @attendance.parent_attendance = nil
     @attendance.attendee.name = attendee.name
 
+    return unless verify_guest_turnstile!
+
     if upsert(@attendance, @event)
       if @attendance.attendee.guest?
         notice = t 'attendance.created_with_link_html', link: event_url(@event, guest_guid: @attendance.attendee.guid)
@@ -50,6 +52,8 @@ class AttendancesController < ApplicationController
 
 
   def update
+    return unless verify_guest_turnstile!
+
     if attendance_params[:rsvp_status] == "No RSVP"
       result = @attendance.destroy
     else
@@ -68,6 +72,16 @@ class AttendancesController < ApplicationController
   end
 
   private
+
+  def verify_guest_turnstile!
+    return true if user_signed_in?
+    return true if Cloudflare::Turnstile.verify(params["cf-turnstile-response"], remote_ip: request.remote_ip)
+
+    @attendance.errors.add(:base, t("turnstile.failed"))
+    flash.now[:alert] = t("turnstile.failed")
+    render "events/show", status: :unprocessable_content
+    false
+  end
 
   def upsert(attendance, event)
     attendance.update(attendance_params_for_upsert(attendance_params, event))

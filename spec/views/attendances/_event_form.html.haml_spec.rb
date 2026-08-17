@@ -31,6 +31,26 @@ RSpec.describe "attendances/event_form" do
     end
   end
 
+  it "shows a captcha for guests when Turnstile is enabled" do
+    allow(Cloudflare::Turnstile).to receive(:enabled?).and_return(true)
+    allow(Cloudflare::Turnstile).to receive(:site_key).and_return("test-site-key")
+    event = FactoryBot.create(:event)
+
+    render('attendances/event_form', event: event, attendance: Attendance.new(event: event))
+
+    expect(rendered).to have_selector('.cf-turnstile[data-sitekey="test-site-key"]')
+  end
+
+  it "does not show a captcha for signed in users" do
+    allow(Cloudflare::Turnstile).to receive(:enabled?).and_return(true)
+    allow(Cloudflare::Turnstile).to receive(:site_key).and_return("test-site-key")
+    attendance = FactoryBot.create(:attendance)
+
+    render('attendances/event_form', attendance: attendance, current_user: attendance.attendee)
+
+    expect(rendered).not_to have_selector('.cf-turnstile')
+  end
+
   it "shows all attendance types as options" do
     event = FactoryBot.create(:event)
     render('attendances/event_form', event: event, attendance: Attendance.new(event: event))
