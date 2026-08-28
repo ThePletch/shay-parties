@@ -7,23 +7,14 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0'
-# Use postgresql as the database for Active Record
+gem 'rails', '~> 8.0'
 gem 'pg', '~> 1.5.3'
-# Use Puma as the app server
 gem 'puma', '~> 6.4'
-# Use SCSS for stylesheets
 gem 'haml-rails', '~> 2.0'
 
 gem 'draper', '~> 4.0'
 
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
 
 # listings for US states/country metadata
 gem 'carmen', '~> 1.1'
@@ -50,12 +41,17 @@ gem "bootstrap_form", "~> 5"
 # lets us display numbers as locale-specific words
 gem "humanize", "~> 3.1"
 
+gem "sorbet-runtime", "~> 0.6.13427"
+
 group :development, :test do
   # Fallback only in dev, production offloads image processing to Lambda
   gem 'image_processing', '~> 1.2'
   gem 'ffi', '~> 1.15.5'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+
+  gem "sorbet", "~> 0.6.13427"
+  gem "tapioca", require: false
 end
 
 group :development do

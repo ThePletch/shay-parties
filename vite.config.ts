@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config'
 import RubyPlugin from 'vite-plugin-ruby';
 import path from 'path';
 
-const isTest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
+const isTest = process.env['VITEST'] === 'true' || process.env['NODE_ENV'] === 'test';
 
 export default defineConfig({
   plugins: isTest ? [] : [RubyPlugin()],
