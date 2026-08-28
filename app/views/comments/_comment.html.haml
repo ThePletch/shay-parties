@@ -8,16 +8,16 @@
     %strong.author= comment.creator.name
     %small
       %span.timestamp
-        = comment.created_timestamp
+        = l(comment.created_at, format: :full)
       %span.timestamp
         - if comment.deleted?
           - deletion_title = comment.editor == comment.creator ? "" : t('comment.view.deleted_by', editor: comment.editor.try(:name))
           %strong{title: deletion_title, data: {toggle: 'tooltip', placement: 'right'}}= t('comment.view.deleted')
         - elsif comment.edited?
-          %span{title: comment.updated_timestamp, data: {toggle: 'tooltip', placement: 'right'}} ✏️
+          %span{title: l(comment.updated_at, format: :full), data: {toggle: 'tooltip', placement: 'right'}} ✏️
     - unless comment.deleted?
       %span.avatar.float-start.mt-2.me-3.mb-1
-        = image_tag(comment.creator.gravatar_url, alt: comment.creator.name, title: comment.creator.name, border: 1)
+        = image_tag(Gravatar.url(comment.creator.email), alt: comment.creator.name, title: comment.creator.name, border: 1)
     - if comment.deleted?
       %span.actions
         .float-end
@@ -26,7 +26,7 @@
               = button_to t("comment.actions.undelete"), undelete_comment_path(comment, guest_guid: params[:guest_guid]), method: :put, class: "undelete-button btn btn-sm btn-danger", remote: false
     - else
       .comment-body.body{id: "comment-#{comment.id}-body"}
-        = comment.rendered_body
+        = Markdown.html(comment.body)
       - if comment.editable_by?(@authenticated_user)
         .edit-form{id: "comment-#{comment.id}-edit"}
           = render 'comments/form', comment: comment

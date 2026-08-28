@@ -93,7 +93,7 @@ class EventsController < ApplicationController
   end
 
   def set_event
-    @event = EventDecorator.decorate(Event.includes(*EventsController::PRELOAD).friendly.find(params[:id]))
+    @event = Event.includes(*EventsController::PRELOAD).friendly.find(params[:id])
   end
 
   # ensures that the event being access is owned by the current user

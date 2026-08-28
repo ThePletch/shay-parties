@@ -97,7 +97,7 @@ class AttendancesController < ApplicationController
 
   def set_owned_attendance_and_event
     @attendance = @authenticated_user.attendances.includes(:event).preload(:attendee).find(params[:id])
-    @event = EventDecorator.decorate(@attendance.event)
+    @event = @attendance.event
   end
 
   def set_attendance
@@ -120,7 +120,7 @@ class AttendancesController < ApplicationController
   end
 
   def set_event
-    @event = EventDecorator.decorate(Event.friendly.find(params[:event_id]))
+    @event = Event.friendly.find(params[:event_id])
   end
 
   # Once an RSVP is created, you can't change its attendee or its event.

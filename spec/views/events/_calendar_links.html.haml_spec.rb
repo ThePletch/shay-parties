@@ -5,7 +5,7 @@ RSpec.describe "events/_calendar_links" do
     render(
       'events/calendar_links',
       attendee: FactoryBot.create(:guest),
-      event: EventDecorator.decorate(FactoryBot.create(:event)),
+      event: FactoryBot.create(:event),
     )
 
     expect(rendered).to eq ""
@@ -17,7 +17,7 @@ RSpec.describe "events/_calendar_links" do
     render(
       'events/calendar_links',
       attendee: attendance.attendee,
-      event: EventDecorator.decorate(attendance.event),
+      event: attendance.event,
     )
 
     expect(rendered).to have_selector('.calendar-links')

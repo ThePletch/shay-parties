@@ -19,4 +19,9 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 ---
-en: {}
+en:
+  time:
+    formats:
+      day: "%b %-d, %Y"
+      clock: "%l:%M %P"
+      full: "%b %-d, %Y %l:%M %P"

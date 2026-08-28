@@ -2,6 +2,10 @@ es:
   time:
     am: am
     pm: pm
+    formats:
+      day: "%-d %b %Y"
+      clock: "%l:%M %P"
+      full: "%-d %b %Y %l:%M %P"
   date:
     abbr_month_names:
       - Ene

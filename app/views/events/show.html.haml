@@ -26,22 +26,22 @@
       .col-sm
         %em
           - # show a simplified format for events spanning a single day
-          - if @event.start_datetime.to_date == @event.end_datetime.to_date
-            .font-weight-bold= @event.start_date
-            = "#{@event.start_time} - #{@event.end_time}"
+          - if @event.single_day?
+            .font-weight-bold= l(@event.start_time, format: :day)
+            = EventTime.same_day_range(@event)
           - else
-            %strong= @event.start_date
-            = @event.start_time
+            %strong= l(@event.start_time, format: :day)
+            = l(@event.start_time, format: :clock)
             %p
               = "…#{t('event.show.time_separator')}"
-              %strong= @event.end_date
-              = @event.end_time
+              %strong= l(@event.end_time, format: :day)
+              = l(@event.end_time, format: :clock)
       - if @event.address
         .col-sm-auto
           .d-sm-none.mt-2= render 'addresses/show', address: @event.address
           .d-none.d-sm-inline.text-end= render 'addresses/show', address: @event.address
     %hr
-    .content= @event.description
+    .content= Markdown.html(@event.description)
   .col-lg.order-lg-2.order-sm-1
     = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
     = render 'events/calendar_links', attendee: @attendee, event: @event

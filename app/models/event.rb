@@ -33,6 +33,21 @@ class Event < ApplicationRecord
 
   scope :attended_by, ->(user) { joins(:attendances).where(attendances: {attendee_id: user.id, attendee_type: "User"}) }
 
+  def attended_by?(attendee)
+    return false unless attendee
+
+    attendance = attendances.find_by(attendee: attendee)
+    attendance.present? && attendance.attending?
+  end
+
+  def root_comments
+    comments.select { |comment| comment.parent_id.nil? }
+  end
+
+  def single_day?
+    start_time.to_date == end_time.to_date
+  end
+
   def landing_page_photo_transformations
     {
       resize: LANDING_PAGE_PHOTO_WIDTH.to_s,
