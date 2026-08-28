@@ -84,6 +84,26 @@ RSpec.describe User do
       expect(target.reload.role).to eq("user")
     end
 
+    it "cannot promote an unconfirmed user to admin" do
+      unconfirmed = FactoryBot.create(:user, :unconfirmed)
+
+      expect { unconfirmed.promote_to_admin!(actor: admin) }.to raise_error(
+        User::ModerationError,
+        I18n.t("admin.users.errors.unconfirmed_email")
+      )
+      expect(unconfirmed.reload.role).to eq("user")
+    end
+
+    it "cannot make an unconfirmed user a superadmin" do
+      unconfirmed = FactoryBot.create(:user, :unconfirmed)
+
+      expect { unconfirmed.make_superadmin! }.to raise_error(
+        User::ModerationError,
+        I18n.t("admin.users.errors.unconfirmed_email")
+      )
+      expect(unconfirmed.reload).not_to be_superadmin
+    end
+
     it "cannot demote, ban, or suspend a superadmin" do
       superadmin = FactoryBot.create(:user, :superadmin)
 

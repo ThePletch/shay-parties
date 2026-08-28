@@ -95,7 +95,10 @@
             %label.form-label{for: 'reason'}= t('admin.users.show.ban_reason_label')
             = text_field_tag :reason, nil, class: 'form-control', id: 'reason', placeholder: t('admin.users.show.ban_reason_placeholder')
           = submit_tag t('admin.users.actions.ban'), class: 'btn btn-danger', data: { confirm: t('admin.users.confirm.ban') }
-        = button_to t('admin.users.actions.promote'), promote_admin_user_path(@user), method: :post, class: 'btn btn-primary', data: { confirm: t('admin.users.confirm.promote') }
+        - if @user.confirmed?
+          = button_to t('admin.users.actions.promote'), promote_admin_user_path(@user), method: :post, class: 'btn btn-primary', data: { confirm: t('admin.users.confirm.promote') }
+        - else
+          %p.text-muted.mb-0= t('admin.users.show.cannot_promote_unconfirmed')
 
       - if @user.suspended?
         = button_to t('admin.users.actions.unsuspend'), unsuspend_admin_user_path(@user), method: :post, class: 'btn btn-success', data: { confirm: t('admin.users.confirm.unsuspend') }

@@ -77,6 +77,7 @@ es:
         not_banned: Este usuario no está prohibido.
         not_promotable: Solo se pueden ascender usuarios normales a admin.
         not_demotable: Solo se pueden degradar admins.
+        unconfirmed_email: Los usuarios deben verificar su correo antes de ser ascendidos a admin o superadmin.
       index:
         title: Usuarios
         header: Usuarios
@@ -116,6 +117,7 @@ es:
         ban_reason_placeholder: ¿Por qué se prohíbe a este usuario?
         superadmin_immutable: Los superadmins no se pueden degradar, suspender ni prohibir desde la interfaz.
         cannot_moderate_self: No puedes suspender, prohibir, ascender ni degradar tu propia cuenta.
+        cannot_promote_unconfirmed: Este usuario debe verificar su correo antes de ser ascendido a admin.
         fields:
           role: Rol
           confirmed: Confirmado

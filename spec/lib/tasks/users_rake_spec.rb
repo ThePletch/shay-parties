@@ -23,6 +23,16 @@ RSpec.describe "users rake tasks" do
     expect(user.reload).to be_superadmin
   end
 
+  it "aborts when the user's email is not verified" do
+    FactoryBot.create(:user, :unconfirmed, email: "ops@example.com")
+
+    expect {
+      expect {
+        invoke_task("users:make_superadmin", "ops@example.com")
+      }.to raise_error(SystemExit)
+    }.to output(/verify their email/).to_stderr
+  end
+
   it "aborts when the user does not exist" do
     expect {
       expect {

@@ -77,6 +77,7 @@ en:
         not_banned: This user is not banned.
         not_promotable: Only regular users can be promoted to admin.
         not_demotable: Only admins can be demoted.
+        unconfirmed_email: Users must verify their email before they can be promoted to admin or superadmin.
       index:
         title: Users
         header: Users
@@ -116,6 +117,7 @@ en:
         ban_reason_placeholder: Why is this user being banned?
         superadmin_immutable: Superadmins cannot be demoted, suspended, or banned in the UI.
         cannot_moderate_self: You cannot suspend, ban, promote, or demote your own account.
+        cannot_promote_unconfirmed: This user must verify their email before they can be promoted to admin.
         fields:
           role: Role
           confirmed: Confirmed
