@@ -16,7 +16,6 @@ gem 'puma', '~> 6.4'
 # Use SCSS for stylesheets
 gem 'haml-rails', '~> 2.0'
 
-gem 'draper', '~> 4.0'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'

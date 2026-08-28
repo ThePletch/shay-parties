@@ -49,4 +49,56 @@ RSpec.describe Event do
 
     expect(event.landing_page_photo_ready?).to be(true)
   end
+
+  describe "#attended_by?" do
+    it "is true when the attendee RSVPed yes or maybe" do
+      attendance = FactoryBot.create(:attendance, rsvp_status: "Yes")
+
+      expect(attendance.event.attended_by?(attendance.attendee)).to be(true)
+    end
+
+    it "is false when the attendee RSVPed no" do
+      attendance = FactoryBot.create(:attendance, rsvp_status: "No")
+
+      expect(attendance.event.attended_by?(attendance.attendee)).to be(false)
+    end
+
+    it "is false when there is no attendee" do
+      event = FactoryBot.create(:event)
+
+      expect(event.attended_by?(nil)).to be(false)
+    end
+  end
+
+  describe "#single_day?" do
+    it "is true when start and end fall on the same calendar day" do
+      event = FactoryBot.build(
+        :event,
+        start_time: Time.zone.parse("2026-08-28 10:00"),
+        end_time: Time.zone.parse("2026-08-28 22:00")
+      )
+
+      expect(event).to be_single_day
+    end
+
+    it "is false when the event spans midnight" do
+      event = FactoryBot.build(
+        :event,
+        start_time: Time.zone.parse("2026-08-28 22:00"),
+        end_time: Time.zone.parse("2026-08-29 01:00")
+      )
+
+      expect(event).not_to be_single_day
+    end
+  end
+
+  describe "#root_comments" do
+    it "returns comments with no parent" do
+      event = FactoryBot.create(:event)
+      root = FactoryBot.create(:comment, event: event)
+      FactoryBot.create(:comment, event: event, parent: root)
+
+      expect(event.root_comments).to eq([root])
+    end
+  end
 end

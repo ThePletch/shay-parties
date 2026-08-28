@@ -12,7 +12,7 @@
           = link_to event.title, event, class: 'h3 p-2 text-decoration-none'
         - unless @hosted_list
           %small.fst-italic.mx-2= t('event.index.hosted_by', name: event.owner.name)
-        %small.d-block.float-sm-end.mx-2.fw-bold= EventDecorator.decorate(event).start_date
+        %small.d-block.float-sm-end.mx-2.fw-bold= l(event.start_time, format: :day)
       .col-auto
         .d-grid.gap-1
           .badge.bg-success{title: t('event.index.labels.going'), data: {'bs-toggle': 'tooltip'}}= event.attendances.pluck(:rsvp_status).count('Yes')

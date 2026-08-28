@@ -4,7 +4,7 @@ RSpec.describe "events/show" do
   it "shows calendar links to user attendees" do
     attendance = FactoryBot.create(:attendance, rsvp_status: "Yes")
 
-    assign(:event, EventDecorator.decorate(attendance.event))
+    assign(:event, attendance.event)
     assign(:attendance, attendance)
     assign(:attendee, attendance.attendee)
 
@@ -16,7 +16,7 @@ RSpec.describe "events/show" do
   it "shows calendar links to guest attendees" do
     attendance = FactoryBot.create(:guest_attendance, rsvp_status: "Yes")
 
-    assign(:event, EventDecorator.decorate(attendance.event))
+    assign(:event, attendance.event)
     assign(:attendance, attendance)
     assign(:attendee, attendance.attendee)
 
@@ -28,7 +28,7 @@ RSpec.describe "events/show" do
   it "hides calendar links from 'no'-RSVPed attendees" do
     attendance = FactoryBot.create(:attendance, rsvp_status: "No")
 
-    assign(:event, EventDecorator.decorate(attendance.event))
+    assign(:event, attendance.event)
     assign(:attendance, attendance)
     assign(:attendee, attendance.attendee)
 
@@ -39,7 +39,7 @@ RSpec.describe "events/show" do
 
   it "hides calendar links if no RSVP" do
     event = FactoryBot.create(:event)
-    assign(:event, EventDecorator.decorate(event))
+    assign(:event, event)
     assign(:attendance, event.attendances.build)
 
     render
@@ -49,7 +49,7 @@ RSpec.describe "events/show" do
 
   it "warns about COVID requirements if enabled" do
     event = FactoryBot.create(:event, requires_testing: true)
-    assign(:event, EventDecorator.decorate(event))
+    assign(:event, event)
     assign(:attendance, event.attendances.build)
 
     render
