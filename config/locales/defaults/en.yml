@@ -1,9 +1,4 @@
 en:
-  time:
-    formats:
-      day: "%b %-d, %Y"
-      clock: "%l:%M %P"
-      full: "%b %-d, %Y %l:%M %P"
   still_translating: Sorry! This page is still being translated. Click here to switch to English.
   submit: Submit
   back: Back
