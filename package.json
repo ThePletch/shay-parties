@@ -13,8 +13,7 @@
     "@rails/activestorage": "^8.1.300",
     "bootstrap": "^5.3.8",
     "flatpickr": "^4.6.13",
-    "jquery": "^3.7.1",
-    "vite-plugin-ruby": "^5.1.1"
+    "jquery": "^3.7.1"
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
@@ -27,6 +26,7 @@
     "sass-embedded": "^1.97.1",
     "typescript": "^6.0.2",
     "vite": "^8.1.5",
+    "vite-plugin-ruby": "^5.1.1",
     "vitest": "^4.1.8"
   }
 }
