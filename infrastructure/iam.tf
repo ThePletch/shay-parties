@@ -128,7 +128,7 @@ data "aws_iam_policy_document" "ecs_deploy" {
   }
 
   dynamic "statement" {
-    for_each = var.create_image_transform_lambda ? [1] : []
+    for_each = var.bootstrap.image_transform_lambda ? [1] : []
 
     content {
       actions   = ["lambda:UpdateFunctionCode"]

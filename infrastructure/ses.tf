@@ -1,6 +1,6 @@
 # SES lives in us-east-1 to match the SMTP endpoint used by Action Mailer.
-# HTTPS SNS subscription is created after the app is serving /webhooks/ses
-# (SNS must complete a SubscriptionConfirmation handshake).
+# The HTTPS SNS subscription is gated on bootstrap.ses_webhook_subscription so the
+# first apply can provision the topic before /webhooks/ses is serving.
 
 data "aws_caller_identity" "current" {}
 
@@ -53,5 +53,30 @@ resource "aws_sesv2_configuration_set_event_destination" "sns" {
     sns_destination {
       topic_arn = aws_sns_topic.ses_events.arn
     }
+  }
+}
+
+resource "aws_sns_topic_subscription" "ses_webhooks" {
+  count = var.bootstrap.ses_webhook_subscription ? 1 : 0
+
+  provider  = aws.northern_virginia
+  topic_arn = aws_sns_topic.ses_events.arn
+  protocol  = "https"
+  endpoint  = "https://${local.main_domain}/webhooks/ses"
+
+  # SNS retries confirmation until the app confirms via SubscribeURL.
+  confirmation_timeout_in_minutes = 5
+}
+
+check "ses_webhook_subscription_bootstrap" {
+  assert {
+    condition     = var.bootstrap.ses_webhook_subscription
+    error_message = <<-EOT
+      SES bounce/complaint webhooks are not subscribed. Bootstrap steps:
+        1. Run the deploy workflow for this environment (app must serve POST /webhooks/ses).
+        2. Re-run Terraform with bootstrap.ses_webhook_subscription = true
+           (e.g. terraform apply -var='bootstrap={ses_webhook_subscription=true}' or set it in your tfvars).
+      Until then, bounce and complaint notifications are published to SNS but not delivered to the app.
+    EOT
   }
 }

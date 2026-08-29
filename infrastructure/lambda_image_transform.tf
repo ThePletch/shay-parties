@@ -47,7 +47,7 @@ resource "aws_ecr_repository" "image_transform_lambda" {
 }
 
 resource "aws_lambda_function" "image_transform" {
-  count = var.create_image_transform_lambda ? 1 : 0
+  count = var.bootstrap.image_transform_lambda ? 1 : 0
 
   function_name = "${var.name}-image-transform"
   role          = aws_iam_role.image_transform_lambda.arn
@@ -71,7 +71,7 @@ resource "aws_lambda_function" "image_transform" {
 }
 
 data "aws_iam_policy_document" "ecs_task_lambda_invoke" {
-  count = var.create_image_transform_lambda ? 1 : 0
+  count = var.bootstrap.image_transform_lambda ? 1 : 0
 
   statement {
     actions = [
@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "ecs_task_lambda_invoke" {
 }
 
 resource "aws_iam_role_policy" "task_lambda_invoke" {
-  count = var.create_image_transform_lambda ? 1 : 0
+  count = var.bootstrap.image_transform_lambda ? 1 : 0
 
   role   = aws_iam_role.task.name
   policy = data.aws_iam_policy_document.ecs_task_lambda_invoke[0].json
@@ -93,12 +93,12 @@ resource "aws_iam_role_policy" "task_lambda_invoke" {
 
 check "image_transform_lambda_bootstrap" {
   assert {
-    condition = var.create_image_transform_lambda
+    condition = var.bootstrap.image_transform_lambda
     error_message = <<-EOT
       Image transform Lambda is not provisioned. Bootstrap steps:
         1. Run the deploy workflow for this environment (builds and pushes the Lambda image to ECR).
-        2. Re-run Terraform with create_image_transform_lambda = true
-           (e.g. terraform apply -var='create_image_transform_lambda=true' or set it in your tfvars).
+        2. Re-run Terraform with bootstrap.image_transform_lambda = true
+           (e.g. terraform apply -var='bootstrap={image_transform_lambda=true}' or set it in your tfvars).
       Until then, Active Storage image transforms run locally in the Rails container instead of Lambda.
     EOT
   }
