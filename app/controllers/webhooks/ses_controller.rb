@@ -7,7 +7,8 @@ module Webhooks
 
     def create
       body = request.raw_post
-      unless Sns::Verifier.authentic?(body)
+      
+      unless authentic?(body)
         head :forbidden
         return
       end
@@ -35,6 +36,16 @@ module Webhooks
       return unless uri.host&.end_with?(".amazonaws.com")
 
       Net::HTTP.get(uri)
+    end
+
+    def authentic?(body)
+      sns_verifier.authentic?(body)
+    rescue StandardError
+      false
+    end
+
+    def sns_verifier
+      @sns_verifier ||= Aws::SNS::MessageVerifier.new
     end
   end
 end
