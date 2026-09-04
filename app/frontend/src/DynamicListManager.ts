@@ -1,12 +1,26 @@
 import $ from 'jquery';
 
 import type { MaybeJQ } from '@/types.js';
-import DynamicListRecord from './DynamicListRecord.js';
+import DynamicListRecord, { attachDeclarativeShadowRoot } from './DynamicListRecord.js';
+
+const ADD_BUTTON_SELECTOR = '[data-prepend-child-index]';
+
+function rowTemplateFrom(host: HTMLElement) {
+  const shadow = attachDeclarativeShadowRoot(host) ?? host.shadowRoot;
+  const template = [...(shadow?.children ?? [])].find((el): el is HTMLTemplateElement => el instanceof HTMLTemplateElement);
+  if (!(template instanceof HTMLTemplateElement)) {
+    const idLabel = host.id;
+    const buttonRef = idLabel !== '' ? ` #${idLabel}` : '';
+    throw new Error(`No row <template> found in the shadow root of record add button${buttonRef}. This is necessary to add new records.`);
+  }
+
+  return template;
+}
 
 class DynamicListManager {
   addButton: JQuery<HTMLElement>;
   targetElement: JQuery<HTMLElement>;
-  prependTemplate: string;
+  rowTemplate: HTMLTemplateElement;
   childIndexPlaceholder: string;
   recordLimit: number;
 
@@ -16,24 +30,26 @@ class DynamicListManager {
       throw new Error('DynamicListManager: add button element is missing or not in the document.');
     }
 
+    const host = this.addButton.get(0);
+    if (host == null) {
+      throw new Error('DynamicListManager: add button element is missing or not in the document.');
+    }
+
     const idLabel = this.addButton.attr('id');
     const buttonRef = idLabel != null && idLabel !== '' ? ` #${idLabel}` : '';
 
     this.recordLimit = this.addButton.data('record-limit');
     this.targetElement = $(this.addButton.data('target'));
 
-    this.prependTemplate = this.addButton.data('form-prepend');
-    if (this.prependTemplate == null) {
-      throw new Error(`No data-form-prepend attribute found on record add button ${buttonRef}. This is necessary to add new records.`);
-    }
-
     this.childIndexPlaceholder = this.addButton.data('prepend-child-index');
     if (this.childIndexPlaceholder == null) {
       throw new Error(`No data-prepend-child-index attribute found on record add button${buttonRef}. This is necessary to properly template new records.`);
     }
 
+    this.rowTemplate = rowTemplateFrom(host);
+
     this.addButton.on('click', () => {
-      const recordElement = DynamicListRecord.fromTemplate(this.prependTemplate, this.childIndexPlaceholder, this.enforceListLimit.bind(this)).element;
+      const recordElement = DynamicListRecord.fromTemplate(this.rowTemplate, this.childIndexPlaceholder, this.enforceListLimit.bind(this)).element;
       this.targetElement.append(recordElement);
       initializeDynamicListManagersWithin(recordElement);
       this.enforceListLimit();
@@ -69,9 +85,9 @@ function ensureDynamicListManager(button: HTMLElement) {
   new DynamicListManager(button);
 }
 
-/** Binds DynamicListManager for every `[data-form-prepend]` under `root` (use `document` for full page; a row element after inserting HTML). */
+/** Binds DynamicListManager for every add control under `root` (use `document` for full page; a row element after inserting HTML). */
 export function initializeDynamicListManagersWithin(root: MaybeJQ<HTMLElement> | Document) {
-  $(root).find('[data-form-prepend]').each((_, button) => {
+  $(root).find(ADD_BUTTON_SELECTOR).each((_, button) => {
     ensureDynamicListManager(button);
   });
 }

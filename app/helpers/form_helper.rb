@@ -44,13 +44,26 @@ module FormHelper
       render(partial, locals.merge!(f: builder))
     end
 
-    # The rendered fields are sent with the link within the data-form-prepend attr
-    html_options['data-form-prepend'] = raw CGI::escapeHTML( fields )
     html_options['data-association-name'] = association
     html_options['data-prepend-child-index'] = options[:child_index]
     html_options['data-record-limit'] = options[:record_limit] if options.key?(:record_limit)
     html_options['data-target'] = target
 
-    content_tag(:span, name, html_options, &block)
+    # row template lives under a shadow-root <template> tag
+    row_template = content_tag(:template, fields)
+    declarative_shadow = content_tag(
+      :template,
+      row_template + content_tag(:slot, ''),
+      shadowrootmode: 'open',
+      shadowrootclonable: true,
+    )
+
+    content_tag(:span, html_options) do
+      if block_given?
+        declarative_shadow + capture(&block)
+      else
+        safe_join([declarative_shadow, name])
+      end
+    end
   end
 end
