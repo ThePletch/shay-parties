@@ -37,3 +37,5 @@ When writing comments, use only language that would be familiar to software engi
 
 ### TypeScript
 ALWAYS use strong types. `any` is NEVER acceptable as a type for variables we control. If an object has a predictable shape, use a dedicated type for it.
+
+File names use kebab case (e.g. `dynamic-list-controller.ts`).

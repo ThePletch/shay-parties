@@ -9,6 +9,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
     "@popperjs/core": "^2.11.8",
     "@rails/activestorage": "^8.1.300",
     "bootstrap": "^5.3.8",

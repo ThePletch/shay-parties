@@ -1,5 +1,6 @@
 module FormHelper
   include ActionView::Helpers::FormHelper
+  include StimulusHelper
 
   def optional_parent_wrap(parent_form, form_record, options = {}, &block)
     if parent_form.present?
@@ -44,10 +45,13 @@ module FormHelper
       render(partial, locals.merge!(f: builder))
     end
 
-    html_options['data-association-name'] = association
-    html_options['data-prepend-child-index'] = options[:child_index]
-    html_options['data-record-limit'] = options[:record_limit] if options.key?(:record_limit)
-    html_options['data-target'] = target
+    html_options[:data] = {
+      controller: 'dynamic-list',
+      action: stimulus_action('click', 'dynamic-list', 'add'),
+      dynamic_list_child_index_value: options[:child_index],
+      dynamic_list_target_value: target,
+    }
+    html_options[:data][:dynamic_list_record_limit_value] = options[:record_limit] if options.key?(:record_limit)
 
     # row template lives under a shadow-root <template> tag
     row_template = content_tag(:template, fields)

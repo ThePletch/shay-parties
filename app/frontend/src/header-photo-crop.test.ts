@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   headerPhotoCropObjectPosition,
   headerPhotoCropScale,
-} from './headerPhotoCrop.js';
+} from './header-photo-crop.js';
 
 describe('headerPhotoCropObjectPosition', () => {
   it('keeps the top of the image visible when the crop offset is zero', () => {

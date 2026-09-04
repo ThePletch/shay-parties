@@ -1,5 +1,5 @@
 import * as bootstrap from "bootstrap";
-import { initializeDynamicListManagersWithin } from "@/DynamicListManager.js";
+import '@/controllers/index.js';
 import '@/tooltips.js';
 
 type WindowWithBootstrap = typeof window & {
@@ -13,5 +13,4 @@ function initPopovers() {
 }
 
 window.addEventListener('load', initPopovers);
-window.addEventListener('load', () => initializeDynamicListManagersWithin(document));
 window.addEventListener('turbo:render', initPopovers);
