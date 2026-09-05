@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import { headerPhotoCropObjectPosition } from '@/headerPhotoCrop.js';
+import { headerPhotoCropObjectPosition } from '@/header-photo-crop.js';
 
 class CropAdjuster {
   private image: JQuery<HTMLElement>;

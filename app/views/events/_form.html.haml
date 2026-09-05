@@ -55,10 +55,9 @@
   %hr
   .form-group.mb-2
     %h3= Poll.model_name.human(count: 2)
-    #polls
+    = dynamic_list t('poll.add_prompt'), form, :polls, {partial: 'polls/form', layout: :inline}, class: 'btn btn-success' do
       = form.fields_for(:polls, layout: :inline) do |f|
         = render partial: "polls/form", locals: {f: f}
-    = link_to_add_fields t('poll.add_prompt'), form, :polls, {partial: 'polls/form', target: "#polls", locals: { poll: form.object.polls.build }, layout: :inline, child_index: 'added_poll'}, class: 'btn btn-success', id: "add-poll"
   %hr
   .actions
     = form.primary

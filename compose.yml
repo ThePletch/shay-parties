@@ -146,6 +146,9 @@ services:
     <<: *shell
     profiles:
     - test
+    build:
+      <<: *builddefaults
+      target: test
     environment:
       <<: *shellenv
       DATABASE_HOST: partiesforall-postgres-test

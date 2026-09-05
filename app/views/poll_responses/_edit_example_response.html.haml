@@ -1,8 +1,6 @@
-- row_id = poll_response.persisted? ? "poll_response_#{poll_response.id}" : "poll_response__timestamp_"
-= f.form_group layout: :inline, class: 'row', "id" => row_id, data: {persisted: (!poll_response.new_record?).to_s} do
-  = f.hidden_field :id, value: poll_response.id unless poll_response.new_record?
-  = f.hidden_field :_destroy, class: 'destroy', value: 0
+= f.form_group layout: :inline, class: 'row', data: {controller: 'dynamic-list-record'} do
+  = dynamic_list_record_hidden_fields(f)
   = f.hidden_field :example_response, value: 1
   .input-group
     = f.text_field :choice, floating: true
-    %button.btn.btn-danger.dynamic-list-delete{data: {dynamic_target_id: row_id}, onclick: "return false;"} X
+    = dynamic_list_record_delete_button

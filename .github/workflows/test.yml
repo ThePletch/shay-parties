@@ -38,10 +38,15 @@ jobs:
       with:
         node-version-file: package.json
     - run: npm ci
+    - name: Set up Chrome
+      uses: browser-actions/setup-chrome@v1
+      id: setup-chrome
     - name: Set up database
       run: bundle exec rails db:setup
     - name: Test JavaScript
       run: npm test
     - name: Test with Rspec
+      env:
+        BROWSER_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
       run: |
         bundle exec rspec

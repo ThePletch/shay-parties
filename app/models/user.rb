@@ -6,6 +6,12 @@ class User < ApplicationRecord
   ROLES = %w[user admin superadmin suspended banned].freeze
   ADMIN_ROLES = %w[admin superadmin].freeze
 
+  before_save :auto_confirm_email, if: -> { Rails.configuration.skip_email_confirmation }
+
+  def auto_confirm_email
+    self.confirmed_at = Time.current
+  end
+
   class ModerationError < StandardError; end
 
   # Include default devise modules. Others available are:
