@@ -14,6 +14,10 @@ This application is packaged as a Docker image, and includes Terraform designed 
 
 When choosing infrastructure, use products that bill by usage instead of by time as much as possible, such as using serverless functions over a persistent server for new compute-intensive features.
 
+## Development
+
+When writing tests, iterate on just the tests you've written until they pass, but when tests relevant to your change are passing, run the full test suite as a final check. It is not sufficient to ensure relevant tests are passing: your code is only working correctly if the entire test suite passes.
+
 ## Coding style
 
 ### General
@@ -39,3 +43,5 @@ When writing comments, use only language that would be familiar to software engi
 ALWAYS use strong types. `any` is NEVER acceptable as a type for variables we control. If an object has a predictable shape, use a dedicated type for it.
 
 File names use kebab case (e.g. `dynamic-list-controller.ts`).
+
+Imports must be side-effect-free: modules export values, and initialization happens in entrypoints. For example, `controllers/index.ts` exports a registry of Stimulus controllers that `application.ts` registers with the Stimulus application.

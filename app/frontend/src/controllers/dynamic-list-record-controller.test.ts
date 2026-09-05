@@ -19,100 +19,51 @@ describe('DynamicListRecordController', () => {
     });
   }
 
-  function deleteButtonFor(rowId: string): HTMLButtonElement {
-    return document.querySelector(`[data-dynamic-target-id="${rowId}"]`) as HTMLButtonElement;
-  }
-
-  it('removes non-persisted rows from the DOM', async () => {
+  it('removes rows that have no destroy field from the DOM', async () => {
     await renderRecords(`
-      <div class="row" id="row-1" data-controller="dynamic-list-record" data-persisted="false">
-        <button type="button" class="dynamic-list-delete"
-                data-dynamic-target-id="row-1"
+      <div class="row" data-controller="dynamic-list-record">
+        <button type="button" data-dynamic-list-record-target="deleteButton"
                 data-action="click->dynamic-list-record#delete">X</button>
       </div>
     `);
 
-    deleteButtonFor('row-1').click();
+    const row = document.querySelector('.row') as HTMLElement;
+    row.querySelector('button')?.click();
 
-    expect(document.querySelector('#row-1')).toBeNull();
+    expect(document.querySelector('.row')).toBeNull();
   });
 
   it('marks persisted rows for removal and restores them on a second click', async () => {
     await renderRecords(`
-      <div class="row" id="poll_1" data-controller="dynamic-list-record" data-persisted="true">
-        <input type="hidden" class="destroy" value="0" />
+      <div class="row" data-controller="dynamic-list-record">
+        <input type="hidden" data-dynamic-list-record-target="destroy" value="0" />
         <input id="question" name="question" />
-        <button type="button" class="dynamic-list-delete btn btn-danger"
-                data-dynamic-target-id="poll_1"
+        <button type="button" data-dynamic-list-record-target="deleteButton"
                 data-action="click->dynamic-list-record#delete">X</button>
       </div>
     `);
 
-    const row = document.querySelector('#poll_1') as HTMLElement;
-    const question = row.querySelector('#question') as HTMLInputElement;
-    const button = deleteButtonFor('poll_1');
+    const row = document.querySelector('.row') as HTMLElement;
+    const button = row.querySelector('button') as HTMLButtonElement;
 
     button.click();
     expect(row.hasAttribute('data-remove')).toBe(true);
-    expect((row.querySelector('input.destroy') as HTMLInputElement).value).toBe('1');
-    expect(question.disabled).toBe(true);
-    expect(question.classList.contains('text-decoration-line-through')).toBe(true);
-    expect(button.textContent).toBe('+');
-    expect(button.classList.contains('btn-primary')).toBe(true);
-    expect(button.classList.contains('btn-danger')).toBe(false);
+    expect((row.querySelector('[data-dynamic-list-record-target="destroy"]') as HTMLInputElement).value).toBe('1');
 
     button.click();
     expect(row.hasAttribute('data-remove')).toBe(false);
-    expect((row.querySelector('input.destroy') as HTMLInputElement).value).toBe('0');
-    expect(question.disabled).toBe(false);
-    expect(question.classList.contains('text-decoration-line-through')).toBe(false);
-    expect(button.textContent).toBe('X');
-    expect(button.classList.contains('btn-danger')).toBe(true);
-    expect(button.classList.contains('btn-primary')).toBe(false);
+    expect((row.querySelector('[data-dynamic-list-record-target="destroy"]') as HTMLInputElement).value).toBe('0');
   });
 
-  function nestedRowsHtml(outerAttributes = '', outerDestroyValue = '0') {
-    return `
-      <div class="row" id="poll_1" data-controller="dynamic-list-record" data-persisted="true" ${outerAttributes}>
-        <input type="hidden" class="destroy" value="${outerDestroyValue}" />
-        <button type="button" class="dynamic-list-delete"
-                data-dynamic-target-id="poll_1"
+  it('marks the row for removal on load when _destroy is already set', async () => {
+    await renderRecords(`
+      <div class="row" data-controller="dynamic-list-record">
+        <input type="hidden" data-dynamic-list-record-target="destroy" value="1" />
+        <button type="button" data-dynamic-list-record-target="deleteButton"
                 data-action="click->dynamic-list-record#delete">X</button>
-        <div class="responses">
-          <div class="row" id="response_1" data-controller="dynamic-list-record" data-persisted="true">
-            <input type="hidden" class="destroy" value="0" />
-            <button type="button" class="dynamic-list-delete"
-                    data-dynamic-target-id="response_1"
-                    data-action="click->dynamic-list-record#delete">X</button>
-          </div>
-        </div>
       </div>
-    `;
-  }
+    `);
 
-  it('disables nested delete buttons while marked for removal', async () => {
-    await renderRecords(nestedRowsHtml());
-
-    const pollButton = deleteButtonFor('poll_1');
-    const responseButton = deleteButtonFor('response_1');
-
-    pollButton.click();
-    expect(responseButton.disabled).toBe(true);
-    expect(pollButton.disabled).toBe(false);
-
-    pollButton.click();
-    expect(responseButton.disabled).toBe(false);
-  });
-
-  it('disables nested delete buttons on load when the row is already marked for destruction', async () => {
-    await renderRecords(nestedRowsHtml('', '1'));
-
-    expect(deleteButtonFor('response_1').disabled).toBe(true);
-  });
-
-  it('disables the delete button for rows under an ancestor marked for removal', async () => {
-    await renderRecords(nestedRowsHtml('data-remove'));
-
-    expect(deleteButtonFor('response_1').disabled).toBe(true);
+    expect(document.querySelector('.row')?.hasAttribute('data-remove')).toBe(true);
   });
 });

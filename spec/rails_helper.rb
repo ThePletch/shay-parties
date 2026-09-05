@@ -12,15 +12,6 @@ require 'rspec/core/formatters'
 require 'capybara/rails'
 require 'capybara/rspec'
 require "capybara/dsl"
-require 'capybara/poltergeist'
-
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, timeout: 120, window_size: [1280, 2000], js_errors: true)
-end
-
-Capybara.javascript_driver = :poltergeist
-Capybara.default_max_wait_time = 3
-Capybara.default_selector = :css
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -68,14 +59,12 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :helper
   config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Warden::Test::Helpers, type: :feature
 
-  config.before(:each) do |ex|
-    if Capybara.current_driver == :rack_test
-      DatabaseCleaner.strategy = :transaction
-    else
-      DatabaseCleaner.strategy = :truncation
-    end
+  config.before(:each) do |example|
+    uses_separate_server = example.metadata[:type] == :system || Capybara.current_driver != :rack_test
+    DatabaseCleaner.strategy = uses_separate_server ? :truncation : :transaction
 
     DatabaseCleaner.start
   end

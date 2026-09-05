@@ -187,6 +187,29 @@ describe EventsController do
 
       expect(event.reload.title).to eq new_title
     end
+
+    it "creates polls submitted under numeric nested-attribute indexes" do
+      event = FactoryBot.create(:event)
+      sign_in event.owner
+
+      patch :update, params: {
+        id: event.id,
+        event: {
+          polls_attributes: {
+            "1700000000001" => {
+              question: "Hats?",
+              responses_attributes: {
+                "1700000000002" => {choice: "Yes", example_response: "1"},
+              },
+            },
+          },
+        },
+      }
+
+      event.reload
+      expect(event.polls.map(&:question)).to eq ["Hats?"]
+      expect(event.polls.includes(:responses).flat_map { |poll| poll.responses.map(&:choice) }).to eq ["Yes"]
+    end
   end
 
   describe "DELETE destroy" do

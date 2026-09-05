@@ -1,8 +1,9 @@
-import { Application } from '@hotwired/stimulus';
+import type { ControllerConstructor } from '@hotwired/stimulus';
 
 import DynamicListController from './dynamic-list-controller.js';
 import DynamicListRecordController from './dynamic-list-record-controller.js';
 
-const application = Application.start();
-application.register('dynamic-list', DynamicListController);
-application.register('dynamic-list-record', DynamicListRecordController);
+export const controllers: Record<string, ControllerConstructor> = {
+  'dynamic-list': DynamicListController,
+  'dynamic-list-record': DynamicListRecordController,
+};

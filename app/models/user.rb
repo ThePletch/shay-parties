@@ -8,8 +8,6 @@ class User < ApplicationRecord
 
   before_save :auto_confirm_email, if: -> { Rails.configuration.skip_email_confirmation }
 
-  private
-
   def auto_confirm_email
     self.confirmed_at = Time.current
   end

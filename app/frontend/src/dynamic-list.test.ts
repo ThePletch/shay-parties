@@ -9,52 +9,45 @@ function templateFromHTML(html: string) {
 }
 
 describe('stampRowFromTemplate', () => {
-  it('replaces child index placeholders in name and id attributes', () => {
+  it('replaces child index placeholders in attributes', () => {
     const template = templateFromHTML(`
-      <div id="record_CHILD_INDEX_">
-        <input id="field_CHILD_INDEX_" name="event[polls_attributes][CHILD_INDEX_][question]" />
-        <label for="field_CHILD_INDEX_">Question</label>
+      <div>
+        <input id="field_new_polls" name="event[polls_attributes][new_polls][question]" />
+        <label for="field_new_polls">Question</label>
       </div>
     `);
 
-    const fragment = stampRowFromTemplate(template, 'CHILD_INDEX_');
+    const fragment = stampRowFromTemplate(template, 'new_polls');
     const row = fragment.firstElementChild as HTMLElement;
     const input = row.querySelector('input') as HTMLInputElement;
 
-    expect(input.getAttribute('name')).toMatch(/event\[polls_attributes\]\[[0-9a-f-]+\]\[question\]/);
-    expect(input.getAttribute('name')).not.toContain('CHILD_INDEX_');
-    expect(row.id).not.toContain('CHILD_INDEX_');
+    expect(input.getAttribute('name')).toMatch(/event\[polls_attributes\]\[\d+\]\[question\]/);
+    expect(input.getAttribute('name')).not.toContain('new_polls');
     expect(input.id).toBe(row.querySelector('label')?.getAttribute('for'));
+    expect(input.id).not.toContain('new_polls');
   });
 
-  it('replaces placeholders inside nested template content and attaches nested shadow roots', () => {
+  it('replaces the parent placeholder inside nested templates and leaves the child placeholder', () => {
     const template = templateFromHTML(`
-      <div id="poll__timestamp_">
-        <input name="event[polls_attributes][added_poll][question]" />
-        <span data-controller="dynamic-list"
-              data-dynamic-list-child-index-value="added_response"
-              data-dynamic-list-target-value=".example-responses-poll__timestamp_">
-          <template shadowrootmode="open" shadowrootclonable>
-            <template>
-              <input name="event[polls_attributes][added_poll][responses_attributes][added_response][choice]" />
-            </template>
-            <slot></slot>
+      <div>
+        <input name="event[polls_attributes][new_polls][question]" />
+        <div data-controller="dynamic-list" data-dynamic-list-child-index-value="new_responses">
+          <template data-dynamic-list-target="template">
+            <input name="event[polls_attributes][new_polls][responses_attributes][new_responses][choice]" />
           </template>
-          Add option
-        </span>
+          <div data-dynamic-list-target="rows"></div>
+          <button type="button" data-dynamic-list-target="addButton">Add option</button>
+        </div>
       </div>
     `);
 
-    const fragment = stampRowFromTemplate(template, 'added_poll');
+    const fragment = stampRowFromTemplate(template, 'new_polls');
     const row = fragment.firstElementChild as HTMLElement;
-    const nestedAddButton = row.querySelector('[data-controller="dynamic-list"]') as HTMLElement;
+    const nestedTemplate = row.querySelector('template') as HTMLTemplateElement;
+    const nestedName = nestedTemplate.content.querySelector('input')?.getAttribute('name');
 
-    const nestedTemplate = [...(nestedAddButton.shadowRoot?.children ?? [])]
-      .find((el): el is HTMLTemplateElement => el instanceof HTMLTemplateElement);
-    expect(nestedTemplate).toBeInstanceOf(HTMLTemplateElement);
-    const nestedName = nestedTemplate?.content.querySelector('input')?.getAttribute('name');
-    expect(nestedName).toMatch(/event\[polls_attributes\]\[[0-9a-f-]+\]\[responses_attributes\]\[added_response\]\[choice\]/);
-    expect(nestedName).not.toContain('added_poll');
-    expect(nestedAddButton.getAttribute('data-dynamic-list-target-value')).not.toContain('_timestamp_');
+    expect(nestedName).toMatch(/event\[polls_attributes\]\[\d+\]\[responses_attributes\]\[new_responses\]\[choice\]/);
+    expect(nestedName).not.toContain('new_polls');
+    expect(nestedName).toContain('new_responses');
   });
 });

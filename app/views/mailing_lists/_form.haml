@@ -10,9 +10,8 @@
           %li= message
   = f.text_field :name, floating: true
 
-  #emails
+  = dynamic_list t('mailing_list.form.add_email'), f, :emails, {partial: 'mailing_list_emails/form', layout: :inline}, class: 'btn btn-success' do
     = f.fields_for(:emails, mailing_list.emails, layout: :inline) do |email_form|
-      = render partial: 'mailing_list_emails/form', locals: {f: email_form, mailing_list_email: email_form.object}
+      = render partial: 'mailing_list_emails/form', locals: {f: email_form}
   .actions
-    = link_to_add_fields(t('mailing_list.form.add_email'), f, :emails, {partial: 'mailing_list_emails/form', target: "#emails", locals: { mailing_list_email: f.object.emails.build }, layout: :inline}, class: 'btn btn-success', id: "add-email")
     = f.submit class: 'btn btn-primary'

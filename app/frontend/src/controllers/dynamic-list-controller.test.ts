@@ -22,99 +22,78 @@ describe('DynamicListController', () => {
     return application;
   }
 
-  function addButtonHtml(extraAttributes = '') {
+  function listHtml(rows = '', extraValues = '') {
     return `
-      <span id="add-poll" class="btn"
-            data-controller="dynamic-list"
-            data-action="click->dynamic-list#add"
-            data-dynamic-list-child-index-value="added_poll"
-            data-dynamic-list-target-value="#polls"
-            ${extraAttributes}>
-        <template shadowrootmode="open" shadowrootclonable>
-          <template>
-            <div class="row" id="poll__timestamp_" data-controller="dynamic-list-record" data-persisted="false">
-              <input name="event[polls_attributes][added_poll][question]" />
-              <button type="button" class="dynamic-list-delete"
-                      data-dynamic-target-id="poll__timestamp_"
-                      data-action="click->dynamic-list-record#delete">X</button>
-            </div>
-          </template>
-          <slot></slot>
+      <div data-controller="dynamic-list"
+           data-action="dynamic-list-record:changed->dynamic-list#enforceLimit"
+           data-dynamic-list-child-index-value="new_polls"
+           ${extraValues}>
+        <template data-dynamic-list-target="template">
+          <div class="row" data-controller="dynamic-list-record">
+            <input name="event[polls_attributes][new_polls][question]" />
+            <button type="button" data-dynamic-list-record-target="deleteButton"
+                    data-action="click->dynamic-list-record#delete">X</button>
+          </div>
         </template>
-        Add poll
-      </span>
+        <div data-dynamic-list-target="rows">${rows}</div>
+        <button type="button" data-dynamic-list-target="addButton"
+                data-action="click->dynamic-list#add">Add poll</button>
+      </div>
     `;
   }
 
-  it('stamps rows with unique ids from the shadow template', async () => {
-    await renderList(`
-      <div id="polls"></div>
-      ${addButtonHtml()}
-    `);
+  it('stamps rows with unique indexes from the template', async () => {
+    await renderList(listHtml());
 
-    const addButton = document.querySelector('#add-poll') as HTMLElement;
-    expect(
-      [...(addButton.shadowRoot?.children ?? [])].find((el) => el instanceof HTMLTemplateElement),
-    ).toBeInstanceOf(HTMLTemplateElement);
-
+    const addButton = document.querySelector('[data-dynamic-list-target="addButton"]') as HTMLButtonElement;
     addButton.click();
     addButton.click();
 
-    const rows = document.querySelectorAll('#polls .row');
+    const rows = document.querySelectorAll('[data-dynamic-list-target="rows"] .row');
     expect(rows).toHaveLength(2);
-    const ids = [...rows].map((row) => row.id);
-    expect(ids[0]).not.toBe(ids[1]);
-    expect(ids[0]).not.toContain('_timestamp_');
-    expect(ids[1]).not.toContain('added_poll');
 
     const names = [...rows].map((row) => row.querySelector('input')?.getAttribute('name'));
     expect(names[0]).not.toBe(names[1]);
-    expect(names[0]).not.toContain('added_poll');
+    expect(names[0]).toMatch(/event\[polls_attributes\]\[\d+\]\[question\]/);
+    expect(names[1]).toMatch(/event\[polls_attributes\]\[\d+\]\[question\]/);
   });
 
   it('disables the add button at the record limit and re-enables it when a row is deleted', async () => {
-    const app = await renderList(`
-      <div id="polls"></div>
-      ${addButtonHtml('data-dynamic-list-record-limit-value="1"')}
-    `);
+    const app = await renderList(listHtml('', 'data-dynamic-list-record-limit-value="1"'));
 
-    const addButton = document.querySelector('#add-poll') as HTMLElement;
-    expect(addButton.classList.contains('disabled')).toBe(false);
+    const addButton = document.querySelector('[data-dynamic-list-target="addButton"]') as HTMLButtonElement;
+    expect(addButton.disabled).toBe(false);
 
     addButton.click();
-    expect(addButton.classList.contains('disabled')).toBe(true);
+    expect(addButton.disabled).toBe(true);
 
-    const row = document.querySelector('#polls .row') as HTMLElement;
+    const row = document.querySelector('[data-dynamic-list-target="rows"] .row') as HTMLElement;
     await waitForController(app, row, 'dynamic-list-record');
-    const deleteButton = row.querySelector('.dynamic-list-delete') as HTMLElement;
+    const deleteButton = row.querySelector('[data-dynamic-list-record-target="deleteButton"]') as HTMLElement;
     deleteButton.click();
 
-    expect(document.querySelectorAll('#polls .row')).toHaveLength(0);
-    expect(addButton.classList.contains('disabled')).toBe(false);
+    expect(document.querySelectorAll('[data-dynamic-list-target="rows"] .row')).toHaveLength(0);
+    expect(addButton.disabled).toBe(false);
   });
 
   it('does not count rows marked for removal against the record limit', async () => {
-    await renderList(`
-      <div id="polls">
-        <div class="row" id="poll_1" data-controller="dynamic-list-record" data-persisted="true">
-          <input type="hidden" class="destroy" value="0" />
-          <input name="event[polls_attributes][1][question]" />
-          <button type="button" class="dynamic-list-delete"
-                  data-dynamic-target-id="poll_1"
-                  data-action="click->dynamic-list-record#delete">X</button>
-        </div>
+    await renderList(listHtml(`
+      <div class="row" data-controller="dynamic-list-record">
+        <input type="hidden" data-dynamic-list-record-target="destroy" value="0" />
+        <input name="event[polls_attributes][1][question]" />
+        <button type="button" data-dynamic-list-record-target="deleteButton"
+                data-action="click->dynamic-list-record#delete">X</button>
       </div>
-      ${addButtonHtml('data-dynamic-list-record-limit-value="1"')}
-    `);
+    `, 'data-dynamic-list-record-limit-value="1"'));
 
-    const addButton = document.querySelector('#add-poll') as HTMLElement;
-    expect(addButton.classList.contains('disabled')).toBe(true);
+    const addButton = document.querySelector('[data-dynamic-list-target="addButton"]') as HTMLButtonElement;
+    expect(addButton.disabled).toBe(true);
 
-    const deleteButton = document.querySelector('#polls .dynamic-list-delete') as HTMLElement;
+    const deleteButton = document.querySelector('[data-dynamic-list-record-target="deleteButton"]') as HTMLElement;
     deleteButton.click();
-    expect(addButton.classList.contains('disabled')).toBe(false);
+    expect(addButton.disabled).toBe(false);
 
     deleteButton.click();
-    expect(addButton.classList.contains('disabled')).toBe(true);
+    expect(addButton.disabled).toBe(true);
   });
 });

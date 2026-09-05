@@ -45,6 +45,14 @@ ENV PORT=${PORT}
 COPY . .
 CMD bundle exec rails server -b :: -p $PORT
 
+FROM server AS test
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends chromium fonts-liberation \
+  && rm -rf /var/lib/apt/lists/*
+ENV CHROME_PATH=/usr/bin/chromium
+ENV BROWSER_PATH=/usr/bin/chromium
+CMD ["bundle", "exec", "rspec"]
+
 # ==== DEPLOYABLE CONTAINER STAGES ====
 
 # Compile production assets and drop install-only artifacts before the runtime image.
