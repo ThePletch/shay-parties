@@ -27,7 +27,7 @@ RSpec.describe "dynamic nested records", type: :system do
     find("input[type='radio'][value='#{option.id}']").click
     click_button "Answer"
 
-    expect(page).to have_content("(1)")
+    expect(page).to have_css(".poll-option-count", text: "1")
     expect(poll.responses.reload.map(&:poll_option)).to eq [option]
   end
 end
