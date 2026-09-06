@@ -36,6 +36,6 @@ class Attendance < ApplicationRecord
   end
 
   def clean_up_poll_responses
-    self.attendee.poll_responses.joins(:poll).where(polls: {event_id: self.event.id}).destroy_all
+    self.attendee.poll_responses.joins(poll_option: :poll).where(polls: {event_id: self.event.id}).destroy_all
   end
 end

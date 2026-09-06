@@ -3,33 +3,47 @@ require 'rails_helper'
 describe Poll do
 
   describe "#responses_and_counts" do
-    it "does not include example responses in counts" do
+    it "counts responses against their options" do
       poll = FactoryBot.create(:poll)
-      FactoryBot.create(:poll_response, poll: poll, example_response: true, choice: 'steve')
-      FactoryBot.create(:poll_response, poll: poll, example_response: false, choice: 'steve')
+      option = FactoryBot.create(:poll_option, poll: poll, choice: 'steve')
+      FactoryBot.create(:poll_response, poll_option: option)
 
-      expect(poll.responses_and_counts['steve']).to eq 1
+      expect(poll.responses_and_counts[option]).to eq 1
     end
 
-    it "still includes responses with no actual responses, but with count zero" do
+    it "still includes options with no actual responses, but with count zero" do
       poll = FactoryBot.create(:poll)
-      FactoryBot.create(:poll_response, poll: poll, example_response: true, choice: 'steve')
+      option = FactoryBot.create(:poll_option, poll: poll, choice: 'steve')
 
-      expect(poll.responses_and_counts['steve']).to eq 0
+      expect(poll.responses_and_counts[option]).to eq 0
     end
 
-    it "returns the count for each response" do
+    it "keeps counts on an option after its text is edited" do
       poll = FactoryBot.create(:poll)
-      FactoryBot.create(:poll_response, poll: poll, example_response: false, choice: 'steve')
-      FactoryBot.create(:poll_response, poll: poll, example_response: false, choice: 'other steve')
-      FactoryBot.create(:poll_response, poll: poll, example_response: false, choice: 'mega steve')
-      FactoryBot.create(:poll_response, poll: poll, example_response: false, choice: 'mega steve')
+      option = FactoryBot.create(:poll_option, poll: poll, choice: 'steve')
+      FactoryBot.create(:poll_response, poll_option: option)
+
+      option.update!(choice: 'steven')
+
+      counts = poll.reload.responses_and_counts
+      expect(counts.keys.map(&:choice)).to eq ['steven']
+      expect(counts[option.reload]).to eq 1
+    end
+
+    it "returns the count for each option" do
+      poll = FactoryBot.create(:poll)
+      steve = FactoryBot.create(:poll_option, poll: poll, choice: 'steve')
+      other_steve = FactoryBot.create(:poll_option, poll: poll, choice: 'other steve')
+      mega_steve = FactoryBot.create(:poll_option, poll: poll, choice: 'mega steve')
+      FactoryBot.create(:poll_response, poll_option: steve)
+      FactoryBot.create(:poll_response, poll_option: other_steve)
+      FactoryBot.create_list(:poll_response, 2, poll_option: mega_steve)
 
       counts = poll.responses_and_counts
-      expect(counts.keys).to match_array(['steve', 'other steve', 'mega steve'])
-      expect(counts['steve']).to eq 1
-      expect(counts['other steve']).to eq 1
-      expect(counts['mega steve']).to eq 2
+      expect(counts.keys).to eq [steve, other_steve, mega_steve]
+      expect(counts[steve]).to eq 1
+      expect(counts[other_steve]).to eq 1
+      expect(counts[mega_steve]).to eq 2
     end
   end
 
