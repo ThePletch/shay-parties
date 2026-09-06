@@ -31,9 +31,9 @@ describe('stampRowFromTemplate', () => {
     const template = templateFromHTML(`
       <div>
         <input name="event[polls_attributes][new_polls][question]" />
-        <div data-controller="dynamic-list" data-dynamic-list-child-index-value="new_responses">
+        <div data-controller="dynamic-list" data-dynamic-list-child-index-value="new_options">
           <template data-dynamic-list-target="template">
-            <input name="event[polls_attributes][new_polls][responses_attributes][new_responses][choice]" />
+            <input name="event[polls_attributes][new_polls][options_attributes][new_options][choice]" />
           </template>
           <div data-dynamic-list-target="rows"></div>
           <button type="button" data-dynamic-list-target="addButton">Add option</button>
@@ -46,8 +46,8 @@ describe('stampRowFromTemplate', () => {
     const nestedTemplate = row.querySelector('template') as HTMLTemplateElement;
     const nestedName = nestedTemplate.content.querySelector('input')?.getAttribute('name');
 
-    expect(nestedName).toMatch(/event\[polls_attributes\]\[\d+\]\[responses_attributes\]\[new_responses\]\[choice\]/);
+    expect(nestedName).toMatch(/event\[polls_attributes\]\[\d+\]\[options_attributes\]\[new_options\]\[choice\]/);
     expect(nestedName).not.toContain('new_polls');
-    expect(nestedName).toContain('new_responses');
+    expect(nestedName).toContain('new_options');
   });
 });

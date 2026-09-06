@@ -2,15 +2,16 @@ class Poll < ApplicationRecord
   include Ownable
 
   belongs_to :event
-  has_many :responses, class_name: "PollResponse", dependent: :destroy
+  has_many :options, -> { order(:id) }, class_name: "PollOption", dependent: :destroy, inverse_of: :poll
+  has_many :responses, through: :options
 
   validates :question, presence: true
 
-  accepts_nested_attributes_for :responses, allow_destroy: true
+  accepts_nested_attributes_for :options, allow_destroy: true
 
   def responses_and_counts
-    responses.group_by(&:choice).transform_values do |resps|
-      resps.reject(&:example_response).count
+    options.each_with_object({}) do |option, tallies|
+      tallies[option] = option.responses.size
     end
   end
 

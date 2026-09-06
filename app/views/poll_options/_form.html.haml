@@ -1,6 +1,5 @@
 = f.form_group layout: :inline, class: 'row', data: {controller: 'dynamic-list-record'} do
   = dynamic_list_record_hidden_fields(f)
-  = f.hidden_field :example_response, value: 1
   .input-group
     = f.text_field :choice, floating: true
     = dynamic_list_record_delete_button

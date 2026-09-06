@@ -198,8 +198,8 @@ describe EventsController do
           polls_attributes: {
             "1700000000001" => {
               question: "Hats?",
-              responses_attributes: {
-                "1700000000002" => {choice: "Yes", example_response: "1"},
+              options_attributes: {
+                "1700000000002" => {choice: "Yes"},
               },
             },
           },
@@ -208,7 +208,7 @@ describe EventsController do
 
       event.reload
       expect(event.polls.map(&:question)).to eq ["Hats?"]
-      expect(event.polls.includes(:responses).flat_map { |poll| poll.responses.map(&:choice) }).to eq ["Yes"]
+      expect(event.polls.includes(:options).flat_map { |poll| poll.options.map(&:choice) }).to eq ["Yes"]
     end
   end
 

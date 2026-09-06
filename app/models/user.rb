@@ -33,7 +33,7 @@ class User < ApplicationRecord
   has_many :edited_comments, as: :editor, class_name: "Comment"
   has_many :poll_responses, as: :respondent, dependent: :destroy
   has_many :polls, through: :managed_events
-  has_many :answered_polls, through: :poll_responses
+  has_many :answered_polls, through: :poll_responses, source: :poll
   has_many :mailing_lists, dependent: :destroy
 
   validate :email_not_denylisted, if: :email_changed?

@@ -12,7 +12,7 @@ class EventsController < ApplicationController
       attendances: :attendee,
       comments: [:creator, :editor],
       photo_attachment: :blob,
-      polls: :responses,
+      polls: {options: :responses},
     },
   ]
 
@@ -128,8 +128,8 @@ class EventsController < ApplicationController
         :_destroy,
         :question,
         {
-          responses_attributes: [
-            [:_destroy, :id, :example_response, :choice]
+          options_attributes: [
+            [:_destroy, :id, :choice]
           ]
         }
       ]
