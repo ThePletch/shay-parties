@@ -1,0 +1,29 @@
+.dynamic-list-record-restore-label {
+  display: none;
+}
+
+[data-controller="dynamic-list-record"][data-remove] {
+  input:not([type="hidden"]) {
+    text-decoration: line-through;
+  }
+
+  .dynamic-list-record-remove-label {
+    display: none;
+  }
+
+  .dynamic-list-record-restore-label {
+    display: inline;
+  }
+
+  [data-dynamic-list-record-target="deleteButton"] {
+    color: var(--bs-white);
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+  }
+
+  [data-controller="dynamic-list-record"] [data-dynamic-list-record-target="deleteButton"],
+  [data-dynamic-list-target="addButton"] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}

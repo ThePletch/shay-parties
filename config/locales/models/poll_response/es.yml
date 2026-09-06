@@ -11,6 +11,6 @@ es:
     rejection:
       unauthenticated: Debe autenticarse como usuario o como invitado para responder a encuestas.
     form:
-      update: Actualizar Respuesta
+      update: Actualizar
       create: Responder
-      destroy: Limpiar Respuesta
+      destroy: Limpiar
