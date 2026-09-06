@@ -51,8 +51,9 @@
     = render 'events/rsvps', event: @event
     - if @event.polls.any?
       %hr
-      - @event.polls.each do |poll|
-        = render 'polls/poll', poll: poll, respondent: @attendee
+      .polls
+        - @event.polls.each do |poll|
+          = render 'polls/poll', poll: poll, respondent: @attendee
 %hr
 
 = render @event.root_comments, comments: @event.comments

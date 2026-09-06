@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    models:
+      poll_option:
+        one: Option
+        other: Options

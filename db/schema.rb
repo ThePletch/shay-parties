@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_16_200000) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_06_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -181,15 +181,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_16_200000) do
     t.index ["user_id"], name: "index_mailing_lists_on_user_id"
   end
 
+  create_table "poll_options", force: :cascade do |t|
+    t.bigint "poll_id", null: false
+    t.string "choice", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["poll_id"], name: "index_poll_options_on_poll_id"
+  end
+
   create_table "poll_responses", force: :cascade do |t|
-    t.bigint "poll_id"
     t.bigint "respondent_id"
-    t.string "choice"
-    t.boolean "example_response", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "respondent_type"
-    t.index ["poll_id"], name: "index_poll_responses_on_poll_id"
+    t.bigint "poll_option_id", null: false
+    t.index ["poll_option_id"], name: "index_poll_responses_on_poll_option_id"
     t.index ["respondent_id"], name: "index_poll_responses_on_respondent_id"
   end
 
@@ -257,4 +263,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_16_200000) do
   add_foreign_key "events", "users"
   add_foreign_key "invite_sends", "events"
   add_foreign_key "invite_sends", "users"
+  add_foreign_key "poll_options", "polls"
+  add_foreign_key "poll_responses", "poll_options"
 end

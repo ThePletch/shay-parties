@@ -8,6 +8,12 @@ class User < ApplicationRecord
   HARD_BOUNCE_ALLOWANCE = 3
   INVITE_RESTRICTION_REASONS = %w[bounce_limit complaint].freeze
 
+  before_save :auto_confirm_email, if: -> { Rails.configuration.skip_email_confirmation }
+
+  def auto_confirm_email
+    self.confirmed_at = Time.current
+  end
+
   class ModerationError < StandardError; end
 
   # Include default devise modules. Others available are:
@@ -29,7 +35,7 @@ class User < ApplicationRecord
   has_many :edited_comments, as: :editor, class_name: "Comment"
   has_many :poll_responses, as: :respondent, dependent: :destroy
   has_many :polls, through: :managed_events
-  has_many :answered_polls, through: :poll_responses
+  has_many :answered_polls, through: :poll_responses, source: :poll
   has_many :mailing_lists, dependent: :destroy
   has_many :invite_sends, dependent: :destroy
   has_many :email_delivery_events, dependent: :destroy

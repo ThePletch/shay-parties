@@ -1,5 +1,5 @@
 import '@/comments.js';
-import { initPendingHeaderPhotoCrops } from '@/headerPhotoCrop.js';
+import { initPendingHeaderPhotoCrops } from '@/header-photo-crop.js';
 
 function initShowPage() {
   initPendingHeaderPhotoCrops();

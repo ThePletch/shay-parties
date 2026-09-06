@@ -215,7 +215,7 @@ describe AttendancesController do
         expect(@attendance.reload.rsvp_status).to eq 'Maybe'
       end
 
-      # Mirrors DynamicListManager form data: mark persisted +1 for destroy, append a new +1 row.
+      # Mirrors dynamic-list controller form data: mark persisted +1 for destroy, append a new +1 row.
       it "allows removing and adding a plus-one in the same update at the limit" do
         @event.update!(plus_one_max: 1)
         existing = FactoryBot.create(:guest_attendance, parent_attendance: @attendance, event: @event)

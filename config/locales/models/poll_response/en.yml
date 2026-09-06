@@ -11,6 +11,6 @@ en:
     rejection:
       unauthenticated: You must be authenticated as a user or guest to answer polls.
     form:
-      update: Update Answer
+      update: Update
       create: Answer
-      destroy: Clear Answer
+      destroy: Clear

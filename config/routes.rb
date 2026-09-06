@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   post "/webhooks/ses", to: "webhooks/ses#create"
 
-  scope "(:locale)" do
+  scope "(:locale)", locale: Regexp.union(*I18n.available_locales.map(&:to_s)) do
     devise_for :users,
       controllers: {
         registrations: 'users/registrations',

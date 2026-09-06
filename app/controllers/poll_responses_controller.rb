@@ -3,7 +3,8 @@ class PollResponsesController < ApplicationController
   before_action :set_response, only: [:update, :destroy]
 
   def update
-    if @response.update(poll_response_params)
+    poll_option = @response.poll.options.find(poll_response_params[:poll_option_id])
+    if @response.update(poll_option: poll_option)
 
       if rsvp = create_rsvp_if_not_exists(@response)
         response_message = t('poll_response.updated_automaybe')
@@ -32,7 +33,8 @@ class PollResponsesController < ApplicationController
   def create
     # todo prevent multiple responses of the same type
     if @authenticated_user
-      @response = @poll.responses.build(poll_response_params.merge(respondent: @authenticated_user))
+      poll_option = @poll.options.find(poll_response_params[:poll_option_id])
+      @response = poll_option.responses.build(respondent: @authenticated_user)
     else
       redirect_to new_user_session_path, alert: t('poll_response.rejection.unauthenticated')
       return
@@ -64,7 +66,7 @@ class PollResponsesController < ApplicationController
   end
 
   def poll_response_params
-    params.require(:poll_response).permit(:choice, :example_response)
+    params.require(:poll_response).permit(:poll_option_id)
   end
 
   def respondent_params

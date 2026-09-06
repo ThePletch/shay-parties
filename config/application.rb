@@ -27,5 +27,6 @@ module ShayParties
     config.force_https_in_direct_uploads_url = false
     config.autoload_paths << Rails.root.join('lib')
     config.active_storage.track_variants = true
+    config.skip_email_confirmation = false
   end
 end
