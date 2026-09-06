@@ -128,7 +128,7 @@ data "aws_iam_policy_document" "ecs_deploy" {
   }
 
   dynamic "statement" {
-    for_each = var.create_image_transform_lambda ? [1] : []
+    for_each = var.bootstrap.image_transform_lambda ? [1] : []
 
     content {
       actions   = ["lambda:UpdateFunctionCode"]
@@ -150,6 +150,14 @@ data "aws_iam_policy_document" "service_actions" {
       aws_s3_bucket.activestorage.arn,
       "${aws_s3_bucket.activestorage.arn}/*",
     ]
+  }
+
+  statement {
+    actions = [
+      "ses:SendEmail",
+      "ses:SendRawEmail",
+    ]
+    resources = ["*"]
   }
 }
 

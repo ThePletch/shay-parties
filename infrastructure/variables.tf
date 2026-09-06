@@ -94,12 +94,18 @@ variable "errors_email" {
   description = "Email that receives notifications when infrastructure fails to run properly"
 }
 
-variable "create_image_transform_lambda" {
-  type        = bool
-  default     = false
+variable "bootstrap" {
+  type = object({
+    image_transform_lambda   = optional(bool, false)
+    ses_webhook_subscription = optional(bool, false)
+  })
+  default     = {}
   description = <<-EOT
-    Create the image-transform Lambda function. Leave false for the first apply so Terraform can
-    provision the ECR repository and GitHub deploy variables before any image exists. Run the deploy
-    workflow to push the Lambda image, then set this to true and apply again.
+    Two-phase apply flags. Leave the defaults for the first apply on a new environment, deploy,
+    then set the relevant keys to true and apply again.
+
+    image_transform_lambda: create the Lambda function for image transforms after the deploy workflow has pushed an image to ECR.
+    ses_webhook_subscription: subscribe SNS to /webhooks/ses after the app is serving that endpoint
+    (HTTPS subscriptions require a live SubscriptionConfirmation handshake).
   EOT
 }
