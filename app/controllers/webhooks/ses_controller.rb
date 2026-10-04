@@ -21,6 +21,8 @@ module Webhooks
       end
 
       head :ok
+    rescue Sns::Https::FetchError
+      head :service_unavailable
     rescue JSON::ParserError
       head :bad_request
     end
@@ -34,7 +36,10 @@ module Webhooks
       uri = URI.parse(url)
       return unless uri.host&.end_with?(".amazonaws.com")
 
-      Net::HTTP.get(uri)
+      response = Sns::Https.get(uri)
+      return if response.is_a?(Net::HTTPSuccess)
+
+      raise Sns::Https::FetchError, "subscription confirmation returned #{response.code}"
     end
   end
 end
