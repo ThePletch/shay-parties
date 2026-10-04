@@ -1,5 +1,3 @@
-import { initializeDynamicListManagersWithin } from "@/DynamicListManager.js";
-
 function previewUrl(form: HTMLFormElement): string | undefined {
   return form.dataset.previewUrl;
 }
@@ -42,7 +40,6 @@ function initInviteComposer() {
     return;
   }
 
-  initializeDynamicListManagersWithin(document);
   const debouncedPreview = debounce(() => { void refreshInvitePreview(); }, 400);
   form.addEventListener("input", debouncedPreview);
   document.getElementById("invite-preview-button")?.addEventListener("click", () => {

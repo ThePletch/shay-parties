@@ -16,12 +16,21 @@
     = text_area_tag :message, @message, class: "form-control", rows: 6, id: "message"
 
   %h2.h5= t("invite.form.recipients_label")
-  #invite-recipients
-    - @recipients.each_with_index do |recipient, index|
-      = render "invites/recipient_fields", index: index, recipient: recipient
-
-  .mb-3
-    = link_to_add_invite_recipient t("invite.form.add_recipient"), class: "btn btn-success", id: "add-invite-recipient"
+  .mb-3{data: {
+    controller: "dynamic-list",
+    action: stimulus_action("dynamic-list-record:changed", "dynamic-list", "enforceLimit"),
+    dynamic_list_child_index_value: "new_record",
+    dynamic_list_record_limit_value: InviteSend::DAILY_LIMIT,
+  }}
+    %template{data: { dynamic_list_target: "template" }}
+      = render "invites/recipient_fields", index: "new_record", recipient: { selected: true }
+    #invite-recipients{data: { dynamic_list_target: "rows" }}
+      - @recipients.each_with_index do |recipient, index|
+        = render "invites/recipient_fields", index: index, recipient: recipient
+    %button#add-invite-recipient.btn.btn-success{type: "button", data: {
+      action: stimulus_action("click", "dynamic-list", "add"),
+      dynamic_list_target: "addButton",
+    }}= t("invite.form.add_recipient")
 
   - if Cloudflare::Turnstile.enabled?
     .mb-3

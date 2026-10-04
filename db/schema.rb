@@ -261,11 +261,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_06_000002) do
   add_foreign_key "email_delivery_events", "users"
   add_foreign_key "events", "addresses"
   add_foreign_key "events", "users"
-<<<<<<< HEAD
-  add_foreign_key "poll_options", "polls"
-  add_foreign_key "poll_responses", "poll_options"
-=======
   add_foreign_key "invite_sends", "events"
   add_foreign_key "invite_sends", "users"
->>>>>>> 5cbf05a ([WIP] Allow sending invite emails, handle delivery complaints)
+  add_foreign_key "poll_options", "polls"
+  add_foreign_key "poll_responses", "poll_options"
 end

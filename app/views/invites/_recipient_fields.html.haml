@@ -1,7 +1,5 @@
-- row_id = "invite_recipient_#{index == 'new_record' ? '_timestamp_' : index}"
 - selected = recipient[:selected].nil? || ActiveModel::Type::Boolean.new.cast(recipient[:selected])
-.row.g-2.mb-2{id: row_id, data: { persisted: "false" }}
-  = hidden_field_tag "recipients[#{index}][_destroy]", 0, class: "destroy"
+.row.g-2.mb-2{data: { controller: "dynamic-list-record" }}
   .col-md-4
     = text_field_tag "recipients[#{index}][name]", recipient[:name], class: "form-control", placeholder: t("invite.form.name_placeholder"), id: "recipients_#{index}_name"
   .col-md-5
@@ -12,4 +10,4 @@
       = check_box_tag "recipients[#{index}][selected]", "1", selected, class: "form-check-input", id: "recipients_#{index}_selected"
       %label.form-check-label{for: "recipients_#{index}_selected"}= t("invite.form.include")
   .col-md-1
-    %button.btn.btn-danger.dynamic-list-delete{data: { dynamic_target_id: row_id }, onclick: "return false;"} X
+    = dynamic_list_record_delete_button
