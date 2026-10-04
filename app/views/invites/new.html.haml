@@ -7,7 +7,7 @@
 - if current_user.invite_send_restricted?
   .alert.alert-danger= t('invite.rejection.restricted')
 - else
-  %p.text-muted= t('invite.form.quota', remaining: @quota_remaining, limit: InviteSend::DAILY_LIMIT)
+  %p.text-muted= t('invite.form.quota', limit: InviteSend::DAILY_LIMIT)
 
 = form_with url: event_invites_path(@event), method: :post, local: true, html: { id: "invite-form", data: { preview_url: preview_event_invites_path(@event) } } do
   .mb-3
@@ -23,7 +23,7 @@
     dynamic_list_record_limit_value: InviteSend::DAILY_LIMIT,
   }}
     %template{data: { dynamic_list_target: "template" }}
-      = render "invites/recipient_fields", index: "new_record", recipient: { selected: true }
+      = render "invites/recipient_fields", index: "new_record", recipient: {}
     #invite-recipients{data: { dynamic_list_target: "rows" }}
       - @recipients.each_with_index do |recipient, index|
         = render "invites/recipient_fields", index: index, recipient: recipient

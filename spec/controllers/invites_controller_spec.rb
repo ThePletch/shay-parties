@@ -3,6 +3,7 @@
 require "rails_helper"
 
 RSpec.describe InvitesController, type: :controller do
+  render_views
   let(:host) { FactoryBot.create(:user) }
   let(:event) { FactoryBot.create(:event, owner: host) }
   let(:recipients) do
@@ -66,7 +67,7 @@ RSpec.describe InvitesController, type: :controller do
       expect { send_invites }.not_to change(InviteSend, :count)
       expect(ActionMailer::Base.deliveries).to be_empty
       expect(response).to have_http_status(:unprocessable_content)
-      expect(flash[:alert]).to include("0 remaining")
+      expect(flash[:alert]).to eq(I18n.t("invite.rejection.over_quota", limit: InviteSend::DAILY_LIMIT))
     end
 
     it "sends a batch that fits under the remaining quota" do
@@ -90,8 +91,11 @@ RSpec.describe InvitesController, type: :controller do
       }
 
       expect(response).to be_successful
-      expect(response.body).to include("Ada")
+      subject = I18n.t("event_invite_mailer.invite.subject", title: event.title, host: host.name)
+      expect(response.body).to include("Subject:")
+      expect(response.body).to include(ERB::Util.html_escape(subject))
       expect(response.body).to include("See you there")
+      expect(response.body).to include("RSVP")
       expect(response.body).to include(event.to_param)
       expect(InviteSend.count).to eq(0)
     end

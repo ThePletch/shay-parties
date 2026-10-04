@@ -35,7 +35,7 @@ class InviteSend < ApplicationRecord
     used = recent_count_for(user)
     remaining = DAILY_LIMIT - used
     if normalized.size > remaining
-      raise BatchRejected.new("invite.rejection.over_quota", remaining: remaining, limit: DAILY_LIMIT)
+      raise BatchRejected.new("invite.rejection.over_quota", limit: DAILY_LIMIT)
     end
 
     invalid = normalized.reject { |recipient| recipient[:email].match?(URI::MailTo::EMAIL_REGEXP) }
@@ -67,7 +67,6 @@ class InviteSend < ApplicationRecord
     mailer = EventInviteMailer.invite(
       event: event,
       host: user,
-      recipient_name: recipient[:name],
       recipient_email: recipient[:email],
       message: message
     )

@@ -28,32 +28,33 @@ en:
       not_owner: Only the event host can send invites.
       no_recipients: Add at least one recipient email.
       batch_too_large: You can send at most %{limit} invites at once.
-      over_quota: That would exceed your limit of %{limit} invites per 24 hours. You have %{remaining} remaining.
+      over_quota: That would exceed the limit of %{limit} emails per 24 hours.
       invalid_emails: "These addresses are not valid emails: %{emails}"
     form:
       title: "Invite guests — %{title}"
       header: "Invite guests to %{title}"
       back: Back to event
-      quota: You can send %{remaining} more invites in the next 24 hours (limit %{limit}).
+      quota: You can send up to %{limit} emails per 24 hours.
       message_label: Message
-      message_help: This note is included in the email. The event link is always added automatically.
+      message_help: If you add a note, the email introduces it as a note from you. The invite header and event link are always included.
       recipients_label: Recipients
       name_placeholder: Name
       email_placeholder: Email
-      include: Include
       add_recipient: Add recipient
       preview: Preview
       send: Send invites
     preview:
       heading: Preview
+      subject: "Subject:"
       placeholder: Enter a name and email to preview the first recipient's invite.
       need_recipient: Enter at least one email address to preview.
   event_invite_mailer:
     invite:
       subject: "You're invited to %{title} (hosted by %{host})"
-      greeting: "Hi %{name},"
-      friend: there
-      cta: "View %{title}"
+      header: "This is an automated email from Parties for All inviting you to %{title}."
+      note: "The host, %{name}, included this note:"
+      cta: RSVP
+      link_fallback: "If the button isn't working, use this link:"
   invite_delivery_mailer:
     bounce_warning:
       subject: An invite you sent could not be delivered
