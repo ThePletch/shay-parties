@@ -10,6 +10,14 @@ RSpec.describe Webhooks::SesController, type: :controller do
     }.to_json
   end
 
+  it "returns service unavailable when the signing certificate cannot be fetched" do
+    allow(Sns::Verifier).to receive(:authentic?).and_raise(Sns::Https::FetchError, "execution expired")
+
+    post :create, body: payload
+
+    expect(response).to have_http_status(:service_unavailable)
+  end
+
   it "rejects invalid SNS signatures" do
     allow(Sns::Verifier).to receive(:authentic?).and_return(false)
 
