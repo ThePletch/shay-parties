@@ -9,7 +9,6 @@ class InvitesController < ApplicationController
   def new
     @message = ""
     @recipients = [{}]
-    @quota_remaining = current_user.remaining_invite_quota
   end
 
   def preview
@@ -23,12 +22,13 @@ class InvitesController < ApplicationController
     mail = EventInviteMailer.invite(
       event: @event,
       host: current_user,
-      recipient_name: recipient[:name],
       recipient_email: recipient[:email],
       message: @message
     )
-    html = mail.html_part&.decoded || mail.body.decoded
-    render html: html.html_safe
+    render partial: "preview", locals: {
+      subject: mail.subject,
+      body: mail.html_part&.decoded || mail.body.decoded,
+    }
   end
 
   def create
@@ -44,13 +44,12 @@ class InvitesController < ApplicationController
       event: @event,
       user: current_user,
       message: @message,
-      recipients: selected_recipients
+      recipients: @recipients
     )
     redirect_to event_path(@event), notice: t("invite.sent", count: sent.size)
   rescue InviteSend::BatchRejected => e
     flash.now[:alert] = e.message
     @recipients = @recipients.presence || [{}]
-    @quota_remaining = current_user.remaining_invite_quota
     render :new, status: :unprocessable_content
   end
 
@@ -71,7 +70,6 @@ class InvitesController < ApplicationController
     return if Cloudflare::Turnstile.verify(token, remote_ip: request.remote_ip)
 
     assign_form_from_params
-    @quota_remaining = current_user.remaining_invite_quota
     flash.now[:alert] = t("turnstile.failed")
     render :new, status: :unprocessable_content
   end
@@ -79,7 +77,6 @@ class InvitesController < ApplicationController
   def assign_form_from_params
     @message = params[:message].to_s
     @recipients = recipient_params
-    @quota_remaining = current_user.remaining_invite_quota
   end
 
   def recipient_params
@@ -96,16 +93,9 @@ class InvitesController < ApplicationController
       hash = entry.to_h.symbolize_keys
       next if hash[:_destroy].to_s == "1"
 
-      { name: hash[:name], email: hash[:email], selected: hash[:selected] }
+      { name: hash[:name], email: hash[:email] }
     end
     parsed.presence || [{}]
-  end
-
-  def selected_recipients
-    recipient_params.select do |recipient|
-      selected = recipient[:selected]
-      selected.nil? || ActiveModel::Type::Boolean.new.cast(selected)
-    end
   end
 
   def preview_recipient

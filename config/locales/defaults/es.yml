@@ -28,32 +28,33 @@ es:
       not_owner: Solo el anfitrión puede enviar invitaciones.
       no_recipients: Añade al menos un correo de destinatario.
       batch_too_large: Puedes enviar como máximo %{limit} invitaciones a la vez.
-      over_quota: Eso superaría el límite de %{limit} invitaciones en 24 horas. Te quedan %{remaining}.
+      over_quota: Eso superaría el límite de %{limit} correos cada 24 horas.
       invalid_emails: "Estas direcciones no son correos válidos: %{emails}"
     form:
       title: "Invitar — %{title}"
       header: "Invitar a %{title}"
       back: Volver al evento
-      quota: Puedes enviar %{remaining} invitaciones más en las próximas 24 horas (límite %{limit}).
+      quota: Puedes enviar hasta %{limit} correos cada 24 horas.
       message_label: Mensaje
-      message_help: Esta nota se incluye en el correo. El enlace del evento siempre se añade.
+      message_help: Si añades una nota, el correo la presenta como una nota tuya. El encabezado de la invitación y el enlace del evento siempre se incluyen.
       recipients_label: Destinatarios
       name_placeholder: Nombre
       email_placeholder: Correo
-      include: Incluir
       add_recipient: Añadir destinatario
       preview: Vista previa
       send: Enviar invitaciones
     preview:
       heading: Vista previa
+      subject: "Asunto:"
       placeholder: Introduce un nombre y correo para previsualizar la primera invitación.
       need_recipient: Introduce al menos un correo para previsualizar.
   event_invite_mailer:
     invite:
       subject: "Te invitan a %{title} (organizado por %{host})"
-      greeting: "Hola %{name},"
-      friend: hola
-      cta: "Ver %{title}"
+      header: "Este es un correo automático de Parties for All con una invitación a %{title}."
+      note: "El anfitrión, %{name}, incluyó esta nota:"
+      cta: RSVP
+      link_fallback: "Si el botón no funciona, usa este enlace:"
   invite_delivery_mailer:
     bounce_warning:
       subject: Una invitación que enviaste no se pudo entregar
