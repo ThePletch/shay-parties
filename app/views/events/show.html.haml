@@ -12,6 +12,8 @@
           - if @event.owned_by?(current_user)
             %small
               = link_to t('form.edit'), edit_event_path(@event), class: 'text-muted'
+              = ' · '
+              = link_to t('invite.actions.send'), new_event_invite_path(@event), class: 'text-muted'
         %em.text-muted.mb-2
           - if @event.owned_by?(current_user)
             = t('event.show.hosted_by_you')

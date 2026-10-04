@@ -1,0 +1,4 @@
+%p= t('.hello', name: @admin.name)
+%p= t(".body_#{@reason}", name: @user.name, email: @user.email)
+%p
+  %a{href: @admin_user_url}= @admin_user_url

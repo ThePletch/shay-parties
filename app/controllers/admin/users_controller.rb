@@ -4,7 +4,7 @@ module Admin
   class UsersController < BaseController
     PER_PAGE = 25
 
-    before_action :set_user, only: %i[show suspend unsuspend ban unban promote demote]
+    before_action :set_user, only: %i[show suspend unsuspend ban unban promote demote clear_invite_restriction]
 
     def index
       scope = filtered_users
@@ -41,6 +41,10 @@ module Admin
 
     def demote
       moderate { @user.demote_from_admin!(actor: current_user) }
+    end
+
+    def clear_invite_restriction
+      moderate { @user.clear_invite_send_restriction!(actor: current_user) }
     end
 
     private
