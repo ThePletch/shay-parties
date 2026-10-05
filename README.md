@@ -21,6 +21,8 @@ Parties for All provides the following features in a lightweight, simple interfa
 
 The main thing keeping me on Facebook was its (admittedly quite good) events system. I looked for alternatives, but all of them were either for-profit startups targeting concerts or event managers with money to burn on advanced features or non-profit services designed for pretty niche use cases (e.g. managing a convention or conference). To make sure I could seamlessly pull myself away, I wrote an alternative.
 
+2026 addendum: I am aware that Partiful exists. I can promise you that this website is much less annoying. It won't call you "bestie" once. Not one time.
+
 It's got everything you need for the basics of managing events with friends and loved ones, but intentionally doesn't have any features for people looking to make money off people showing up. I also wouldn't recommend it for events with more than a few dozen attendees - it's not built for interacting with the masses (the comments section, for instance, designed under the assumption that discussions won't involve more than a few dozen comments)
 
 I develop this project as a hobby because I feel like this is a service that should exist without any restrictions. There are some associated costs, but they're minimal (and will be minimal unless this really takes off). I might have a donation option here in the future to defray those costs.
@@ -37,6 +39,7 @@ To contribute to Parties for All, just fork it and open a pull request with your
 * If you changed any user-facing interactions, same as above - it needs an integration test.
 * Any changes to the models or controllers need a corresponding model or controller unit test.
 * New or updated models need new or updated factories.
+* All application text lives in the locale manifests. If you don't speak one of the languages we're translated into, let me know you need a translation rather than using an automated translator.
 
 And, of course, your changes shouldn't break any existing tests (though it's fine to change those tests if you've changed the assumptions they're testing).
 
