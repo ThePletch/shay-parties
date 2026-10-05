@@ -33,7 +33,10 @@ module Ses
       end
 
       def client
-        Aws::SESV2::Client.new(region: ENV.fetch("SES_REGION", "us-east-1"))
+        Aws::SESV2::Client.new(
+          region: ENV.fetch("SES_REGION", "us-east-1"),
+          use_dualstack_endpoint: true
+        )
       end
     end
   end
