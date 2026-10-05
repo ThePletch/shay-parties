@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 require "aws-sdk-sesv2"
-require "json"
-require "resolv"
-require "socket"
 
 module Ses
   class InviteDelivery
