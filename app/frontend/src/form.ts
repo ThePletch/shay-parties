@@ -1,19 +1,4 @@
-import $ from 'jquery';
 import * as ActiveStorage from "@rails/activestorage";
-
-export function disableFieldWith(fieldId: string, checkboxId: string) {
-  const checkbox = $('#' + checkboxId);
-  const field = $('#' + fieldId);
-  function syncFieldWithCheckbox() {
-    if (checkbox.is(':checked')) {
-      field.prop('disabled', false);
-    } else {
-      field.prop('disabled', true);
-    }
-  }
-  checkbox.on('change', syncFieldWithCheckbox);
-  syncFieldWithCheckbox();
-}
 
 export function configureDirectUpload(debug: boolean) {
   ActiveStorage.start();

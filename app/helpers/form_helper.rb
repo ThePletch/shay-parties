@@ -57,6 +57,17 @@ module FormHelper
     ])
   end
 
+  def confirm_form(message, **options)
+    data = options.fetch(:data, {})
+    options.merge(
+      data: data.merge(
+        controller: "confirm",
+        action: stimulus_action("submit", "confirm", "guard"),
+        confirm_message_value: message,
+      )
+    )
+  end
+
   def dynamic_list_record_delete_button
     tag.button(
       type: "button",

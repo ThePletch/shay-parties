@@ -1,11 +1,14 @@
-.poll
-  %h5.poll-question
-    = poll.question
+- counts_by_option = poll.responses_and_counts
+- tally = counts_by_option.filter_map { |option, count| "#{option.choice} #{count}" if count.positive? }.join(' · ')
+%details.poll
+  %summary.link-body-emphasis.text-decoration-underline.link-underline-opacity-0.link-underline-opacity-100-hover
+    %span.poll-question= poll.question
+    - if tally.present?
+      %span.poll-tally= tally
   - if respondent.nil?
     %em.text-muted.small= t('poll.rejection.unauthenticated_html', sign_in_link: link_to(t('poll.rejection.unauthenticated_sign_in_msg'), new_user_session_path))
   - poll_response = poll.response_for_respondent(respondent)
   - form_object = poll_response.persisted? ? [poll_response] : [poll, poll_response]
-  - counts_by_option = poll.responses_and_counts
   - total_response_count = counts_by_option.values.sum
   - poll_form_id = "poll_#{poll.id}_response_form"
   = form_for form_object, html: {id: poll_form_id} do |f|
@@ -31,4 +34,4 @@
       - submit_label = poll_response.persisted? ? t('poll_response.form.update') : t('poll_response.form.create')
       = submit_tag submit_label, form: poll_form_id, class: 'btn btn-sm btn-secondary'
       - if poll_response.persisted?
-        = button_to t('poll_response.form.destroy'), poll_response_path(poll_response, guest_guid: params[:guest_guid]), method: :delete, class: 'btn btn-sm btn-outline-danger', form_class: 'd-inline'
+        = button_to t('poll_response.form.destroy'), poll_response_path(poll_response, guest_guid: params[:guest_guid]), method: :delete, class: 'btn btn-sm btn-outline-danger', form: confirm_form(t('poll_response.form.confirm_destroy'), class: 'd-inline')

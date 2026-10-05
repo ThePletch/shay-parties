@@ -8,7 +8,7 @@ en:
     created: Poll was successfully created.
     updated: Poll was successfully updated.
     destroyed: Poll was deleted.
-    add_prompt: Add Poll
+    add_prompt: Add a poll
     form:
       errors_msg:
         one: "One error prohibited this poll from being saved:"

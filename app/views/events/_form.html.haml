@@ -1,64 +1,68 @@
 = vite_typescript_tag 'entrypoints/events/form'
 
-- # svg config for info circle
-%svg.d-none{xmlns: "http://www.w3.org/2000/svg"}
-  %symbol#info-fill{viewBox: "0 0 16 16", fill: 'currentColor'}
-    %path{d: "M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"}
+- address = event.address
+- location_line = [address&.first_line, address&.second_line].compact_blank.join(", ")
+- location_open = address&.errors&.any?
 
-.accordion.p-1.mx-md-5
-  .accordion-item
-    .accordion-header.d-grid
-      %button.accordion-button.collapsed.gap-2.btn.text-bg-secondary{type: 'button', data: {bs: {toggle: 'collapse', target: '#preview'}}, aria: {expanded: 'false', controls: 'preview'}}= t('event.form.preview_label')
-    #preview.accordion-collapse.collapse
-      .alert.alert-info.m-3.d-inline-flex.flex-shrink-0.align-items-center
-        %svg.bi.flex-shrink-0.me-2{role: "img", width: '1em', height: '1em', aria: {label: "Info:"}}
-          %use{'xlink:href' => "#info-fill"}
-        %div= t('event.form.header_photo_crop_prompt')
-      .hero.border-top
-        .hero-image
-          %img#photo-preview{src: event.photo.attached? ? rails_storage_redirect_path(event.photo) : vite_asset_path('images/default_event_image.jpg'), data: {initial_y_offset: event.photo_crop_y_offset}}
-        .mx-2
-          .hero-title
-            %h1.title.display-4#title-preview{data: {default: t('event.title_placeholder')}}
-            %em.text-muted.mb-2
-              = t('event.show.hosted_by_you')
-      .mx-1.alert.alert-danger.text-center.emojified-warning#requires-testing
-        %strong= t('event.show.requires_testing')
-%hr
-= bootstrap_form_for(event, url: event.persisted? ? event_path(event) : events_path) do |form|
-  = form.text_field :title, floating: true
-  = form.form_group(class: 'mt-3 d-lg-flex') do
-    .flex-lg-grow-1
-      = form.text_field :start_time, class: 'datetimepicker', value: event.start_time, floating: true
-    .align-items-center.text-center.mx-3
-      %em.col= "…#{t('event.show.time_separator')}…"
-    .flex-lg-grow-1
-      = form.text_field :end_time, class: 'datetimepicker', value: event.end_time, floating: true
-  .row
-    .flex-grow-0.col-lg-6
-      .input-group
-        = form.check_box(:plus_one_max, {label: t('event.form.plus_ones_prompt'), label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'input-group-text', id: 'event_plus_one_enable', checked: event.plus_one_max != 0}, -1, 0)
-        = form.select :plus_one_max, [[t('event.form.plus_ones_unlimited'), -1], 1, 2, 3], class: 'pe-sm-3', selected: event.plus_one_max, floating: true
-    .col-auto
-      = form.check_box :requires_testing, label_class: 'btn btn-outline-dark', class: 'marked-checkbox btn-check', wrapper_class: 'd-inline-block'
-      = render "shared/info_tooltip", message: t('event.form.testing_help')
-  = form.form_group do
-    = form.hidden_field :photo_crop_y_offset
-    - if event.photo.attached?
-      = form.hidden_field :photo, value: form.object.photo.signed_id
-    = form.file_field :photo, direct_upload: true, help: t('event.form.header_photo_help')
-    %strong.form-text#crop-prompt= t('event.form.header_photo_crop_prompt')
-  = render partial: "addresses/form", locals: { parent_form: form, address: event.address }
-  %hr
-  .form-group
-    = form.text_area :description, class: 'form-control', style: "height: 10em;", floating: true, help: t('event.form.description_uses_markdown_html', link: link_to(t('event.form.description_uses_markdown_name'), 'https://www.markdownguide.org/basic-syntax/'))
-  %hr
-  .form-group.mb-2
-    %h3= Poll.model_name.human(count: 2)
-    = dynamic_list t('poll.add_prompt'), form, :polls, {partial: 'polls/form', layout: :inline}, class: 'btn btn-success' do
-      = form.fields_for(:polls, layout: :inline) do |f|
-        = render partial: "polls/form", locals: {f: f}
-  %hr
-  .actions
-    = form.primary
-    = link_to t('back'), hosted_events_path, class: 'ms-2 btn btn-light'
+.event-form
+  %h1.h2.mb-3
+    - if event.persisted?
+      = t('event.form.title.edit', title: event.title)
+    - else
+      = t('event.form.title.new')
+  = bootstrap_form_for(event, url: event.persisted? ? event_path(event) : events_path) do |form|
+    = form.text_field :title, floating: true
+    = form.form_group(class: 'd-flex flex-column flex-sm-row align-items-sm-end gap-sm-2') do
+      .flex-sm-grow-1
+        = form.text_field :start_time, class: 'datetimepicker', value: event.start_time, floating: true
+      %span.text-muted.pb-sm-3= t('event.form.time_separator')
+      .flex-sm-grow-1
+        = form.text_field :end_time, class: 'datetimepicker', value: event.end_time, floating: true
+
+    .mb-3
+      .form-label= t('event.form.location')
+      #event-location-summary{hidden: location_open}
+        #event-location-filled{hidden: location_line.blank?}
+          .d-flex.align-items-center.justify-content-between.gap-3
+            %p#event-location-line.mb-0= location_line
+            %button#event-location-change.btn.btn-link.px-0{type: 'button'}= t('event.form.change_location')
+        %button#event-location-add.btn.btn-link.px-0{type: 'button', hidden: location_line.present?}= t('event.form.add_location')
+      #event-location-editor{hidden: !location_open}
+        = render partial: "addresses/form", locals: { parent_form: form, address: event.address }
+        %button#event-location-done.btn.btn-link.px-0{type: 'button'}= t('event.form.location_done')
+
+    = form.text_area :description, rows: 5, floating: true, help: t('event.form.description_uses_markdown_html', link: link_to(t('event.form.description_uses_markdown_name'), 'https://www.markdownguide.org/basic-syntax/'))
+
+    .mb-3
+      = form.hidden_field :photo_crop_y_offset
+      - if event.photo.attached?
+        = form.hidden_field :photo, value: form.object.photo.signed_id
+      = form.file_field :photo, direct_upload: true, hide_label: true, class: 'visually-hidden', wrapper_class: 'mb-0'
+      %label#event-photo-add.btn.btn-link.px-0{for: 'event_photo', hidden: event.photo.attached?}= t('event.form.add_header_photo')
+      #event-photo-chosen{hidden: !event.photo.attached?}
+        .d-flex.gap-3.align-items-center
+          %img#event-photo-thumb.event-photo-thumb{alt: '', src: event.photo.attached? ? rails_storage_redirect_path(event.photo) : nil}
+          %div
+            #event-photo-name.small
+              - if event.photo.attached?
+                = event.photo.filename
+            .d-flex.gap-3
+              %label.btn.btn-link.px-0.py-0{for: 'event_photo'}= t('event.form.replace_header_photo')
+              %button#event-photo-crop-toggle.btn.btn-link.px-0.py-0{type: 'button', aria: {expanded: 'false', controls: 'event-photo-crop'}, data: {show_label: t('event.form.adjust_crop'), hide_label: t('event.form.hide_crop')}}= t('event.form.adjust_crop')
+      #event-photo-crop.mt-2{hidden: true}
+        .event-photo-frame
+          %img#photo-preview{alt: t('event.form.header_photo_crop_prompt'), src: event.photo.attached? ? rails_storage_redirect_path(event.photo) : nil, data: {initial_y_offset: event.photo_crop_y_offset}}
+        %p.form-text.mb-0= t('event.form.header_photo_crop_prompt')
+
+    = form.select :plus_one_max, [[t('event.form.plus_ones_none'), 0], 1, 2, 3, [t('event.form.plus_ones_unlimited'), -1]], {label: t('event.form.plus_ones_label'), selected: event.plus_one_max.nil? ? -1 : event.plus_one_max, floating: true, wrapper_class: 'event-plus-ones'}
+    = form.check_box :requires_testing
+    %p#event-testing-help.form-text{hidden: !event.requires_testing}= t('event.form.testing_help')
+
+    .mb-3
+      = dynamic_list t('poll.add_prompt'), form, :polls, {partial: 'polls/form', layout: :inline}, class: 'btn btn-link px-0' do
+        = form.fields_for(:polls, layout: :inline) do |f|
+          = render partial: "polls/form", locals: {f: f}
+
+    .actions
+      = form.primary
+      = link_to t('back'), hosted_events_path, class: 'ms-2 btn btn-light'

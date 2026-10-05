@@ -1,28 +1,22 @@
-%h5.text-center.mt-2 Attendees
-%ul.nav.nav-pills.nav-fill{role: 'tablist'}
-  %li.nav-item
-    %a.nav-link#going-tab{href: '#going', role: 'tab', 'aria-controls' => 'going', data: {'bs-toggle': 'tab'}}
-      %i.fa.fa-check{"aria-hidden" => true}
-      %span= t('event.rsvp_list.headers.yes', count: event.attendances.going.count)
-  %li.nav-item
-    %a.nav-link#maybe-tab{href: '#maybe', role: 'tab', 'aria-controls' => 'maybe', data: {'bs-toggle': 'tab'}}
-      %i.fa.fa-question{"aria-hidden" => true}
-      %span= t('event.rsvp_list.headers.maybe', count: event.attendances.maybe.count)
-  %li.nav-item
-    %a.nav-link#not-going-tab{href: '#not-going', role: 'tab', 'aria-controls' => 'not-going', data: {'bs-toggle': 'tab'}}
-      %i.fa.fa-cross{"aria-hidden" => true}
-      %span= t('event.rsvp_list.headers.no', count: event.attendances.not_going.count)
-.tab-content
-  - {going: event.attendances.going, maybe: event.attendances.maybe, 'not-going': event.attendances.not_going}.each do |label, collection|
-    - attendances_ordered = rsvps_order(collection)
-    .tab-pane{id: label, role: 'tabpanel', 'aria-labelledby' => "#{label}-tab"}
-      %ul.list-group
-        - if attendances_ordered.empty?
-          %li.list-group-item
-            %small.text-muted= t('event.rsvp_list.empty_category')
-        - elsif event.owned_by?(current_user)
-          %li.list-group-item
-            %div.mb-2
-              %strong= t('event.rsvp_list.host_email_collection_header')
-              = text_area_tag nil, attendances_ordered.map(&:attendee).pluck(:email).join(",\n"), class: 'form-control'
-        = render partial: "attendances/attendance", collection: attendances_ordered
+- going = rsvps_order(event.attendances.going)
+- maybe = rsvps_order(event.attendances.maybe)
+- not_going = rsvps_order(event.attendances.not_going)
+
+%section.attendees
+  %p.going-count.fw-medium.mb-1= t('event.show.going_count', count: going.size)
+  - if going.empty?
+    %p.text-muted.small= t('event.rsvp_list.empty_category')
+  - else
+    %ul.attendee-list.going-list
+      = render partial: 'attendances/attendance', collection: going
+  - if maybe.any? || not_going.any?
+    %details.other-rsvps
+      %summary.small.link-secondary.text-decoration-underline.link-underline-opacity-0.link-underline-opacity-100-hover= t('event.show.other_rsvps', maybe: maybe.size, cant: not_going.size)
+      - if maybe.any?
+        %p.small.fw-medium.mt-2.mb-1= t('event.show.rsvp.maybe')
+        %ul.attendee-list
+          = render partial: 'attendances/attendance', collection: maybe
+      - if not_going.any?
+        %p.small.fw-medium.mt-2.mb-1= t('event.show.rsvp.cant')
+        %ul.attendee-list
+          = render partial: 'attendances/attendance', collection: not_going

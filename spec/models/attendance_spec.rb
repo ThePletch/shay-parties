@@ -86,6 +86,35 @@ describe Attendance do
     expect(attendance).not_to be_valid
   end
 
+  it "still accepts an RSVP change after plus-ones are turned off" do
+    attendance = FactoryBot.create(:attendance, rsvp_status: "Yes")
+    FactoryBot.create(:guest_attendance, parent_attendance: attendance, event: attendance.event)
+    attendance.event.update!(plus_one_max: 0)
+
+    expect(attendance.update(rsvp_status: "Maybe")).to be true
+    expect(attendance.reload.rsvp_status).to eq "Maybe"
+    expect(attendance.plus_ones.count).to eq 1
+  end
+
+  it "rejects a new plus one after plus-ones are turned off" do
+    attendance = FactoryBot.create(:attendance)
+    attendance.event.update!(plus_one_max: 0)
+
+    result = attendance.update(
+      plus_ones_attributes: {
+        "0" => {
+          event_id: attendance.event.id,
+          rsvp_status: "Yes",
+          attendee_type: "Guest",
+          attendee_attributes: { name: "Sam", email: "sam@example.com" },
+        },
+      }
+    )
+
+    expect(result).to be false
+    expect(attendance.reload.plus_ones).to be_empty
+  end
+
   it "deletes poll responses for its event when destroyed" do
     user = FactoryBot.create(:user)
     rsvp = FactoryBot.create(:attendance, attendee: user)

@@ -1,0 +1,7 @@
+.dropdown
+  %button.btn.btn-outline-secondary.btn-sm.dropdown-toggle{type: "button", data: {bs_toggle: "dropdown"}, aria: {expanded: "false"}}
+    = t("mailing_list.actions.menu")
+  %ul.dropdown-menu.dropdown-menu-end
+    %li= link_to t("mailing_list.actions.rename"), edit_mailing_list_path(mailing_list), class: "dropdown-item"
+    %li
+      = button_to t("mailing_list.actions.delete"), mailing_list_path(mailing_list), method: :delete, class: "dropdown-item text-danger", form: confirm_form(t("mailing_list.form.confirm_delete"), class: "d-grid")

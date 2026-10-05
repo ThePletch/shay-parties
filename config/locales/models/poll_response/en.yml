@@ -14,3 +14,4 @@ en:
       update: Update
       create: Answer
       destroy: Clear
+      confirm_destroy: Clear your answer to this poll?

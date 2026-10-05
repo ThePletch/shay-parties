@@ -23,13 +23,4 @@ module EventsHelper
     end
   end
 
-  def rsvp_color_class(attendance)
-    if attendance.attendance_id.present?
-      'ms-5 list-group-item-info'
-    elsif attendance.event.owned_by?(attendance.attendee)
-      'list-group-item-primary'
-    else
-      ''
-    end
-  end
 end

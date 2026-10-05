@@ -19,30 +19,25 @@
       %span.avatar.float-start.mt-2.me-3.mb-1
         = image_tag(Gravatar.url(comment.creator.email), alt: comment.creator.name, title: comment.creator.name, border: 1)
     - if comment.deleted?
-      %span.actions
-        .float-end
-          .btn-group
-            - if comment.deletable_by?(@authenticated_user)
-              = button_to t("comment.actions.undelete"), undelete_comment_path(comment, guest_guid: params[:guest_guid]), method: :put, class: "undelete-button btn btn-sm btn-danger", remote: false
+      - if comment.deletable_by?(@authenticated_user)
+        .comment-actions
+          = button_to t("comment.actions.undelete"), undelete_comment_path(comment, guest_guid: params[:guest_guid]), method: :put, class: "undelete-button btn btn-sm btn-danger", form: { class: "d-inline" }, remote: false
     - else
       .comment-body.body{id: "comment-#{comment.id}-body"}
         = Markdown.html(comment.body)
       - if comment.editable_by?(@authenticated_user)
         .edit-form{id: "comment-#{comment.id}-edit"}
           = render 'comments/form', comment: comment
-    .clearfix
     - if @authenticated_user and !comment.deleted?
       .reply-form{data: {id: comment.id}}
         = render 'comments/form', parent_comment: comment
-      %span.actions
-        .float-end
-          .btn-group
-            - if comment.editable_by?(@authenticated_user)
-              %a.edit-button.btn.btn-sm.btn-primary{id: "comment-#{comment.id}-edit-button", data: {id: comment.id}}= t('comment.actions.edit')
-            - if comment.deletable_by?(@authenticated_user)
-              = button_to t("comment.actions.delete"), comment_path(comment, guest_guid: params[:guest_guid]), method: :delete, data: { confirm: t('comment.actions.confirm_delete') },  class: "btn btn-sm btn-danger delete-button", remote: false
-        .float-start
-          %a.btn.btn-sm.btn-primary.reply-button{data: {id: comment.id}}= t('comment.actions.reply')
+      .comment-actions
+        %a.btn.btn-sm.btn-link.link-secondary.link-underline-opacity-0.link-underline-opacity-100-hover.p-0.reply-button{data: {id: comment.id}}= t('comment.actions.reply')
+        .comment-action-group
+          - if comment.editable_by?(@authenticated_user)
+            %a.edit-button.btn.btn-sm.btn-link.link-secondary.link-underline-opacity-0.link-underline-opacity-100-hover.p-0{id: "comment-#{comment.id}-edit-button", data: {id: comment.id}}= t('comment.actions.edit')
+          - if comment.deletable_by?(@authenticated_user)
+            = button_to t("comment.actions.delete"), comment_path(comment, guest_guid: params[:guest_guid]), method: :delete, class: "btn btn-sm btn-link link-danger link-underline-opacity-0 link-underline-opacity-100-hover p-0 delete-button", form: confirm_form(t("comment.actions.confirm_delete")), remote: false
     .clearfix
     .section.bottom
     .children

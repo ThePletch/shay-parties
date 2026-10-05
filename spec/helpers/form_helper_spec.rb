@@ -37,4 +37,15 @@ RSpec.describe FormHelper, type: :helper do
       expect(html).not_to have_css("[data-dynamic-list-target='addButton']")
     end
   end
+
+  describe "#confirm_form" do
+    it "asks for confirmation before the form submits" do
+      form = helper.confirm_form("Delete this comment?", class: "d-inline")
+
+      expect(form[:class]).to eq("d-inline")
+      expect(form[:data][:controller]).to eq("confirm")
+      expect(form[:data][:action]).to eq("submit->confirm#guard")
+      expect(form[:data][:confirm_message_value]).to eq("Delete this comment?")
+    end
+  end
 end

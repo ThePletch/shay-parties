@@ -1,27 +1,59 @@
 - event ||= attendance.event
 - form_url = attendance.persisted? ? attendance_path(attendance) : event_attendances_path(attendance, event)
-= bootstrap_form_with(model: attendance, url: form_url) do |form|
-  - if current_user.present? and not current_user.guest?
+- signed_in_user = current_user.present? && !current_user.guest?
+- guest_attendee = attendance.persisted? && attendance.attendee.is_a?(Guest)
+- identity_known = signed_in_user || guest_attendee || (attendance.persisted? && attendance.attendee.is_a?(User))
+- choice_labels = { 'Yes' => t('event.show.rsvp.going'), 'Maybe' => t('event.show.rsvp.maybe'), 'No' => t('event.show.rsvp.cant') }
+- submit_labels = { 'Yes' => t('event.show.rsvp.submit_going'), 'Maybe' => t('event.show.rsvp.submit_maybe'), 'No' => t('event.show.rsvp.submit_cant') }
+- form_data = { rsvp_choice: true }
+- form_data[:rsvp_autosubmit] = true if identity_known
+
+= bootstrap_form_with(model: attendance, url: form_url, data: form_data, class: 'rsvp-form') do |form|
+  - if attendance.errors.any?
+    .alert.alert-danger= attendance.errors.full_messages.to_sentence
+  - if signed_in_user
     = form.hidden_field :user_id, value: current_user.id
   - else
     = hidden_field_tag :guest_guid, params[:guest_guid]
-    .row.mt-2.mx-1
-      %h5.col-lg-8.p-0
-        %div= t('attendance.form.prompt_guest')
-        %small.fst-italic.text-muted= t('attendance.form.can_change_later')
-      %h6.col-lg-4.p-0.text-end
-        = link_to t('attendance.form.sign_in_alt'), new_user_session_path, class: 'text-decoration-none'
-    = form.fields_for(:attendee, form.object.attendee || Guest.new, builder: BootstrapForm::FormBuilder) do |attendee_form|
-      = attendee_form.form_group layout: :inline do
-        .input-group
-          = attendee_form.text_field :name, floating: true
-          = attendee_form.email_field :email, floating: true
-  = form.select(:rsvp_status, options_for_select(attendance_types_localized, selected: attendance.rsvp_status), floating: true)
-  - add_plus_one_label = event.allows_plus_ones? ? t('attendance.form.add_plus_one') : nil
-  = dynamic_list add_plus_one_label, form, :plus_ones, {record_limit: event.plus_one_max, partial: 'attendances/plus_one_form', locals: { event: event }, layout: :inline}, class: 'btn btn-success w-100' do
-    = form.fields_for(:plus_ones, attendance.plus_ones, layout: :inline) do |plus_one_form|
-      = render partial: 'attendances/plus_one_form', locals: {f: plus_one_form, event: event}
-  - if event.has_plus_one_limit?
-    .form-text.mb-2= t('attendance.form.plus_ones_limit_prompt', count: event.plus_one_max.humanize(locale: I18n.locale))
-  .d-grid
-    = form.primary('RSVP')
+  .rsvp-choices.justify-content-center
+    - choice_labels.each do |value, label|
+      - choice_id = "attendance_rsvp_status_#{value.downcase}"
+      %input.btn-check{type: 'radio', name: 'attendance[rsvp_status]', id: choice_id, value: value, checked: attendance.rsvp_status == value, autocomplete: 'off'}
+      %label.btn.btn-outline-secondary{for: choice_id}= label
+  - if guest_attendee
+    %p.rsvp-identity-summary.small.text-muted.mb-2{data: { rsvp_identity_summary: true }}
+      = "#{attendance.attendee.name} · #{attendance.attendee.email}"
+      %button.btn.btn-link.btn-sm.link-secondary.link-underline-opacity-0.link-underline-opacity-100-hover.p-0.align-baseline.ms-2{type: 'button', data: { rsvp_edit_identity: true }}
+        = t('form.edit')
+    .rsvp-identity{data: { rsvp_identity: 'saved' }, hidden: true}
+      = form.fields_for(:attendee, attendance.attendee, builder: BootstrapForm::FormBuilder) do |attendee_form|
+        = attendee_form.hidden_field :id
+        = attendee_form.text_field :name, floating: true, required: false
+        = attendee_form.email_field :email, floating: true, required: false
+      = form.submit t('form.update'), class: 'btn btn-primary'
+  - elsif !identity_known
+    .rsvp-identity{data: { rsvp_identity: 'pending' }, hidden: !Attendance::RSVP_TYPES.include?(attendance.rsvp_status)}
+      = form.fields_for(:attendee, form.object.attendee || Guest.new, builder: BootstrapForm::FormBuilder) do |attendee_form|
+        = attendee_form.text_field :name, floating: true, required: false
+        = attendee_form.email_field :email, floating: true, required: false
+      .d-flex.flex-wrap.align-items-center.gap-3
+        %button.btn.btn-primary{type: 'submit', data: { rsvp_submit_label: true, label_yes: submit_labels['Yes'], label_maybe: submit_labels['Maybe'], label_no: submit_labels['No'] }}
+          = submit_labels[attendance.rsvp_status] || submit_labels['Yes']
+        = link_to t('event.show.sign_in'), new_user_session_path, class: 'small link-secondary link-underline-opacity-0 link-underline-opacity-100-hover'
+  - saved_plus_ones = attendance.persisted? ? attendance.plus_ones.select(&:persisted?) : []
+  - if saved_plus_ones.any? || (attendance.persisted? && event.allows_plus_ones?)
+    .rsvp-plus-ones{data: {plus_ones_mode: saved_plus_ones.any? ? 'summary' : 'form'}}
+      .d-flex.align-items-center.gap-2.mb-1
+        %span.fw-semibold.text-black= t('event.show.plus_ones')
+        - if saved_plus_ones.any?
+          %button.btn.btn-sm.btn-outline-secondary{type: 'button', data: {plus_ones_edit: true}}
+            = t('event.show.edit_plus_ones')
+      = dynamic_list (event.allows_plus_ones? ? t('event.show.bring_someone') : nil), form, :plus_ones, {record_limit: event.plus_one_max, partial: 'attendances/plus_one_form', locals: { event: event }, layout: :inline}, class: 'btn btn-sm btn-outline-secondary rsvp-bring mt-1' do
+        = form.fields_for(:plus_ones, attendance.plus_ones, layout: :inline) do |plus_one_form|
+          = render partial: 'attendances/plus_one_form', locals: {f: plus_one_form, event: event}
+      - if event.has_plus_one_limit?
+        .form-text.rsvp-plus-ones-limit= t('attendance.form.plus_ones_limit_prompt', count: event.plus_one_max.humanize(locale: I18n.locale))
+      .rsvp-plus-ones-actions
+        = form.submit t('form.update'), class: 'btn btn-sm btn-primary rsvp-save'
+        %button.btn.btn-sm.btn-outline-secondary.rsvp-cancel{type: 'button', data: {plus_ones_cancel: true}}
+          = t('cancel')

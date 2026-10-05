@@ -3,37 +3,68 @@ en:
     created: Mailing list was successfully created.
     updated: Mailing list was successfully updated.
     destroyed: Mailing list was successfully deleted.
-    synced: Users synced to mailing list.
+    synced:
+      one: Linked 1 address to an account.
+      other: Linked %{count} addresses to accounts.
+    added:
+      one: Added 1 address.
+      other: Added %{count} addresses.
+    removed: Removed %{email}.
+    none_to_add: Add at least one email address.
+    invalid_emails: "These addresses are not valid emails: %{emails}"
+    address_count:
+      one: 1 address
+      other: "%{count} addresses"
     index:
       title: Mailing Lists
       header: Mailing Lists
-      headings:
-        name: Name
-        emails_count: Emails
-      new_button: New Mailing List
+      new_button: New list
+      empty: You have no mailing lists yet.
     show:
+      back_to_list: Back to list
       headings:
-        email: Email
-        user: User
-      no_user: No User
-      copypastable: Copypastable List
-      manage: Manage List
-      sync: Sync Users
+        email: Address
+        user: Account
+      no_user: No account
+      search: Search addresses
+      search_button: Search
+      copy: Copy addresses
+      copied:
+        one: Copied 1 address
+        other: Copied %{count} addresses
+      copy_failed: Could not copy. The addresses are shown below so you can copy them.
+      match: Match accounts
+      add: Add addresses
+      add_help: One address per line.
+      add_placeholder: guest@example.com
+      add_submit: Add
+      remove: Remove
+      confirm_remove: Remove %{email} from this list?
+      empty: This list has no addresses yet.
+      no_matches: No addresses match.
+      showing: "%{shown} of %{total} · %{filter} · %{event}"
       filters:
-        exclude_no_for: "Exclude 'No' RSVPs for:"
-        attendees: "Attendees for:"
-        button: Filter
-        clear: Clear Filters
+        label: Filter addresses
+        all: All
+        not_declined: Not declined
+        going: Going or maybe
+        event: Event
+        clear: Clear
+        no_events: Host an event to filter by RSVP.
+    actions:
+      menu: Actions
+      rename: Rename
+      delete: Delete list
     form:
-      delete: Delete mailing list
       confirm_delete: Are you sure you want to delete this mailing list?
+      save: Save
+      create: Create list
       errors_msg:
         one: "One error prohibited this mailing list from being saved:"
         other: "%{count} errors prohibited this mailing list from being saved:"
-      add_email: Add an email
       title:
-        edit: Edit %{name}
+        edit: Rename %{name}
         new: New Mailing List
       header:
-        edit: Editing %{name}
+        edit: Rename %{name}
         new: New Mailing List

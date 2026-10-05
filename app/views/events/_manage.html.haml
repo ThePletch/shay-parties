@@ -1,0 +1,9 @@
+%details.event-manage
+  %summary.btn.btn-outline-secondary.btn-sm= t('event.show.manage')
+  .event-manage-panel
+    = link_to t('event.show.edit'), edit_event_path(event), class: 'link-secondary link-underline-opacity-0 link-underline-opacity-100-hover d-block py-1'
+    = link_to t('invite.actions.send'), new_event_invite_path(event), class: 'link-secondary link-underline-opacity-0 link-underline-opacity-100-hover d-block py-1'
+    %details.mt-2
+      %summary.event-manage-emails.link-secondary.text-decoration-underline.link-underline-opacity-0.link-underline-opacity-100-hover= t('event.show.copy_emails')
+      - emails = event.attendances.filter_map { |attendance| attendance.attendee&.email }
+      = text_area_tag nil, emails.join(",\n"), class: 'form-control mt-2', rows: [[emails.size, 8].min, 3].max, readonly: true, aria: { label: t('event.show.copy_emails') }

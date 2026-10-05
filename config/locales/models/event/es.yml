@@ -9,7 +9,7 @@ es:
         end_time: Hora Final
         photo: Foto de Encabezado
         description: Descripción
-        plus_one_max: Máx +1s por usuario
+        plus_one_max: "+1s"
         requires_testing: Prueba de COVID requerida
     errors:
       models:
@@ -35,17 +35,21 @@ es:
         edit: "Editando %{title}"
         new: Evento Nuevo
       show_event_link: Ver Evento
-      preview_label: Haga clic para ver un avance del encabezado de su evento.
-      testing_help:
-        Los eventos que requieren pruebas de COVID-19 tendrán un aviso que informará a los invitados sobre el requisito de la
-        prueba. Asegúrese de explicar cómo enviarle evidencia de una prueba negativa en la descripción del evento.
-      header_photo_help:
-        Las fotos se escalan y recortan al ancho de pantalla completo (1900px por 500px).
-        Abra el avance del evento en la parte superior de la página para ajustar cómo aparecerá su imagen de encabezado.
-      header_photo_crop_prompt: Arrastre la imagen para cambiar cómo se recortará su foto.
-      description_uses_markdown_html: Puede formatear la descripción del evento con %{link} para poner el texto en negrita, añadir enlaces, o organizar cosas en viñetas.
+      location: Lugar
+      add_location: Añadir un lugar
+      change_location: Cambiar
+      location_done: Listo
+      time_separator: hasta
+      testing_help: Los invitados ven una nota en la página del evento. Explique en la descripción cómo enviar la prueba.
+      add_header_photo: Añadir una foto de encabezado
+      replace_header_photo: Reemplazar
+      adjust_crop: Ajustar recorte
+      hide_crop: Ocultar recorte
+      header_photo_crop_prompt: Arrastre la imagen para cambiar cómo se recortará.
+      description_uses_markdown_html: "%{link} sirve para negrita, enlaces y listas."
       description_uses_markdown_name: Markdown
-      plus_ones_prompt: ¿Permitir +1s?
+      plus_ones_label: "+1s"
+      plus_ones_none: Ninguno
       plus_ones_unlimited: Ilimitados
     rsvp_list:
       headers:
@@ -81,6 +85,32 @@ es:
       time_separator: hasta
       hosted_by_other: Organizado por %{name}
       hosted_by_you: Organizado por usted
+      manage: Administrar
+      edit: Editar evento
+      copy_emails: Copiar emails de invitados
+      sign_in: "¿Tiene una cuenta? Inicie sesión"
+      bring_someone: Traer a alguien
+      plus_ones: "+1s"
+      edit_plus_ones: Editar +1s
+      plus_one_summary: "+1 · %{name} · %{email}"
+      add_to_calendar: Añadir al calendario
+      download_ics: Descargar .ics
+      you: Usted
+      remove: Eliminar
+      restore: Deshacer
+      with_attendee: con %{name}
+      going_count:
+        one: "%{count} asiste"
+        other: "%{count} asisten"
+      other_rsvps: "%{maybe} quizás · %{cant} no asisten"
+      rsvp:
+        going: Sí
+        maybe: Quizás
+        cant: "No"
+        submit_going: Confirmar asistencia
+        submit_maybe: RSVP quizás
+        submit_cant: No asistiré
+      testing_badge: Prueba de COVID requerida
       requires_testing:
         Se debe mostrar una foto de una prueba rápida de COVID negativa
         de las últimas 24 horas para poder entrar a este evento.

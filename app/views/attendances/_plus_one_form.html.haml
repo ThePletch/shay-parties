@@ -1,13 +1,20 @@
-= f.form_group layout: :inline, class: 'row', data: {controller: 'dynamic-list-record'} do
+- attendee = f.object.attendee
+- saved = f.object.persisted? && attendee.present?
+.rsvp-plus-one.mb-2{data: {controller: 'dynamic-list-record'}}
   = dynamic_list_record_hidden_fields(f)
   = f.hidden_field :event_id, value: event.id
-  .input-group
-    .input-group-text{class: ('text-bg-danger' if f.object.errors.any?)}
-      %span.me-2= "+1"
-    = f.fields_for :attendee, f.object.attendee || Guest.new do |f_attendee|
+  - if saved
+    %p.rsvp-plus-one-summary.small.text-secondary.mb-1{data: {plus_one_summary: true}}
+      = t('event.show.plus_one_summary', name: attendee.name, email: attendee.email)
+  .rsvp-plus-one-fields{data: {plus_one_fields: true}}
+    .d-flex.justify-content-between.align-items-baseline.mb-1
+      %small.text-secondary= t('attendance.plus_one')
+      %button.btn.btn-sm.btn-link.link-danger.link-underline-opacity-0.link-underline-opacity-100-hover.p-0{type: 'button', data: {dynamic_list_record_target: 'deleteButton', action: stimulus_action('click', 'dynamic-list-record', 'delete')}}
+        %span.dynamic-list-record-remove-label= t('event.show.remove')
+        %span.dynamic-list-record-restore-label= t('event.show.restore')
+    = f.fields_for :attendee, attendee || Guest.new do |f_attendee|
       = f_attendee.hidden_field :id, value: f_attendee.object.try(:id) unless f.object.new_record?
-      = f_attendee.text_field :name, value: f_attendee.object.try(:name), floating: true
-      = f_attendee.text_field :email, value: f_attendee.object.try(:email), floating: true
-    = dynamic_list_record_delete_button
-  - if f.object.errors.any?
-    .form-text= f.errors_on(:base, custom_class: 'text-danger')
+      = f_attendee.text_field :name, value: f_attendee.object.try(:name), floating: true, required: false
+      = f_attendee.email_field :email, value: f_attendee.object.try(:email), floating: true, required: false
+    - if f.object.errors.any?
+      .form-text.text-danger= f.errors_on(:base, custom_class: 'text-danger')

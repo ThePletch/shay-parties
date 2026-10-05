@@ -99,28 +99,28 @@
     %h2.h4= t('admin.users.show.actions_heading')
     .d-flex.flex-column.gap-2
       - if @user.role == 'user' && @user != current_user
-        = button_to t('admin.users.actions.suspend'), suspend_admin_user_path(@user), method: :post, class: 'btn btn-warning', data: { confirm: t('admin.users.confirm.suspend') }
-        = form_with url: ban_admin_user_path(@user), method: :post, local: true, class: 'border rounded p-3' do
+        = button_to t('admin.users.actions.suspend'), suspend_admin_user_path(@user), method: :post, class: 'btn btn-warning', form: confirm_form(t('admin.users.confirm.suspend'))
+        = form_with url: ban_admin_user_path(@user), method: :post, local: true, class: 'border rounded p-3', data: confirm_form(t('admin.users.confirm.ban'))[:data] do
           .mb-2
             %label.form-label{for: 'reason'}= t('admin.users.show.ban_reason_label')
             = text_field_tag :reason, nil, class: 'form-control', id: 'reason', placeholder: t('admin.users.show.ban_reason_placeholder')
-          = submit_tag t('admin.users.actions.ban'), class: 'btn btn-danger', data: { confirm: t('admin.users.confirm.ban') }
+          = submit_tag t('admin.users.actions.ban'), class: 'btn btn-danger'
         - if @user.confirmed?
-          = button_to t('admin.users.actions.promote'), promote_admin_user_path(@user), method: :post, class: 'btn btn-primary', data: { confirm: t('admin.users.confirm.promote') }
+          = button_to t('admin.users.actions.promote'), promote_admin_user_path(@user), method: :post, class: 'btn btn-primary', form: confirm_form(t('admin.users.confirm.promote'))
         - else
           %p.text-muted.mb-0= t('admin.users.show.cannot_promote_unconfirmed')
 
       - if @user.suspended?
-        = button_to t('admin.users.actions.unsuspend'), unsuspend_admin_user_path(@user), method: :post, class: 'btn btn-success', data: { confirm: t('admin.users.confirm.unsuspend') }
+        = button_to t('admin.users.actions.unsuspend'), unsuspend_admin_user_path(@user), method: :post, class: 'btn btn-success', form: confirm_form(t('admin.users.confirm.unsuspend'))
 
       - if @user.banned?
-        = button_to t('admin.users.actions.unban'), unban_admin_user_path(@user), method: :post, class: 'btn btn-success', data: { confirm: t('admin.users.confirm.unban') }
+        = button_to t('admin.users.actions.unban'), unban_admin_user_path(@user), method: :post, class: 'btn btn-success', form: confirm_form(t('admin.users.confirm.unban'))
 
       - if @user.role == 'admin' && @user != current_user
-        = button_to t('admin.users.actions.demote'), demote_admin_user_path(@user), method: :post, class: 'btn btn-secondary', data: { confirm: t('admin.users.confirm.demote') }
+        = button_to t('admin.users.actions.demote'), demote_admin_user_path(@user), method: :post, class: 'btn btn-secondary', form: confirm_form(t('admin.users.confirm.demote'))
 
       - if @user.invite_send_restricted?
-        = button_to t('admin.users.actions.clear_invite_restriction'), clear_invite_restriction_admin_user_path(@user), method: :post, class: 'btn btn-outline-warning', data: { confirm: t('admin.users.confirm.clear_invite_restriction') }
+        = button_to t('admin.users.actions.clear_invite_restriction'), clear_invite_restriction_admin_user_path(@user), method: :post, class: 'btn btn-outline-warning', form: confirm_form(t('admin.users.confirm.clear_invite_restriction'))
 
       - if @user.superadmin?
         %p.text-muted.mb-0= t('admin.users.show.superadmin_immutable')

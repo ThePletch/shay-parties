@@ -1,7 +1,6 @@
 - parent_form ||= nil
 - address ||= nil
 - address_persisted = !!address.try(:persisted?)
-%h4= t('activerecord.models.address')
 = optional_parent_wrap(parent_form, address || Address.new, {record_name: :address, include_id: !address_persisted, locals: { address: address}}) do |form|
   - if address_persisted
     = form.hidden_field :id
@@ -12,7 +11,6 @@
         = parent_form.collection_select('address_id', @prior_addresses, :id, :to_s, {include_blank: t('address.form.address_placeholder'), wrapper: false}, class: 'form-select-sm')
       %small.form-text#fetch-in-progress Fetching address...
       %small.form-text.text-danger#fetch-error There was an error fetching info for your address. Please enter your address manually.
-      %hr
   = form.text_field :street, floating: true
   = form.text_field :street2, class: 'form-control', label: t('address.form.street2_unit_number_explain'), floating: true
   .row

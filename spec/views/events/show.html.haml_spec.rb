@@ -10,7 +10,7 @@ RSpec.describe "events/show" do
 
     render
 
-    expect(rendered).to match /Add to Google Calendar/
+    expect(rendered).to have_text("Add to calendar")
   end
 
   it "shows calendar links to guest attendees" do
@@ -22,7 +22,7 @@ RSpec.describe "events/show" do
 
     render
 
-    expect(rendered).to match /Add to Google Calendar/
+    expect(rendered).to have_text("Add to calendar")
   end
 
   it "hides calendar links from 'no'-RSVPed attendees" do
@@ -34,7 +34,7 @@ RSpec.describe "events/show" do
 
     render
 
-    expect(rendered).not_to match /Add to Google Calendar/
+    expect(rendered).not_to have_text("Add to calendar")
   end
 
   it "hides calendar links if no RSVP" do
@@ -44,7 +44,7 @@ RSpec.describe "events/show" do
 
     render
 
-    expect(rendered).not_to match /Add to Google Calendar/
+    expect(rendered).not_to have_text("Add to calendar")
   end
 
   it "warns about COVID requirements if enabled" do
@@ -54,6 +54,8 @@ RSpec.describe "events/show" do
 
     render
 
-    expect(rendered).to have_text("negative rapid COVID test")
+    expect(rendered).to have_css(".badge", text: "COVID test required")
+    expect(rendered).to have_css("small", text: "negative rapid COVID test")
+    expect(rendered).not_to have_css(".alert")
   end
 end
