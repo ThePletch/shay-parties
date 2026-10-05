@@ -14,3 +14,4 @@ es:
       update: Actualizar
       create: Responder
       destroy: Limpiar
+      confirm_destroy: "¿Limpiar su respuesta a esta encuesta?"

@@ -48,4 +48,16 @@ describe MailingList do
       end
     end
   end
+
+  describe "add_addresses" do
+    it "adds new addresses, skips duplicates, and reports invalid ones" do
+      mailing_list = FactoryBot.create(:mailing_list, emails: ["maya@example.com"])
+
+      result = mailing_list.add_addresses("maya@example.com\nJordan@Example.com, not-an-email")
+
+      expect(result[:added]).to eq(["jordan@example.com"])
+      expect(result[:invalid]).to eq(["not-an-email"])
+      expect(mailing_list.emails.pluck(:email)).to match_array(["maya@example.com", "jordan@example.com"])
+    end
+  end
 end

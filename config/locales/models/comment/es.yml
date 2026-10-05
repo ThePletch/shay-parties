@@ -19,7 +19,7 @@ es:
       confirm_delete: ¿Está seguro que quiere eliminar este comentario?
       delete: Eliminar
       edit: Editar
-      new: Publicar un comentario
+      new: Escriba un comentario
       undelete: Recuperar
       reply: Responder
     errors:

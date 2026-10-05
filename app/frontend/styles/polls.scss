@@ -2,6 +2,20 @@
   margin-bottom: 0.85rem;
 }
 
+.poll > summary {
+  align-items: baseline;
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+
+.poll-tally {
+  color: var(--bs-secondary-color);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
 .poll-question {
   font-size: 1.05rem;
   font-weight: 600;

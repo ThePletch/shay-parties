@@ -9,7 +9,6 @@ class CropAdjuster {
   private dragging: boolean;
   private imageLoaded: boolean;
   private parentDiv: JQuery<HTMLElement>;
-  private parentCollapsible: JQuery<HTMLElement>
   private rawDimensions: { height: number; width: number; } | undefined;
 
   constructor(image: JQuery<HTMLElement>) {
@@ -18,8 +17,7 @@ class CropAdjuster {
     this.dragging = false;
     this.imageLoaded = false;
 
-    this.parentDiv = this.image.closest('.hero-image');
-    this.parentCollapsible = this.image.closest('.accordion');
+    this.parentDiv = this.image.closest('.event-photo-frame');
     this.parentDiv.on('mousedown', (e) => {
       e.preventDefault();
       this.dragging = true;
@@ -28,9 +26,6 @@ class CropAdjuster {
       if (this.dragging && this.imageLoaded) {
         this.shiftYOffset(e.originalEvent?.movementY ?? 0);
       }
-    });
-    this.parentCollapsible.on('click', () => {
-      this.shiftYOffset(0);
     });
     $(window).on('mouseup', () => {
       this.dragging = false;
@@ -74,8 +69,7 @@ class CropAdjuster {
 
   shiftYOffset(change: number) {
     if (this.imageScaleFactor() === 0) {
-      // image scale factor will be zero when the preview is minimized
-      // abort early so we don't end up dividing by zero
+      // The crop frame has no width while it is hidden.
       return;
     }
 
@@ -111,49 +105,43 @@ class CropAdjuster {
   scaledImageHeight() {
     return (this.rawDimensions?.height ?? 0) * this.imageScaleFactor();
   }
+
+  refresh() {
+    if (!this.rawDimensions) {
+      return;
+    }
+    this.shiftYOffset(0);
+  }
+}
+
+let adjuster: CropAdjuster | undefined;
+
+export function refreshHeaderPhotoCrop() {
+  adjuster?.refresh();
 }
 
 $(function () {
-  $('#crop-prompt, #crop-instruction').hide();
-
-  function setTitlePreview(newValue: string) {
-    const previewObj = $('#title-preview');
-    if (newValue) {
-      previewObj.html(newValue);
-    } else {
-      previewObj.html(previewObj.data('default'));
-    }
-  }
-  $('#event_title').on('keyup', (e) => {
-    setTitlePreview($(e.target).val()?.toString() ?? '');
-  });
-  setTitlePreview($('#event_title').val()?.toString() ?? '');
-
-  // handles visibility only in the crop preview
-  function setTestingWarningVisible(visible: boolean) {
-    $('#requires-testing').toggle(visible);
+  const preview = $("#photo-preview");
+  if (preview.length === 0) {
+    return;
   }
 
-  $('#event_requires_testing').on('change', (e) => {
-    setTestingWarningVisible((e.target as HTMLInputElement).checked);
-  });
-  setTestingWarningVisible($('#event_requires_testing').prop('checked'));
-
-  const adjuster = new CropAdjuster($("#photo-preview"));
+  adjuster = new CropAdjuster(preview);
 
   function loadImagePreview(input: HTMLInputElement, firstLoad = false) {
+    if (!adjuster) {
+      return;
+    }
     if (input.files != null && input.files.length > 0) {
       const src = URL.createObjectURL(input.files[0]!);
       adjuster.scaleToNewImage(src, firstLoad);
-      $('#crop-prompt, #crop-instruction').show();
       $("#photo-preview").attr('src', src);
     } else {
       const imageSrc = $('#photo-preview').attr('src');
       if (!imageSrc) {
-        throw new Error("Tried to scale to null image");
+        return;
       }
       adjuster.scaleToNewImage(imageSrc, firstLoad);
-      $('#crop-prompt, #crop-instruction').hide();
     }
   }
 

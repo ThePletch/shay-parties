@@ -1,42 +1,79 @@
 - title @mailing_list.name
 .row
-  .col-lg-6
-    %h1.title
-      = @mailing_list.name
-      = link_to t('form.edit'), edit_mailing_list_path(@mailing_list)
-    %table.table
-      %thead
-        %tr
-          %td= t('mailing_list.show.headings.email')
-          %td= t('mailing_list.show.headings.user')
-      %tbody
-        - @emails.each do |email|
-          %tr
-            %td= email.email
-            - if email.user.present?
-              %td= email.user.name
-            - else
-              %td.text-muted= t('mailing_list.show.no_user')
-    %h4= t('mailing_list.show.copypastable')
-    = text_area_tag nil, @emails.pluck(:email).join(",\n"), class: 'form-control'
-  .col-lg-6
-    %h2.text-center= t('mailing_list.show.manage')
-    = button_to t('mailing_list.show.sync'), sync_users_mailing_list_path(@mailing_list), method: :put, class: 'btn btn-primary btn-block btn-sm'
-    .row
-      = form_tag '', class: 'form-inline col p-0', method: :get do
-        = hidden_field_tag :scope, 'exclude_no_rsvps'
-        .input-group.col
-          .input-group-prepend
-            .input-group-text= t('mailing_list.show.filters.exclude_no_for')
-          = select_tag :event_id, options_for_select(Event.all.pluck(:title, :id)), class: 'form-control'
-          = submit_tag "Filter", class: 'btn btn-primary col-auto m-0'
-    .row
-      = form_tag '', class: 'form-inline col p-0', method: :get do
-        = hidden_field_tag :scope, 'attendees'
-        .input-group.col
-          .input-group-prepend
-            .input-group-text= t('mailing_list.show.filters.attendees')
-          = select_tag :event_id, options_for_select(Event.all.pluck(:title, :id)), class: 'form-control'
-          = submit_tag t('mailing_list.show.filters.button'), class: 'btn btn-primary col-auto m-0'
+  .col-lg-8
+    %p.mb-2
+      = link_to t("mailing_list.index.header"), mailing_lists_path, class: "text-decoration-none"
+    .d-flex.justify-content-between.align-items-start.gap-3
+      %div
+        %h1.title.mb-0= @mailing_list.name
+        %p.text-muted.mb-0= t("mailing_list.address_count", count: @mailing_list.emails.size)
+      = render "menu", mailing_list: @mailing_list
 
-    = link_to t('mailing_list.show.filters.clear'), mailing_list_path(@mailing_list), class: 'btn btn-secondary btn-block btn-sm'
+    .d-flex.flex-wrap.align-items-center.gap-2.my-3
+      = form_with url: mailing_list_path(@mailing_list), method: :get, class: "d-flex gap-2" do
+        = hidden_field_tag :scope, @list_scope if @list_scope
+        = hidden_field_tag :event_id, @event.id if @event
+        = label_tag :q, t("mailing_list.show.search"), class: "visually-hidden"
+        = search_field_tag :q, params[:q], class: "form-control", placeholder: t("mailing_list.show.search")
+        = submit_tag t("mailing_list.show.search_button"), class: "btn btn-outline-secondary", name: nil
+      .btn-group{role: "group", aria: {label: t("mailing_list.show.filters.label")}}
+        = link_to t("mailing_list.show.filters.all"), mailing_list_path(@mailing_list, q: params[:q]), class: mailing_list_filter_class(@list_scope.nil?)
+        - if @events.any?
+          - event_id = @event&.id || @events.first.id
+          = link_to t("mailing_list.show.filters.not_declined"), mailing_list_path(@mailing_list, scope: "exclude_no_rsvps", event_id: event_id, q: params[:q]), class: mailing_list_filter_class(@list_scope == "exclude_no_rsvps")
+          = link_to t("mailing_list.show.filters.going"), mailing_list_path(@mailing_list, scope: "attendees", event_id: event_id, q: params[:q]), class: mailing_list_filter_class(@list_scope == "attendees")
+        - else
+          %button.btn.btn-sm.btn-outline-primary{type: "button", disabled: true}= t("mailing_list.show.filters.not_declined")
+          %button.btn.btn-sm.btn-outline-primary{type: "button", disabled: true}= t("mailing_list.show.filters.going")
+      - if @list_scope && @event
+        = form_with url: mailing_list_path(@mailing_list), method: :get, class: "d-flex" do
+          = hidden_field_tag :scope, @list_scope
+          = hidden_field_tag :q, params[:q]
+          = label_tag :event_id, t("mailing_list.show.filters.event"), class: "visually-hidden"
+          = select_tag :event_id, options_for_select(@events.map { |event| [event.title, event.id] }, @event.id), class: "form-select", onchange: "this.form.requestSubmit()"
+      .d-flex.align-items-center.gap-2{data: {controller: "copy-text", copy_text_message_value: t("mailing_list.show.copied", count: @emails.size), copy_text_failed_value: t("mailing_list.show.copy_failed")}}
+        %textarea.d-none{readonly: true, aria: {hidden: true}, data: {copy_text_target: "source"}}= @emails.map(&:email).join("\n")
+        %button.btn.btn-outline-secondary{type: "button", data: {action: "copy-text#copy"}}= t("mailing_list.show.copy")
+        %span.text-muted.small{data: {copy_text_target: "status"}}
+      = button_to t("mailing_list.show.match"), sync_users_mailing_list_path(@mailing_list), method: :put, params: mailing_list_filter_params, class: "btn btn-outline-secondary", form: {class: "d-inline"}
+
+    - if @events.empty?
+      %p.small.text-muted= t("mailing_list.show.filters.no_events")
+    - if @list_scope && @event
+      %p.text-muted
+        = t("mailing_list.show.showing", shown: @emails.size, total: @mailing_list.emails.size, filter: t("mailing_list.show.filters.#{@list_scope == "attendees" ? "going" : "not_declined"}"), event: @event.title)
+        = link_to t("mailing_list.show.filters.clear"), mailing_list_path(@mailing_list, q: params[:q]), class: "ms-2"
+
+    - if @emails.any?
+      .table-responsive
+        %table.table.align-middle
+          %thead
+            %tr
+              %th= t("mailing_list.show.headings.email")
+              %th= t("mailing_list.show.headings.user")
+              %th
+          %tbody
+            - @emails.each do |email|
+              %tr
+                %td= email.email
+                - if email.user.present?
+                  %td= email.user.name
+                - else
+                  %td.text-muted= t("mailing_list.show.no_user")
+                %td.text-end
+                  = button_to t("mailing_list.show.remove"), mailing_list_email_path(@mailing_list, email), method: :delete, params: mailing_list_filter_params, class: "btn btn-sm btn-link text-secondary text-decoration-none", form: confirm_form(t("mailing_list.show.confirm_remove", email: email.email), class: "d-inline")
+    - elsif @mailing_list.emails.any?
+      %p= t("mailing_list.show.no_matches")
+    - else
+      %p= t("mailing_list.show.empty")
+
+    %button.btn.btn-outline-secondary{type: "button", data: {bs_toggle: "collapse", bs_target: "#add-addresses"}, aria: {expanded: "false", controls: "add-addresses"}}
+      = t("mailing_list.show.add")
+    #add-addresses.collapse.mt-3
+      = form_with url: add_emails_mailing_list_path(@mailing_list) do
+        - mailing_list_filter_params.each do |key, value|
+          = hidden_field_tag key, value
+        .mb-2
+          = label_tag :addresses, t("mailing_list.show.add_help"), class: "form-label"
+          = text_area_tag :addresses, nil, class: "form-control", rows: 4, placeholder: t("mailing_list.show.add_placeholder")
+        = submit_tag t("mailing_list.show.add_submit"), class: "btn btn-primary"

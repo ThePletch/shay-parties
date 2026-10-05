@@ -3,37 +3,68 @@ es:
     created: Lista de correo creada exitosamente.
     updated: Lista de correo actualizada exitosamente.
     destroyed: Lista de correo eliminada exitosamente.
-    synced: Usuarios sincronizados a la lista de correo.
+    synced:
+      one: Se vinculó 1 correo a una cuenta.
+      other: Se vincularon %{count} correos a cuentas.
+    added:
+      one: Se añadió 1 correo.
+      other: Se añadieron %{count} correos.
+    removed: Se eliminó %{email}.
+    none_to_add: Añade al menos una dirección de correo.
+    invalid_emails: "Estas direcciones no son correos válidos: %{emails}"
+    address_count:
+      one: 1 correo
+      other: "%{count} correos"
     index:
       title: Listas de Correo
       header: Listas de Correo
-      headings:
-        name: Nombre
-        emails_count: Emails
-      new_button: Lista de Correo Nueva
+      new_button: Lista nueva
+      empty: Todavía no tienes listas de correo.
     show:
+      back_to_list: Volver a la lista
       headings:
-        email: Email
-        user: Usuario
-      no_user: Sin Usuario
-      copypastable: Lista para copiar
-      manage: Administrar Lista
-      sync: Sincronizar Usuarios
+        email: Correo
+        user: Cuenta
+      no_user: Sin cuenta
+      search: Buscar correos
+      search_button: Buscar
+      copy: Copiar correos
+      copied:
+        one: Se copió 1 correo
+        other: Se copiaron %{count} correos
+      copy_failed: No se pudo copiar. Los correos aparecen abajo para que puedas copiarlos.
+      match: Vincular cuentas
+      add: Añadir correos
+      add_help: Un correo por línea.
+      add_placeholder: invitado@ejemplo.com
+      add_submit: Añadir
+      remove: Quitar
+      confirm_remove: "¿Quitar %{email} de esta lista?"
+      empty: Esta lista todavía no tiene correos.
+      no_matches: Ningún correo coincide.
+      showing: "%{shown} de %{total} · %{filter} · %{event}"
       filters:
-        exclude_no_for: "Excluir 'No' RSVPs de:"
-        attendees: "Asistentes de:"
-        button: Filtrar
-        clear: Limpiar Filtros
+        label: Filtrar correos
+        all: Todos
+        not_declined: No rechazaron
+        going: Van o tal vez
+        event: Evento
+        clear: Limpiar
+        no_events: Organiza un evento para filtrar por RSVP.
+    actions:
+      menu: Acciones
+      rename: Cambiar nombre
+      delete: Eliminar lista
     form:
-      delete: Eliminar lista de correo
-      confirm_delete: ¿Está seguro que quiere eliminar esta lista?
+      confirm_delete: "¿Está seguro que quiere eliminar esta lista de correo?"
+      save: Guardar
+      create: Crear lista
       errors_msg:
         one: "Un error impidió que se guardara esta lista de correo:"
         other: "%{count} errores impidieron que se guardara esta lista de correo:"
-      add_email: Añadir un Email
       title:
-        edit: Editar %{name}
+        edit: Cambiar nombre de %{name}
         new: Lista de Correo Nueva
       header:
-        edit: Editando %{name}
+        edit: Cambiar nombre de %{name}
         new: Lista de Correo Nueva

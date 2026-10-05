@@ -8,7 +8,7 @@ es:
     created: Encuesta creada exitosamente.
     updated: Encuesta actualizada exitosamente.
     destroyed: Encuesta eliminada.
-    add_prompt: Añadir Encuesta
+    add_prompt: Añadir una encuesta
     form:
       errors_msg:
         one: "Un error impidió que se guardara esta encuesta:"

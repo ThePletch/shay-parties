@@ -1,17 +1,10 @@
-- if mailing_list.persisted?
-  = button_to t('mailing_list.form.delete'), mailing_list_path(mailing_list), method: :delete, class: 'btn btn-danger float-end', data: {confirm: t('mailing_list.form.confirm_delete')}
-.clearfix
-= bootstrap_form_with(model: mailing_list, local: true) do |f|
+= bootstrap_form_with(model: mailing_list) do |f|
   - if mailing_list.errors.any?
     #error_explanation
-      %h2= t('mailing_list.form.errors_msg', count: mailing_list.errors.count)
+      %h2= t("mailing_list.form.errors_msg", count: mailing_list.errors.count)
       %ul
         - mailing_list.errors.full_messages.each do |message|
           %li= message
   = f.text_field :name, floating: true
-
-  = dynamic_list t('mailing_list.form.add_email'), f, :emails, {partial: 'mailing_list_emails/form', layout: :inline}, class: 'btn btn-success' do
-    = f.fields_for(:emails, mailing_list.emails, layout: :inline) do |email_form|
-      = render partial: 'mailing_list_emails/form', locals: {f: email_form}
   .actions
-    = f.submit class: 'btn btn-primary'
+    = f.submit (mailing_list.persisted? ? t("mailing_list.form.save") : t("mailing_list.form.create")), class: "btn btn-primary"

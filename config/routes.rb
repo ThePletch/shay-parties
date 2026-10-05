@@ -52,8 +52,10 @@ Rails.application.routes.draw do
 
     resources :mailing_lists do
       member do
-        put 'sync_users'
+        put :sync_users
+        post :add_emails
       end
+      resources :emails, only: [:destroy], controller: "mailing_list_emails"
     end
 
     namespace :admin do

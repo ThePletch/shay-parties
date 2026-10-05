@@ -11,6 +11,6 @@
     = dynamic_list_record_delete_button
 
   .my-2.px-4
-    = dynamic_list t('poll.form.add_option'), f, :options, {partial: 'poll_options/form', layout: :inline}, class: 'btn btn-success' do
+    = dynamic_list t('poll.form.add_option'), f, :options, {partial: 'poll_options/form', layout: :inline}, class: 'btn btn-link px-0' do
       = f.fields_for(:options, layout: :inline) do |r|
         = render partial: 'poll_options/form', locals: {f: r}

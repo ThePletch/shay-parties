@@ -18,11 +18,11 @@ describe MailingListsController do
       expect(flash[:alert]).to include "You need to sign in"
     end
 
-    it "redirects away non-creators" do
+    it "does not find a missing list for a signed-in user" do
       login_user
-      get :show, params: {id: 12345}
-      expect(response).to redirect_to root_path
-      expect(flash[:alert]).to include "You're not allowed to manage mailing lists"
+      expect do
+        get :show, params: {id: 12345}
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     context "authenticated as a creator" do
@@ -64,9 +64,9 @@ describe MailingListsController do
         end
 
         it "omits declined rsvps for exclude_no_rsvps" do
-          event = FactoryBot.create(:event)
+          event = FactoryBot.create(:event, owner: @user)
           not_attending = @attendees.first
-          FactoryBot.create(:attendance, invitable: not_attending, attendable: event, rsvp_status: "No")
+          FactoryBot.create(:attendance, attendee: not_attending, event: event, rsvp_status: "No")
 
           expected_shows = @mailing_list.emails.where(user_id: @attendees.map(&:id) - [not_attending.id])
           get :show, params: {id: @mailing_list.id, scope: 'exclude_no_rsvps', event_id: event.id}
@@ -74,15 +74,51 @@ describe MailingListsController do
         end
 
         it "shows only rsvped attendees for attendees" do
-          event = FactoryBot.create(:event)
+          event = FactoryBot.create(:event, owner: @user)
           attending = @attendees.first
-          FactoryBot.create(:attendance, invitable: attending, attendable: event, rsvp_status: "Yes")
+          FactoryBot.create(:attendance, attendee: attending, event: event, rsvp_status: "Yes")
 
           expected_shows = @mailing_list.emails.where(user_id: attending.id)
           get :show, params: {id: @mailing_list.id, scope: 'attendees', event_id: event.id}
           expect(assigns(:emails)).to match_array(expected_shows)
         end
+
+        it "searches by address and account name" do
+          get :show, params: {id: @mailing_list.id, q: @attendees.first.name}
+          expect(assigns(:emails)).to match_array(@mailing_list.emails.where(user_id: @attendees.first.id))
+        end
+
+        it "lists only events the user hosts" do
+          hosted = FactoryBot.create(:event, owner: @user, title: "Rooftop dinner")
+          FactoryBot.create(:event, title: "Someone else's party")
+
+          get :show, params: {id: @mailing_list.id}
+          expect(assigns(:events)).to match_array([hosted])
+        end
       end
+    end
+  end
+
+  describe "POST add_emails" do
+    before :each do
+      login_creator
+      @mailing_list = FactoryBot.create(:mailing_list, user: @user, emails: ["maya@example.com"])
+    end
+
+    it "adds valid addresses and reports invalid ones" do
+      post :add_emails, params: {id: @mailing_list.id, addresses: "jordan@example.com\nnope"}
+
+      expect(response).to redirect_to(mailing_list_path(@mailing_list))
+      expect(flash[:notice]).to eq("Added 1 address.")
+      expect(flash[:alert]).to include("nope")
+      expect(@mailing_list.emails.pluck(:email)).to include("jordan@example.com")
+    end
+
+    it "keeps the current filter" do
+      event = FactoryBot.create(:event, owner: @user)
+      post :add_emails, params: {id: @mailing_list.id, addresses: "jordan@example.com", scope: "attendees", event_id: event.id}
+
+      expect(response).to redirect_to(mailing_list_path(@mailing_list, scope: "attendees", event_id: event.id))
     end
   end
 end

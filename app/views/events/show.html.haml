@@ -5,59 +5,50 @@
   .hero
     .hero-image
       = event_header_image_tag(@event)
-    .mx-2
-      .hero-title
-        %h1.title.display-4
-          = @event.title
-          - if @event.owned_by?(current_user)
-            %small
-              = link_to t('form.edit'), edit_event_path(@event), class: 'text-muted'
-              = ' · '
-              = link_to t('invite.actions.send'), new_event_invite_path(@event), class: 'text-muted'
-        %em.text-muted.mb-2
-          - if @event.owned_by?(current_user)
-            = t('event.show.hosted_by_you')
-          - else
-            = t('event.show.hosted_by_other', name: @event.owner.name)
-- if @event.requires_testing
-  .alert.alert-danger.text-center.emojified-warning
-    %strong= t('event.show.requires_testing')
-.row
-  .col-lg.order-lg-1.order-sm-2
-    .row
-      .col-sm
-        %em
-          - # show a simplified format for events spanning a single day
-          - if @event.single_day?
-            .font-weight-bold= l(@event.start_time, format: :day)
-            = EventTime.same_day_range(@event)
-          - else
-            %strong= l(@event.start_time, format: :day)
-            = l(@event.start_time, format: :clock)
-            %p
-              = "…#{t('event.show.time_separator')}"
-              %strong= l(@event.end_time, format: :day)
-              = l(@event.end_time, format: :clock)
-      - if @event.address
-        .col-sm-auto
-          .d-sm-none.mt-2= render 'addresses/show', address: @event.address
-          .d-none.d-sm-inline.text-end= render 'addresses/show', address: @event.address
-    %hr
-    .content= Markdown.html(@event.description)
-  .col-lg.order-lg-2.order-sm-1
-    = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
-    = render 'events/calendar_links', attendee: @attendee, event: @event
-    %hr
-    = render 'events/rsvps', event: @event
-    - if @event.polls.any?
-      %hr
-      .polls
-        - @event.polls.each do |poll|
-          = render 'polls/poll', poll: poll, respondent: @attendee
-%hr
 
-= render @event.root_comments, comments: @event.comments
-- if @authenticated_user
-  %a.btn.btn-sm.btn-primary.comment-button.mb-3{data: {id: 'new'}}= t('comment.actions.new')
-  .comment-form{data: {id: 'new'}}
-    = render 'comments/form', event: @event
+.event-show
+  .d-flex.justify-content-between.align-items-start.gap-3.mt-3
+    %h1.h2.mb-1= @event.title
+    - if @event.owned_by?(current_user)
+      = render 'events/manage', event: @event
+  - if @event.requires_testing
+    %p.testing-requirement
+      %span.badge.text-bg-danger= t('event.show.testing_badge')
+      %small= t('event.show.requires_testing')
+  .event-when.mt-2
+    - if @event.single_day?
+      .fw-medium= l(@event.start_time, format: :day)
+      = EventTime.same_day_range(@event)
+    - else
+      %span.fw-medium= l(@event.start_time, format: :day)
+      = l(@event.start_time, format: :clock)
+      %span.d-block
+        = "…#{t('event.show.time_separator')}"
+        %span.fw-medium= l(@event.end_time, format: :day)
+        = l(@event.end_time, format: :clock)
+  - if @event.address
+    .mt-1= render 'addresses/show', address: @event.address
+  %p.text-muted.fst-italic.small.mb-3
+    - if @event.owned_by?(current_user)
+      = t('event.show.hosted_by_you')
+    - else
+      = t('event.show.hosted_by_other', name: @event.owner.name)
+
+  = render 'attendances/event_form', attendance: @attendance, event: @event, attendee: @attendee
+  = render 'events/calendar_links', attendee: @attendee, event: @event
+
+  .content.my-4= Markdown.html(@event.description)
+
+  = render 'events/rsvps', event: @event
+
+  - if @event.polls.any?
+    .polls.my-4
+      - @event.polls.each do |poll|
+        = render 'polls/poll', poll: poll, respondent: @attendee
+
+  .comments.mt-4
+    = render @event.root_comments, comments: @event.comments
+    - if @authenticated_user
+      %a.comment-button.link-secondary.link-underline-opacity-0.link-underline-opacity-100-hover{data: {id: 'new'}}= t('comment.actions.new')
+      .comment-form{data: {id: 'new'}}
+        = render 'comments/form', event: @event

@@ -6,7 +6,7 @@ RSpec.describe "dynamic nested records", type: :system do
     sign_in event.owner
     visit edit_event_path(event)
 
-    click_button "Add Poll"
+    click_button "Add a poll"
     find("input[name*='[polls_attributes]'][name$='[question]']").set("What should we eat?")
 
     click_button "Add an option"
@@ -22,11 +22,13 @@ RSpec.describe "dynamic nested records", type: :system do
     expect(poll.question).to eq "What should we eat?"
     expect(poll.options.map(&:choice)).to eq ["Pizza"]
     expect(poll.responses).to be_empty
+    find("summary", text: "What should we eat?").click
     expect(page).to have_field(type: "radio", with: option.id)
 
     find("input[type='radio'][value='#{option.id}']").click
     click_button "Answer"
 
+    find("summary", text: "What should we eat?").click
     expect(page).to have_css(".poll-option-count", text: "1")
     expect(poll.responses.reload.map(&:poll_option)).to eq [option]
   end

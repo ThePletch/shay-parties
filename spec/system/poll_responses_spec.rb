@@ -12,10 +12,12 @@ RSpec.describe "poll responses", type: :system do
     expect(page).to have_css(".poll-question", text: "What should we eat?")
     expect(page).to have_no_css(".poll-option-count", text: /\d/)
 
+    find("summary", text: "What should we eat?").click
     find("label.poll-option-choice", text: "Pizza").click
     click_button "Answer"
 
     expect(page).to have_content("Responded to poll.")
+    find("summary", text: "What should we eat?").click
     within("label.poll-option-choice", text: "Pizza") do
       expect(page).to have_css(".poll-option-count", text: "1")
       expect(page).to have_checked_field(type: "radio", with: pizza.id)
@@ -26,6 +28,7 @@ RSpec.describe "poll responses", type: :system do
     click_button "Update"
 
     expect(page).to have_content("Poll response updated.")
+    find("summary", text: "What should we eat?").click
     within("label.poll-option-choice", text: "Tacos") do
       expect(page).to have_css(".poll-option-count", text: "1")
       expect(page).to have_checked_field(type: "radio", with: tacos.id)
@@ -35,11 +38,14 @@ RSpec.describe "poll responses", type: :system do
     end
     expect(poll.responses.reload.map(&:poll_option)).to eq [tacos]
 
-    click_button "Clear"
+    accept_confirm { click_button "Clear" }
 
     expect(page).to have_content("Poll response cleared.")
-    expect(page).to have_no_css(".poll-option-count", text: /\d/)
-    expect(page).to have_no_checked_field(type: "radio")
+    find("summary", text: "What should we eat?").click
+    within(".poll") do
+      expect(page).to have_no_css(".poll-option-count", text: /\d/)
+      expect(page).to have_no_checked_field(type: "radio")
+    end
     expect(poll.responses.reload).to be_empty
   end
 end

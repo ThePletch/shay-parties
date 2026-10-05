@@ -34,33 +34,157 @@ $hero-gradient-height: 200px;
   object-position: top;
 }
 
-.hero-title {
-  position: relative;
-  bottom: 5vh;
+.event-show {
+  margin-inline: auto;
+  max-width: 40rem;
 }
 
-#photo-preview {
-  object-fit: cover;
-  width: 100%;
-  height: Min(500px, 26vw);
-  object-position: top;
-}
+.testing-requirement {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  margin: 0.75rem 0 0;
 
-.emojified-warning {
-  span, em, strong {
-    &::before, &::after {
-      content: '⚠️';
-      margin: 1em;
-    }
+  small {
+    color: var(--bs-secondary-color);
+    font-size: smaller;
   }
 }
 
-.marked-checkbox + label::before {
-  content: '☐';
-  margin-right: 0.5em;
+.event-manage > summary {
+  list-style: none;
 }
 
-.marked-checkbox:checked + label::before {
-  content: '☑';
-  margin-right: 0.5em;
+.event-manage > summary::-webkit-details-marker {
+  display: none;
+}
+
+.event-manage-panel {
+  border: 1px solid var(--bs-border-color);
+  margin-top: 0.5rem;
+  min-width: 16rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.event-manage-emails {
+  cursor: pointer;
+}
+
+.rsvp-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.rsvp-choices .btn-check + .btn {
+  border-radius: 2rem;
+}
+
+.rsvp-plus-ones {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+.rsvp-plus-ones-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.rsvp-plus-ones:not(:has([data-dynamic-list-target='rows'] > *)) .rsvp-plus-ones-actions {
+  display: none;
+}
+
+.rsvp-plus-ones .rsvp-bring:disabled {
+  display: none;
+}
+
+.rsvp-plus-ones[data-plus-ones-mode='summary'] {
+  .rsvp-bring,
+  .rsvp-plus-ones-actions,
+  .rsvp-plus-ones-limit,
+  [data-plus-one-fields] {
+    display: none;
+  }
+}
+
+.rsvp-plus-ones[data-plus-ones-mode='form'] {
+  [data-plus-one-summary],
+  [data-plus-ones-edit] {
+    display: none;
+  }
+}
+
+.rsvp-plus-ones [data-controller='dynamic-list-record'][data-remove] [data-dynamic-list-record-target='deleteButton'] {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--bs-danger);
+}
+
+.calendar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.calendar-links a {
+  text-underline-offset: 0.15em;
+}
+
+.attendees {
+  margin-top: 2rem;
+}
+
+.attendee-list {
+  list-style: none;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+.attendee-row {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+}
+
+.attendee-plus-one {
+  padding-left: 1rem;
+}
+
+.event-form {
+  margin-inline: auto;
+  max-width: 40rem;
+}
+
+.event-plus-ones {
+  max-width: 12rem;
+}
+
+.event-photo-thumb {
+  border-radius: 0.25rem;
+  flex: none;
+  height: 3rem;
+  object-fit: cover;
+  width: 4.5rem;
+}
+
+.event-photo-frame {
+  aspect-ratio: 1900 / 500;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+#photo-preview {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  width: 100%;
 }

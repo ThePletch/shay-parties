@@ -9,7 +9,7 @@ en:
         end_time: End Time
         photo: Header Photo
         description: Description
-        plus_one_max: Max +1s per guest
+        plus_one_max: Plus-ones
         requires_testing: Require COVID test
     errors:
       models:
@@ -33,17 +33,21 @@ en:
         edit: "Editing %{title}"
         new: New Event
       show_event_link: See Event
-      preview_label: Click to see a preview of your event's header
-      testing_help:
-        Events that require testing for COVID-19 will have a banner informing guests of the testing requirement.
-        Be sure to explain how to send you evidence of a negative test in your event description.
-      header_photo_help:
-        Photos are scaled and cropped to full-screen width (1900px by 500px).
-        Open the event preview at the top of the page to adjust how your header image will appear.
-      header_photo_crop_prompt:  Drag the image to change how it will be cropped.
-      description_uses_markdown_html: You can format the event description with %{link} to make text bold, add links, or organize things into bullet points.
+      location: Location
+      add_location: Add a location
+      change_location: Change
+      location_done: Done
+      time_separator: to
+      testing_help: Guests see a note on the event page. Say in the description how to send proof of a test.
+      add_header_photo: Add a header photo
+      replace_header_photo: Replace
+      adjust_crop: Adjust crop
+      hide_crop: Hide crop
+      header_photo_crop_prompt: Drag the image to change how it will be cropped.
+      description_uses_markdown_html: "%{link} works for bold text, links, and lists."
       description_uses_markdown_name: Markdown
-      plus_ones_prompt: Allow +1s?
+      plus_ones_label: Plus-ones
+      plus_ones_none: None
       plus_ones_unlimited: Unlimited
     rsvp_list:
       headers:
@@ -79,6 +83,32 @@ en:
       time_separator: until
       hosted_by_other: Hosted by %{name}
       hosted_by_you: Hosted by you
+      manage: Manage
+      edit: Edit event
+      copy_emails: Copy guest emails
+      sign_in: Have an account? Sign in
+      bring_someone: Bring someone
+      plus_ones: Plus-ones
+      edit_plus_ones: Edit +1s
+      plus_one_summary: "+1 · %{name} · %{email}"
+      add_to_calendar: Add to calendar
+      download_ics: Download .ics
+      you: You
+      remove: Remove
+      restore: Undo
+      with_attendee: with %{name}
+      going_count:
+        one: "%{count} going"
+        other: "%{count} going"
+      other_rsvps: "%{maybe} maybe · %{cant} can’t come"
+      rsvp:
+        going: Going
+        maybe: Maybe
+        cant: "Can’t"
+        submit_going: RSVP going
+        submit_maybe: RSVP maybe
+        submit_cant: "Can’t come"
+      testing_badge: COVID test required
       requires_testing:
         You must show a photo of a negative rapid COVID test
         from the past 24 hours to be allowed entry to this event.
