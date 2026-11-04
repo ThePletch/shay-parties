@@ -134,7 +134,7 @@ GEM
     commonmarker (2.6.0-arm64-darwin)
     concurrent-ruby (1.3.8)
     connection_pool (3.0.2)
-    crass (1.0.7)
+    crass (1.0.8)
     cuprite (0.18)
       capybara (~> 3.0)
       ferrum (~> 0.18.0)
